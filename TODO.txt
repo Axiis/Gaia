@@ -1,0 +1,24 @@
+
+2016/06/17 =========================================================
+1. Implement notification from services where necessary: this involves calling into the notification service
+   with the relevant parameters to generate notifications.
+
+2. Convert all 'new Entity(...)' calls from with the services to 'DataContext.Store<Entity>().NewEntity()' calls. [Done]
+
+3. Flesh out the Profile-Discovery feature. The object returned in the sequence from the "Discover" method needs to be
+   defined, as i believe it needs to be an object that encapsulates the user-data authorized for viewing, for each user.
+
+4. Review the "FeatureAccess.AllowAccessTo(...)" method to take into consideration the "Permission" property added to 
+   FeatureDescriptors. [Done]
+
+5. Flesh out the feature uri's for all the Service methods. These will be used to seed the database, so include this in the
+   "fleshing out". [Done]
+
+6. Define default AccessProfiles for "System-Admin", "Policy-Admin", "Service-Provider", "Farmer", "Guest" and seed the database with them.
+   Upon registering a new User, the default Profiles MUST be applied to them. So this needs to be added too. [Done]
+
+7. Enforce that any access to the system without logging in will be done as a "Guest" user. This will be done via the UserContextService: if
+   no user is logged in, it will fetch and return the guest user.
+
+8. Creating SystemAdmin and PolicyAdmin accounts will require an extra process...maybe an invite sent from the "root" admin to the email of a user
+   with a link to enter the necessary details and supply back to a special method on the service authrized to create admin accounts.
