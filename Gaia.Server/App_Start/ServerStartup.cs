@@ -8,6 +8,7 @@ using Gaia.Server.DI;
 using static Axis.Luna.Extensions.ObjectExtensions;
 using System.Web.Http.Dependencies;
 using Axis.Luna;
+using Gaia.Server.OAuth;
 
 [assembly: OwinStartup(typeof(Gaia.Server.App_Start.ServerStartup))]
 
@@ -48,8 +49,8 @@ namespace Gaia.Server.App_Start
 
             app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
             {
-                AuthorizeEndpointPath = new PathString(Paths.AuthorizePath),
-                TokenEndpointPath = new PathString(Paths.TokenPath),
+                AuthorizeEndpointPath = new PathString(OAuthPaths.ThirdpartyAuthorizationPath),
+                TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
                 ApplicationCanDisplayErrors = true,
 
 #if DEBUG
@@ -68,13 +69,6 @@ namespace Gaia.Server.App_Start
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
             {
             });
-        }
-
-
-        public class Paths
-        {
-            readonly static public string AuthorizePath = "/Authorize";
-            readonly static public string TokenPath = "/Tokens";
         }
 
         public class OWINMapKeys

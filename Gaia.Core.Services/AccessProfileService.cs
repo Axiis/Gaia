@@ -14,9 +14,9 @@ using Axis.Pollux.Identity.Principal;
 
 namespace Gaia.Core.Services
 {
-    public class AccessProfileService: IAccessProfileService
+    public class AccessProfileService: BaseService, IAccessProfileService
     {
-        public IUserContextService UserContext { get; private set; }
+        public override IUserContextService UserContext { get; protected set; }
         public IDataContext DataContext { get; private set; }
 
 

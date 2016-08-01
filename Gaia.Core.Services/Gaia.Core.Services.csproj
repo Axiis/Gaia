@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="ActivityFeedService.cs" />
     <Compile Include="AdvertService.cs" />
+    <Compile Include="BaseService.cs" />
     <Compile Include="CommentService.cs" />
     <Compile Include="ContextVerificationService.cs" />
     <Compile Include="ForumService.cs" />

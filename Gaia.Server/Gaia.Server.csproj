@@ -234,9 +234,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\ServerStartup.cs" />
+    <Compile Include="Controllers\AuthorizeController.cs" />
     <Compile Include="DI\DIRegistration.cs" />
     <Compile Include="DI\ResolutionContext.cs" />
     <Compile Include="OAuth\AuthorizationServer.cs" />
+    <Compile Include="OAuth\Paths.cs" />
     <Compile Include="OAuth\TokenStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -254,9 +256,7 @@
       <Name>Gaia.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
