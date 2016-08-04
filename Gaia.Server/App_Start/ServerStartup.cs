@@ -9,6 +9,10 @@ using static Axis.Luna.Extensions.ObjectExtensions;
 using System.Web.Http.Dependencies;
 using Axis.Luna;
 using Gaia.Server.OAuth;
+using Microsoft.Owin.BuilderProperties;
+using System.Threading;
+using System.Linq;
+using System;
 
 [assembly: OwinStartup(typeof(Gaia.Server.App_Start.ServerStartup))]
 
@@ -18,7 +22,8 @@ namespace Gaia.Server.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureDI(app);
+            ConfigureDI(app); //<-- must come first!!!
+
             ConfigureWebApi(app);
             ConfigureOAuth(app);
         }
@@ -26,6 +31,11 @@ namespace Gaia.Server.App_Start
         private void ConfigureDI(IAppBuilder app)
         {
             app.Properties[OWINMapKeys.ResolutionContext] = new ResolutionContext(DIRegistration.RegisterTypes);
+
+            //shutdown delegate
+            var token = new AppProperties(app.Properties).OnAppDisposing;
+            if (token != CancellationToken.None)
+                token.Register(() => app.Properties[OWINMapKeys.ResolutionContext].As<ResolutionContext>().Dispose());
         }
 
 
@@ -46,12 +56,15 @@ namespace Gaia.Server.App_Start
         private void ConfigureOAuth(IAppBuilder app)
         {
             var resolver = app.Properties[OWINMapKeys.ResolutionContext].As<IServiceResolver>();
+            var tokenstore = resolver.Resolve<TokenStore>();
+            var expiryInterval = tokenstore.Settings.FirstOrDefault(_config => _config.Name == TokenStore.TokenExpiration); //<- this is a timespan datum
 
             app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
             {
                 AuthorizeEndpointPath = new PathString(OAuthPaths.ThirdpartyAuthorizationPath),
                 TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
                 ApplicationCanDisplayErrors = true,
+                AccessTokenExpireTimeSpan = TimeSpan.Parse(expiryInterval.Data),
 
 #if DEBUG
                 AllowInsecureHttp = true,

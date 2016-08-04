@@ -22,7 +22,7 @@ namespace Gaia.Core.Utils
             return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI))
                                     .Any(featureUri => profiles.Any(profile => profile.AllowsAccessTo(featureUri))) ?
                                      Operation.Run(() => function()) :
-                                     Operation.Fail<Out>(new Exception());
+                                     Operation.Fail<Out>(new FeatureAccessException());
         }
         public static Operation<Out> Guard<Out>(this IUserContextService context, Func<Operation<Out>> function)
         {
@@ -31,7 +31,7 @@ namespace Gaia.Core.Utils
             return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI))
                                     .Any(featureUri => profiles.Any(profile => profile.AllowsAccessTo(featureUri))) ?
                                      Operation.Run(() => function()) :
-                                     Operation.Fail<Out>(new Exception());
+                                     Operation.Fail<Out>(new FeatureAccessException());
         }
 
         public static Operation Guard(this IUserContextService context, Action action)
@@ -41,7 +41,7 @@ namespace Gaia.Core.Utils
             return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI))
                                     .Any(featureUri => profiles.Any(profile => profile.AllowsAccessTo(featureUri))) ?
                                      Operation.Run(() => action()) :
-                                     Operation.Fail(new Exception());
+                                     Operation.Fail(new FeatureAccessException());
         }
 
         private static IEnumerable<FeatureAttribute> GetFeatureAttributes(this MethodInfo method)
@@ -92,5 +92,13 @@ namespace Gaia.Core.Utils
         public static AccessPermission? Combine(this IEnumerable<FeatureAccessDescriptor> descriptors)
             => descriptors.Select(_d => _d.Permission)
                           .Aggregate(new AccessPermission?(), (reduced, next) => reduced == AccessPermission.Deny ? reduced : next);
+    }
+
+    public class FeatureAccessException: Exception
+    {
+        public FeatureAccessException(string message = null)
+        : base(message ?? "Access Denied to the requested resource")
+        {
+        }
     }
 }

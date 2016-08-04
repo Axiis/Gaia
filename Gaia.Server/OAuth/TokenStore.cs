@@ -3,13 +3,14 @@ using Axis.Luna.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
 namespace Gaia.Server.OAuth
 {
-    public class TokenStore
+    public class TokenManager
     {
         private TokenContext _context = new TokenContext();
 
@@ -72,16 +73,56 @@ namespace Gaia.Server.OAuth
         public string ClientInfo { get; set; }
     }
 
-    public class TokenContext: DbContext
+    public class Configuration
+    {
+        [Key]
+        public long Id { get; set; }
+
+        [MaxLength(400)]
+        [Index(IsClustered = false, IsUnique = true)]
+        public string Name { get; set; }
+
+        public CommonDataType Type { get; set; }
+
+        public string Data { get; set; }
+    }
+
+    public enum CommonDataType
+    {
+        String,
+        Integer,
+        Float,
+        Boolean,
+        Binary,
+
+        DateTime,
+        TimeSpan,
+        Url,
+
+        Object
+    }
+
+
+
+    public class TokenStore: DbContext
     {
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //seed the database
         }
 
         #region data sets
         public IDbSet<AccessToken> AccessTokens { get; set; }
         public IDbSet<ThirdPartyAccessCode> AccessCodes { get; set; }
+        public IDbSet<Configuration> Settings { get; set; }
+        #endregion
+
+        #region Token Store Settings
+
+        public static readonly string TokenExpiration = "Gaia.TokenExpiration";
+
         #endregion
     }
 }

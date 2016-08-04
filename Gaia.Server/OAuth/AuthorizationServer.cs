@@ -23,6 +23,12 @@ namespace Gaia.Server.OAuth
         }
 
         #region OAuthAuthrizationServerProvider
+        public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        {
+            return base.GrantResourceOwnerCredentials(context.p);
+        }
+        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+            => Task.Run(() => context.Validated());
         #endregion
 
         #region IAuthenticationTokenProvider Members

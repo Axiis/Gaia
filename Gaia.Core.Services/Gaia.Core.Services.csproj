@@ -71,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AccessProfileService.cs" />
     <Compile Include="SystemSettingService.cs" />
+    <Compile Include="UserContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gaia.Core\Gaia.Core.csproj">

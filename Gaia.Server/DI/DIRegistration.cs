@@ -60,6 +60,12 @@ namespace Gaia.Server.DI
                           .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation));
             #endregion
 
+            #region TokenStore
+
+            c.Register<TokenStore>(Lifestyle.Singleton);
+
+            #endregion
+
             #endregion
 
 
