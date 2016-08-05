@@ -107,6 +107,7 @@
     <Compile Include="Services\IRatingService.cs" />
     <Compile Include="Services\IAccessProfileService.cs" />
     <Compile Include="Services\ISystemSettingsService.cs" />
+    <Compile Include="Services\IUserLocator.cs" />
     <Compile Include="System\IContextAware.cs" />
     <Compile Include="System\SystemSettings.cs" />
     <Compile Include="Utils\Extensions.cs" />

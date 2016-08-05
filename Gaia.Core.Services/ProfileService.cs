@@ -114,7 +114,7 @@ namespace Gaia.Core.Services
             {
                 var setting = DataContext.Store<SystemSetting>().Query
                                          .First(_st => _st.Name == System.SystemSettings.DefaultUserRegistrationVerificationExpiration.Key);
-                return ContextVerifier.CreateVerificationObject(targetUser, UserRegistrationContext, DateTime.Now + TimeSpan.Parse(setting.StringData));
+                return ContextVerifier.CreateVerificationObject(targetUser, UserRegistrationContext, DateTime.Now + TimeSpan.Parse(setting.Data));
             });
 
         public Operation<User> VerifyUserRegistration(string userId, string token)
@@ -189,7 +189,7 @@ namespace Gaia.Core.Services
             {
                 var setting = DataContext.Store<SystemSetting>().Query
                                          .First(_st => _st.Name == System.SystemSettings.DefaultUserActivationVerificationExpiration.Key);
-                return ContextVerifier.CreateVerificationObject(targetUser, UserActivationContext, DateTime.Now + TimeSpan.Parse(setting.StringData));
+                return ContextVerifier.CreateVerificationObject(targetUser, UserActivationContext, DateTime.Now + TimeSpan.Parse(setting.Data));
             });
 
         public Operation<User> VerifyUserActivation(string targetUser, string contextToken)

@@ -8,43 +8,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
+using Axis.Jupiter;
+using System.Security.Claims;
+using Axis.Pollux.Authentication.Service;
+using Axis.Pollux.Authentication;
+using System.Text;
+using Axis.Luna.Extensions;
 
 namespace Gaia.Server.OAuth
 {
-    public class AuthorizationServer : OAuthAuthorizationServerProvider, IAuthenticationTokenProvider
+    public class AuthorizationServer : OAuthAuthorizationServerProvider//, IAuthenticationTokenProvider
     {
-        private TokenStore _tokenStore = null;
+        private ICredentialAuthentication _credentialAuthority = null;
 
-        public AuthorizationServer(TokenStore tokenStore)
+        public AuthorizationServer(ICredentialAuthentication credentialAuthority)
         {
-            ThrowNullArguments(() => tokenStore);
+            ThrowNullArguments(() => credentialAuthority);
 
-            this._tokenStore = tokenStore;
+            this._credentialAuthority = credentialAuthority;
         }
 
         #region OAuthAuthrizationServerProvider
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
-        {
-            return base.GrantResourceOwnerCredentials(context.p);
-        }
-        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
-            => Task.Run(() => context.Validated());
-        #endregion
+            => Task.Run(() =>
+            {
+                //authenticate the credential authority
+                _credentialAuthority.VerifyCredential(new Credential
+                {
+                    OwnerId = context.UserName,
+                    Metadata = CredentialMetadata.Password,
+                    Value = Encoding.Unicode.GetBytes(context.Password)
+                })
+                .Then(opr => context.Validated(new ClaimsIdentity(context.Options.AuthenticationType).UsingValue(id => id.AddClaim(new Claim("user-name", context.UserName)))))
+                .Error(() => context.UsingValue(cxt => cxt.SetError("invalid_grant","invalid user credential"))
+                                    .UsingValue(cxt => cxt.Rejected()));
+            });
 
-        #region IAuthenticationTokenProvider Members
-        public void Create(AuthenticationTokenCreateContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task CreateAsync(AuthenticationTokenCreateContext context) => Task.Run(() => Create(context));
-
-        public void Receive(AuthenticationTokenReceiveContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ReceiveAsync(AuthenticationTokenReceiveContext context) => Task.Run(() => Receive(context));
+        /// <summary>
+        /// For custom authentication/authorizations
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public override Task GrantCustomExtension(OAuthGrantCustomExtensionContext context) => base.GrantCustomExtension(context);
+        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context) => Task.Run(() => context.Validated());
         #endregion
     }
 }

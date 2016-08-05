@@ -20,10 +20,6 @@ namespace Gaia.Server.DI
             #region infrastructure service registration
             c.Register<AuthorizationServer>(Lifestyle.Singleton);
             c.Register<IOAuthAuthorizationServerProvider>(() => c.GetInstance<AuthorizationServer>());
-            c.Register<IAuthenticationTokenProvider>(() => c.GetInstance<AuthorizationServer>());
-
-
-            c.Register<TokenStore>(Lifestyle.Singleton);
 
             #endregion
 
@@ -58,12 +54,6 @@ namespace Gaia.Server.DI
                           .Select(_t => new { @interface = _t, implementation = serviceImplAssembly.GetTypes().FirstOrDefault(_impl => _impl.GetInterfaces().Contains(_t)) })
                           .Where(_pair => _pair.implementation != null)
                           .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation));
-            #endregion
-
-            #region TokenStore
-
-            c.Register<TokenStore>(Lifestyle.Singleton);
-
             #endregion
 
             #endregion

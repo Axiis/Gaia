@@ -34,7 +34,7 @@ namespace Gaia.Core.Services
                                                    .FirstOrDefault(_st => _st.Name == System.SystemSettings.DefaultContextVerificationExpiration.Key)
                                                    .ThrowIfNull("could not find system setting");
 
-                return CreateVerificationObject(userId, verificationContext, DateTime.Now + TimeSpan.Parse(defaultExpiration.StringData));
+                return CreateVerificationObject(userId, verificationContext, DateTime.Now + TimeSpan.Parse(defaultExpiration.Data));
             });
 
         public Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext, DateTime expiryDate)

@@ -13,6 +13,7 @@ using Microsoft.Owin.BuilderProperties;
 using System.Threading;
 using System.Linq;
 using System;
+using Gaia.Core.Domain;
 
 [assembly: OwinStartup(typeof(Gaia.Server.App_Start.ServerStartup))]
 
@@ -56,25 +57,20 @@ namespace Gaia.Server.App_Start
         private void ConfigureOAuth(IAppBuilder app)
         {
             var resolver = app.Properties[OWINMapKeys.ResolutionContext].As<IServiceResolver>();
-            var tokenstore = resolver.Resolve<TokenStore>();
-            var expiryInterval = tokenstore.Settings.FirstOrDefault(_config => _config.Name == TokenStore.TokenExpiration); //<- this is a timespan datum
 
             app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
             {
                 AuthorizeEndpointPath = new PathString(OAuthPaths.ThirdpartyAuthorizationPath),
                 TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
                 ApplicationCanDisplayErrors = true,
-                AccessTokenExpireTimeSpan = TimeSpan.Parse(expiryInterval.Data),
+                AccessTokenExpireTimeSpan = DefaultSettings.TokenExpiryInterval,
 
 #if DEBUG
                 AllowInsecureHttp = true,
 #endif
 
                 // Authorization server provider which controls the lifecycle of Authorization Server
-                Provider = resolver.Resolve<IOAuthAuthorizationServerProvider>(),
-
-                // Authorization code provider which creates and receives the authorization code.
-                AuthorizationCodeProvider = resolver.Resolve<IAuthenticationTokenProvider>()
+                Provider = resolver.Resolve<IOAuthAuthorizationServerProvider>()
             });
 
             //app.UseCors(CorsOptions.AllowAll); //<-- will configure this appropriately when it is needed
@@ -87,6 +83,11 @@ namespace Gaia.Server.App_Start
         public class OWINMapKeys
         {
             public static readonly string ResolutionContext = "Gaia.Server.OWIN/ResolutionContext";
+        }
+
+        public class DefaultSettings
+        {
+            public static readonly TimeSpan TokenExpiryInterval = TimeSpan.FromDays(1);
         }
     }
 }
