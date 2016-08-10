@@ -16,7 +16,6 @@ namespace Gaia.Core.OAModule
 
             this.Property(e => e.ModifiedBy).HasMaxLength(250);
             this.Property(e => e.CreatedBy).HasMaxLength(250);
-
         }
     }
 }

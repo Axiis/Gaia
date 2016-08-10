@@ -2,11 +2,15 @@
 using Gaia.Core.Domain;
 using Gaia.Core.System;
 using Gaia.Core.Utils;
+using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
     public interface ICommentService : IUserContextAware
     {
+        [Feature("system/Comments/@comments-for")]
+        Operation<IEnumerable<Comment>> CommentsFor(string contextName, string contextId);
+
         [Feature("system/Comments/@comment-on")]
         Operation<Comment> CommentOn(string contextName, string contextId, string comment);
 

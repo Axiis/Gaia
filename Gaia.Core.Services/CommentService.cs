@@ -5,7 +5,8 @@ using Gaia.Core.Domain;
 using Axis.Jupiter;
 using Gaia.Core.Utils;
 using System.Linq;
-
+using System;
+using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
@@ -74,6 +75,12 @@ namespace Gaia.Core.Services
                     Text = comment
                 })
                 .UsingValue(cmt => commentStore.Add(cmt).Context.CommitChanges());
+            });
+
+        public Operation<IEnumerable<Comment>> CommentsFor(string contextName, string contextId)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var commentStore = DataContext.Store<Comment>();
             });
     }
 }

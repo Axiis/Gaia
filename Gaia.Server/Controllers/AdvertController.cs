@@ -6,6 +6,8 @@ using Gaia.Core.Services;
 using System.Web.Http;
 using Gaia.Core.Domain;
 using System;
+using System.Linq;
+using Axis.Luna;
 
 namespace Gaia.Server.Controllers
 {
@@ -54,23 +56,58 @@ namespace Gaia.Server.Controllers
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
 
+        [HttpPut]
+        [Route("api/adverts/published/@{advertId}")]
+        IHttpActionResult Publish(long advertId)
+            => _advert.Publish(advertId)
+                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
+                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Result;
+
+        [HttpPut]
+        [Route("api/adverts/suspended/@{advertId}")]
+        IHttpActionResult Suspend(long advertId)
+            => _advert.Suspend(advertId)
+                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
+                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Result;
+
+        [HttpPut]
+        [Route("api/adverts/archived/@{advertId}")]
+        IHttpActionResult Archive(long advertId)
+            => _advert.Archive(advertId)
+                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
+                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Result;
+
+
+        /// <summary>
+        /// Retrieves the next advert after examining the query-string for a parameter "exposed" that contains a comma separated list of advert ids
+        /// e.g
+        /// <para>
+        /// <c>api/adverts/sequence?exposed=2212,4432,543,5,134,654,24,654,755,12234,675</c>
+        /// </para>
+        /// </summary>
+        /// <param name="exposed"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/adverts/sequence")]
+        IHttpActionResult NextAdvert(string exposed)
+            => Operation.Try(() => exposed.Split(',').Select(v => long.Parse(v)).ToArray())
+                  .Then(opr => _advert.NextAdvert(opr.Result))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Result;
+
+
         [HttpPost]
-        [Route("api/adverts/published")]
-        IHttpActionResult Publish(long advertId);
-
-        [Route("system/User/Advert/@suspend")]
-        Operation<Advert> Suspend(long advertId);
-
-        [Route("system/User/Advert/@archive")]
-        Operation<Advert> Archive(long advertId);
+        [Route("api/adverts/hits/@{advertId}")]
+        IHttpActionResult Hit(long advertId)
+            => _advert.Hit(advertId)
+                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
+                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Result;
         
-        [Route("system/Adverts/@next")]
-        Operation<Advert> NextAdvert(long[] exposed);
-        
-        [Route("system/Adverts/@hit")]
-        Operation Hit(long advertId);
-
-        Nullable<>
     }
 
     namespace AdvertModels

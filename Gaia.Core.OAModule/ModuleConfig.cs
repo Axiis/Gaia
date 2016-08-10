@@ -9,7 +9,7 @@ using Gaia.Core.OAModule.Mappings.Meta;
 using Gaia.Core.Services;
 using Gaia.Core.Utils;
 using System;
-using System.Collections.Generic;
+using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Reflection;
 
@@ -30,9 +30,34 @@ namespace Gaia.Core.OAModule
                .Where(t => t.IsEntityMap())
                .ForAll((cnt, t) => this.UsingConfiguration(Activator.CreateInstance(t).AsDynamic()));
 
+            //setup the comments view
+            this.WithContextQueryGenerator<Domain.Comment>("gaia.CommentHierarchy", _cxt =>
+            {
+                var context = _cxt.As<EuropaContext>();
+                var commentTable = context.ContextMetadata.TypeMetadata<Comment>().Table.TableName;
+
+                context.Database.ExecuteSqlCommand(@"
+
+CREATE VIEW [dbo].[__CommentHierarchy]  AS 
+WITH    cte ( CommentId, ParentId ) 
+AS ( 
+    SELECT   EntityId , EntityId 
+    FROM     dbo.Employees 
+    UNION ALL 
+    SELECT   e.CommentId , cte.CommentId 
+    FROM     cte 
+    INNER JOIN dbo.Employees AS e 
+    ON e.EntityId = cte.ParentId 
+   ) 
+SELECT  ISNULL(EmployeeID, 0) AS ManagerEmployeeID , 
+        ISNULL(ManagerEmployeeID, 0) AS EmployeeID 
+FROM    cte");
+                return context.Database.SqlQuery<Comment>("").AsQueryable();
+            });
+
             //seeding
             //1. Seed the application-feature-catalogue (a list of FeatureURI's). Note that 'savechanges' is automatically called.
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureURI>();
                 ns = typeof(IAdvertService).Namespace;
@@ -49,10 +74,10 @@ namespace Gaia.Core.OAModule
 
             #region 2.1 Root user/profile
             //the user object
-            this.UsingContextSeed(context => context.Store<User>().Add(new User { UserId = DomainConstants.RootAccount, Status = UserStatus.Active }).Context.CommitChanges());
+            this.UsingContext(context => context.Store<User>().Add(new User { UserId = DomainConstants.RootAccount, Status = UserStatus.Active }).Context.CommitChanges());
 
             //the profile object
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessProfile>();
                 store.Add(new FeatureAccessProfile
@@ -80,7 +105,7 @@ namespace Gaia.Core.OAModule
             });
 
             //assign the profile to the user
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<UserAccessProfile>();
                 store.Add(new UserAccessProfile
@@ -96,10 +121,10 @@ namespace Gaia.Core.OAModule
 
             #region 2.2 Guest user/profile
             //the user object
-            this.UsingContextSeed(context => context.Store<User>().Add(new User { UserId = DomainConstants.GuestAccount, Status = UserStatus.Active }).Context.CommitChanges());
+            this.UsingContext(context => context.Store<User>().Add(new User { UserId = DomainConstants.GuestAccount, Status = UserStatus.Active }).Context.CommitChanges());
 
             //the profile object
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessProfile>();
                 store.Add(new FeatureAccessProfile
@@ -114,7 +139,7 @@ namespace Gaia.Core.OAModule
             });
 
             //the default access descriptors
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessDescriptor>();
                 new[]
@@ -140,7 +165,7 @@ namespace Gaia.Core.OAModule
             });
 
             //assign the profile to the user
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<UserAccessProfile>();
                 store.Add(new UserAccessProfile
@@ -156,7 +181,7 @@ namespace Gaia.Core.OAModule
 
             #region 2.3 Policy-Admin profile
             //the profile object
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessProfile>();
                 store.Add(new FeatureAccessProfile
@@ -171,7 +196,7 @@ namespace Gaia.Core.OAModule
             });
 
             //the default access descriptors
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessDescriptor>();
                 new[] 
@@ -210,7 +235,7 @@ namespace Gaia.Core.OAModule
 
             #region 2.4 Service-Provider profile
             //the profile object
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessProfile>();
                 store.Add(new FeatureAccessProfile
@@ -225,7 +250,7 @@ namespace Gaia.Core.OAModule
             });
 
             //the default access descriptors
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessDescriptor>();
                 new[]
@@ -263,7 +288,7 @@ namespace Gaia.Core.OAModule
 
             #region 2.5 Farmer profile
             //the profile object
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessProfile>();
                 store.Add(new FeatureAccessProfile
@@ -278,7 +303,7 @@ namespace Gaia.Core.OAModule
             });
 
             //the default access descriptors
-            this.UsingContextSeed(context =>
+            this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessDescriptor>();
                 new[]
@@ -313,6 +338,19 @@ namespace Gaia.Core.OAModule
                 store.Context.CommitChanges();
             });
             #endregion
+        }
+    }
+
+    namespace Util
+    {
+        public class ReplyMap
+        {
+
+        }
+
+        public class ReplyEntityMap: EntityTypeConfiguration<ReplyMap>
+        {
+
         }
     }
 }
