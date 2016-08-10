@@ -51,7 +51,8 @@
     <Reference Include="Axis.Jupiter.Europa">
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Jupiter\Axis.Jupiter.Europa\bin\Debug\Axis.Jupiter.Europa.dll</HintPath>
     </Reference>
-    <Reference Include="Axis.Luna">
+    <Reference Include="Axis.Luna, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Luna\Axis.Luna\bin\Debug\Axis.Luna.dll</HintPath>
     </Reference>
     <Reference Include="Axis.Narvi">
@@ -234,12 +235,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\ServerStartup.cs" />
-    <Compile Include="Controllers\AuthorizeController.cs" />
+    <Compile Include="Controllers\AccessProfileController.cs" />
+    <Compile Include="Controllers\ActivityFeedController.cs" />
+    <Compile Include="Controllers\AdvertController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="DI\DIRegistration.cs" />
     <Compile Include="DI\ResolutionContext.cs" />
     <Compile Include="OAuth\AuthorizationServer.cs" />
     <Compile Include="OAuth\Paths.cs" />
-    <Compile Include="OAuth\TokenStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
