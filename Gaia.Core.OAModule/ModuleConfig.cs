@@ -31,28 +31,39 @@ namespace Gaia.Core.OAModule
                .ForAll((cnt, t) => this.UsingConfiguration(Activator.CreateInstance(t).AsDynamic()));
 
             //setup the comments view
-            this.WithContextQueryGenerator<Domain.Comment>("gaia.CommentHierarchy", _cxt =>
+            this.WithContextQueryGenerator("gaia.CommentHierarchy", (_cxt, args) =>
             {
                 var context = _cxt.As<EuropaContext>();
                 var commentTable = context.ContextMetadata.TypeMetadata<Comment>().Table.TableName;
+                var replyMapTable = context.ContextMetadata.TypeMetadata<Util.ReplyMap>().Table.TableName;
+                var commentContext = typeof(Comment).GaiaDomainTypeName();
 
                 context.Database.ExecuteSqlCommand(@"
 
-CREATE VIEW [dbo].[__CommentHierarchy]  AS 
-WITH    cte ( CommentId, ParentId ) 
-AS ( 
-    SELECT   EntityId , EntityId 
-    FROM     dbo.Employees 
-    UNION ALL 
-    SELECT   e.CommentId , cte.CommentId 
-    FROM     cte 
-    INNER JOIN dbo.Employees AS e 
-    ON e.EntityId = cte.ParentId 
-   ) 
-SELECT  ISNULL(EmployeeID, 0) AS ManagerEmployeeID , 
-        ISNULL(ManagerEmployeeID, 0) AS EmployeeID 
-FROM    cte");
-                return context.Database.SqlQuery<Comment>("").AsQueryable();
+drop the ReplyMap table if it exists
+
+IF OBJECT_ID('[dbo].[" + replyMapTable + @"]') IS NULL
+BEGIN
+    CREATE VIEW [dbo].[" + replyMapTable + @"]  AS 
+    WITH    CommentRecursive ( CommentId, ParentId ) AS
+    ( 
+        SELECT   ct.EntityId , ct.ContextId 
+        FROM     [dbo].[" + replyMapTable + @"] AS ct
+        WHERE    ct.ContextName <> '" + commentContext + @"'
+
+        UNION ALL 
+        SELECT     ct.CommentId , ct.ContextId 
+        FROM       CommentRecursive AS cr
+        INNER JOIN [dbo].[" + replyMapTable + @"] AS ct 
+        ON         ct.ContextId = cr.EntityId 
+    )
+
+    SELECT * FROM cte;    
+END
+");
+                return from rmap in context.Store<Util.ReplyMap>().Query
+                       join comment in context.Store<Util.ReplyMap>().Query
+                       where 
             });
 
             //seeding
@@ -345,7 +356,8 @@ FROM    cte");
     {
         public class ReplyMap
         {
-
+            public long CommentId { get; set; }
+            public long ParentId { get; set; }
         }
 
         public class ReplyEntityMap: EntityTypeConfiguration<ReplyMap>

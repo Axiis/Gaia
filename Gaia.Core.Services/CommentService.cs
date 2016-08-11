@@ -23,7 +23,7 @@ namespace Gaia.Core.Services
             this.DataContext = dataContext;
         }
 
-        public Operation<Comment> CommentOn(string contextName, string contextId, string comment)
+        public Operation<Comment> CommentOn(string contextName, long contextId, string comment)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var user = UserContext.CurrentUser;
@@ -39,7 +39,7 @@ namespace Gaia.Core.Services
                 .UsingValue(_comment => commentstore.Add(_comment).Context.CommitChanges());
             });
 
-        public Operation<UserReaction> ReactTo(string contextName, string contextId, string reaction)
+        public Operation<UserReaction> ReactTo(string contextName, long contextId, string reaction)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var rxstore = DataContext.Store<UserReaction>();
@@ -77,7 +77,7 @@ namespace Gaia.Core.Services
                 .UsingValue(cmt => commentStore.Add(cmt).Context.CommitChanges());
             });
 
-        public Operation<IEnumerable<Comment>> CommentsFor(string contextName, string contextId)
+        public Operation<IEnumerable<Comment>> CommentsFor(string contextName, long contextId)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var commentStore = DataContext.Store<Comment>();
