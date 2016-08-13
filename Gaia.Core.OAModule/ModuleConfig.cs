@@ -35,35 +35,29 @@ namespace Gaia.Core.OAModule
             {
                 var context = _cxt.As<EuropaContext>();
                 var commentTable = context.ContextMetadata.TypeMetadata<Comment>().Table.TableName;
-                var replyMapTable = context.ContextMetadata.TypeMetadata<Util.ReplyMap>().Table.TableName;
                 var commentContext = typeof(Comment).GaiaDomainTypeName();
 
-                context.Database.ExecuteSqlCommand(@"
-
-drop the ReplyMap table if it exists
-
-IF OBJECT_ID('[dbo].[" + replyMapTable + @"]') IS NULL
-BEGIN
-    CREATE VIEW [dbo].[" + replyMapTable + @"]  AS 
-    WITH    CommentRecursive ( CommentId, ParentId ) AS
+                var sql = @"
+    WITH CommentRecursive ( CommentId, ParentId ) AS
     ( 
-        SELECT   ct.EntityId , ct.ContextId 
-        FROM     [dbo].[" + replyMapTable + @"] AS ct
-        WHERE    ct.ContextName <> '" + commentContext + @"'
+        SELECT   ct.EntityId , ct.ContextId, ct.EntityId as Root
+        FROM     [dbo].[" + commentTable + @"] AS ct
+        WHERE    ct.ContextId = " + args[0] + @"
 
         UNION ALL 
-        SELECT     ct.CommentId , ct.ContextId 
+        SELECT     ct.CommentId , ct.ContextId, cr.Root
         FROM       CommentRecursive AS cr
-        INNER JOIN [dbo].[" + replyMapTable + @"] AS ct 
+        INNER JOIN [dbo].[" + commentTable + @"] AS ct 
         ON         ct.ContextId = cr.EntityId 
     )
 
-    SELECT * FROM cte;    
-END
-");
-                return from rmap in context.Store<Util.ReplyMap>().Query
-                       join comment in context.Store<Util.ReplyMap>().Query
-                       where 
+    SELECT ct.* 
+    FROM CommentRecursive as cr 
+    JOIN " + commentTable + @" as ct
+    ON   cr.EntityId = ct.EntityId
+";
+
+                return context.Database.SqlQuery<Comment>(sql).AsQueryable();
             });
 
             //seeding

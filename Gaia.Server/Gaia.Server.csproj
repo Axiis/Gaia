@@ -239,6 +239,8 @@
     <Compile Include="Controllers\ActivityFeedController.cs" />
     <Compile Include="Controllers\AdvertController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\ContextVerificationController.cs" />
+    <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="DI\DIRegistration.cs" />
     <Compile Include="DI\ResolutionContext.cs" />

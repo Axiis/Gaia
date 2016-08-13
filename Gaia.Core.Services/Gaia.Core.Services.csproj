@@ -38,7 +38,7 @@
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Luna\Axis.Luna\bin\Debug\Axis.Luna.dll</HintPath>
     </Reference>
     <Reference Include="Axis.Narvi">
-      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Narvi\Axis.Narvi\Axis.Narvi\bin\Debug\Axis.Narvi.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Narvi\Axis.Narvi\bin\Debug\Axis.Narvi.dll</HintPath>
     </Reference>
     <Reference Include="Axis.Pollux.Authentication">
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.Authentication\bin\Debug\Axis.Pollux.Authentication.dll</HintPath>

@@ -63,7 +63,7 @@ namespace Gaia.Core.Services
                                   .UsingValue(_thread =>
                                   {
                                       _thread.Title = thread.Title;
-                                      _thread.Description = thread.Description;
+                                      _thread.Content = thread.Content;
                                       threadstore.Modify(_thread, true);
                                   });
             });

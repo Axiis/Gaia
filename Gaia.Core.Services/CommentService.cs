@@ -78,9 +78,6 @@ namespace Gaia.Core.Services
             });
 
         public Operation<IEnumerable<Comment>> CommentsFor(string contextName, long contextId)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var commentStore = DataContext.Store<Comment>();
-            });
+            => FeatureAccess.Guard(UserContext, () => DataContext.ContextQuery<Comment>(NamedQueries.CommentHierarchy, contextId).AsEnumerable());
     }
 }

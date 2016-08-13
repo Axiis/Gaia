@@ -26,13 +26,13 @@ namespace Gaia.Core.Domain
             set { set(ref value); }
         }
 
-        public virtual string Description
+        public virtual string Content
         {
             get { return get<string>(); }
             set { set(ref value); }
         }
 
-        public long Topic
+        public long TopicId
         {
             get { return get<long>(); }
             set { set(ref value); }
