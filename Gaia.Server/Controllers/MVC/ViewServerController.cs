@@ -1,13 +1,19 @@
 ﻿using Axis.Luna.Extensions;
-using System.Web.Mvc;
+using System.Web.Http;
 
 namespace Gaia.Server.Controllers.MVC
 {
-    public class ViewServerController : Controller
+    public class ViewServerController : ApiController
     {
         [HttpGet]
-        [Route("view-server/{viewPath}")]
-        public ViewResult GetView(string viewPath) 
-            => View($"~/views/{viewPath.ThrowIfNull().TrimEnd(".cshtml")}.cshtml");
+        [Route("xviews/{viewPath}")]
+        public IHttpActionResult GetView(string viewPath) 
+            => Render($"~/views/{viewPath.ThrowIfNull()}");
+
+        private IHttpActionResult Render(string viewPath)
+        {
+            //find the view page, apply interpolation, and send it to the response
+            return this.Content<string>(System.Net.HttpStatusCode.OK, "interpolated view returned");
+        }
     }
 }
