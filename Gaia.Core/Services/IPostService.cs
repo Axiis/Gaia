@@ -13,8 +13,8 @@ namespace Gaia.Core.Services
         [Feature("system/User/Post/@edit")]
         Operation<Post> EditPost(Post post);
 
-        [Feature("system/User/Post/@share")]
-        Operation<Post> Share(long postId);
+        [Feature("system/User/Post/@publish")]
+        Operation<Post> Publish(long postId);
 
         [Feature("system/User/Post/@archive")]
         Operation<Post> Archive(long postId);

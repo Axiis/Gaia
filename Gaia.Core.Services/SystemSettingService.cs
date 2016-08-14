@@ -33,17 +33,10 @@ namespace Gaia.Core.Services
                 store.Query
                      .FirstOrDefault(st => st.Name == settingName)
                      .ThrowIfNull("could not find setting")
-                     .Do(st => store.Modify(st.With(new { StringData = settingValue }), true));
+                     .Do(st => store.Modify(st.With(new { Data = settingValue }), true));
             });
 
-        public Operation ModifySetting(string settingName, byte[] settingValue)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var store = DataContext.Store<SystemSetting>();
-                store.Query
-                     .FirstOrDefault(st => st.Name == settingName)
-                     .ThrowIfNull("could not find setting")
-                     .Do(st => store.Modify(st.With(new { BinaryData = settingValue }), true));
-            });
+        public Operation<IEnumerable<SystemSetting>> GetSettings()
+            => FeatureAccess.Guard(UserContext, () => DataContext.Store<SystemSetting>().Query.AsEnumerable());
     }
 }

@@ -9,8 +9,8 @@ namespace Gaia.Core.Services
     public interface IUserLocator
     {
         /// <summary>
-        /// retrieves andreturns the name of the currently authenticated user in the execution context (or request context)
+        /// retrieves and returns the name of the currently authenticated user in the execution context (or request context)
         /// </summary>
-        string CurrentUser { get; set; }
+        string CurrentUser();
     }
 }

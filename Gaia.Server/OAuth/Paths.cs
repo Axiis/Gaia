@@ -7,7 +7,7 @@ namespace Gaia.Server.OAuth
 {
     public class OAuthPaths
     {
-        readonly static public string ThirdpartyAuthorizationPath = "/AuthrizeThirdparty";
+        readonly static public string CredentialAuthorizationPath = "/view-server/login";
         readonly static public string TokenPath = "/Tokens";
     }
 }

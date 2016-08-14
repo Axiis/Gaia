@@ -9,29 +9,33 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Http.Dependencies;
-
+    using SimpleInjector.Integration.WebApi;
 
     public class ResolutionContext : IServiceResolver, IDependencyResolver
     {
-        private ResolutionContext _parent = null;
-        private Container _simpleInjector = new Container();
-
-        private bool _isSubContext => _parent != null;
+        private IDependencyResolver _resolver = null;
+        private IDependencyScope _scope = null;
+        
 
         #region Init
-
-        private ResolutionContext(ResolutionContext parent)
+        private ResolutionContext(IDependencyScope scope)
         {
-            ThrowNullArguments(() => parent);
-
-            this._parent = parent;
+            this._scope = scope;
         }
 
-        public ResolutionContext(Action<Container> serviceRegistration)
+        public ResolutionContext(Action<Container> serviceRegistration) : this(null, serviceRegistration)
+        { }
+
+        public ResolutionContext(ScopedLifestyle defaultScope, Action<Container> serviceRegistration)
         {
             ThrowNullArguments(() => serviceRegistration);
 
-            serviceRegistration.Invoke(_simpleInjector);
+            var container = new SimpleInjector.Container();
+            if (defaultScope != null) container.Options.DefaultScopedLifestyle = defaultScope;
+
+            serviceRegistration.Invoke(container);
+            this._resolver = new SimpleInjectorWebApiDependencyResolver(container);
+            _scope = _resolver;
         }
 
         #endregion
@@ -40,24 +44,24 @@
         #region ISericeResolver Members
         public void Dispose()
         {
-            if (this._parent != null) this._parent = null;
-            else _simpleInjector.Dispose();
+            Eval(() => _resolver?.Dispose());
+            Eval(() => _scope?.Dispose());
         }
 
 
-        public IServiceResolver ManagedScope() => new ResolutionContext(this);
+        public IServiceResolver ManagedScope() => new ResolutionContext(_resolver.As<IDependencyResolver>().BeginScope());
 
         public IServiceResolver ManagedScope(object parameter) => ManagedScope();
 
 
-        public object Resolve(Type serviceType, params object[] args) => _simpleInjector.GetInstance(serviceType);
+        public object Resolve(Type serviceType, params object[] args) => _scope.GetService(serviceType);
 
-        public Service Resolve<Service>(params object[] args) => _simpleInjector.GetInstance(typeof(Service)).As<Service>();
+        public Service Resolve<Service>(params object[] args) =>_scope.GetService(typeof(Service)).As<Service>();
 
 
-        public IEnumerable<object> ResolveAll(Type serviceType, params object[] args) => _simpleInjector.GetAllInstances(serviceType);
+        public IEnumerable<object> ResolveAll(Type serviceType, params object[] args) => _scope.GetServices(serviceType);
 
-        public IEnumerable<Service> ResolveAll<Service>(params object[] args) => _simpleInjector.GetAllInstances(typeof(Service)).Cast<Service>();
+        public IEnumerable<Service> ResolveAll<Service>(params object[] args) => _scope.GetServices(typeof(Service)).Cast<Service>();
         #endregion
 
 

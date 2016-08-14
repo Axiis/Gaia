@@ -64,7 +64,7 @@ namespace Gaia.Core.Services
                                 .ThrowIfNull("could not find post")
                                 .UsingValue(_post =>
                                 {
-                                    if (_post.Status == PostStatus.Shared)
+                                    if (_post.Status == PostStatus.Published)
                                     {
                                         //get previous history
                                         var oldHistory = poststore.Query.FirstOrDefault(_history => _history.ParentPostId == _post.EntityId);
@@ -95,7 +95,7 @@ namespace Gaia.Core.Services
                                 });
             });
 
-        public Operation<Post> Share(long postId)
+        public Operation<Post> Publish(long postId)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var user = UserContext.CurrentUser;
@@ -106,7 +106,7 @@ namespace Gaia.Core.Services
                                 .Where(post => post.Status == PostStatus.Private)
                                 .FirstOrDefault()
                                 .ThrowIfNull("could not find post")
-                                .UsingValue(post => poststore.Modify(post.With(new { Status = PostStatus.Archived }), true));
+                                .UsingValue(post => poststore.Modify(post.With(new { Status = PostStatus.Published }), true));
             });
     }
 }

@@ -33,7 +33,7 @@ namespace Gaia.Core.Services
                 //for now, only the Policy-admin users can make posts that are targeted to everyone, so those are the posts that get viewed here
                 return DataContext.Store<Post>().Query
                                   .Where(p => p.CreatedOn < _from)
-                                  .Where(p => p.Status == PostStatus.Shared)
+                                  .Where(p => p.Status == PostStatus.Published)
                                   .Where(p => p.ParentPostId == 0) //<- most recent 'edit' of the post
                                   .OrderByDescending(p => p.CreatedOn)
                                   .Take(count)

@@ -60,7 +60,7 @@ namespace Gaia.Core.Domain
     public enum PostStatus
     {
         Private,
-        Shared,
+        Published,
         Archived
     }
 }

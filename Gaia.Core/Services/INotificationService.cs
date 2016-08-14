@@ -2,6 +2,7 @@
 using Gaia.Core.Domain;
 using Gaia.Core.System;
 using Gaia.Core.Utils;
+using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
@@ -15,5 +16,11 @@ namespace Gaia.Core.Services
 
         [Feature("system/User/Notification/@clear-all")]
         Operation ClearAllNotifications();
+
+        [Feature("system/User/Notification/@get-target-notifications")]
+        Operation<IEnumerable<Notification>> NotificationsFor(string targetUser);
+
+        [Feature("system/User/Notification/@get-own-notifications")]
+        Operation<IEnumerable<Notification>> Notifications();
     }
 }

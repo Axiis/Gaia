@@ -2,15 +2,8 @@
 using static Axis.Luna.Extensions.ExceptionExtensions;
 using static Axis.Luna.Extensions.ObjectExtensions;
 using static Axis.Luna.Extensions.OperationExtensions;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Gaia.Server.Controllers.CommentModels;
-using Axis.Luna;
 
 namespace Gaia.Server.Controllers
 {

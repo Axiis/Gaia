@@ -82,7 +82,7 @@
     <Compile Include="Mappings\UserReactionMapping.cs" />
     <Compile Include="Mappings\UserAccessProfileMapping.cs" />
     <Compile Include="Mappings\ContextVerificationMapping.cs" />
-    <Compile Include="ModuleConfig.cs" />
+    <Compile Include="GaiaDomainModuleConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

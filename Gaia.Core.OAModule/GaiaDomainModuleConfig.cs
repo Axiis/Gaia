@@ -15,14 +15,14 @@ using System.Reflection;
 
 namespace Gaia.Core.OAModule
 {
-    public class ModuleConfig : BaseModuleConfigProvider
+    public class GaiaDomainModuleConfig : BaseModuleConfigProvider
     {
         public override string ModuleName => "Gaia.Core.ObjectAccessModule";
 
         protected override void Initialize()
         {
             //Configuration
-            var asm = typeof(ModuleConfig).Assembly;
+            var asm = typeof(GaiaDomainModuleConfig).Assembly;
             string ns = typeof(AdvertMapping).Namespace,
                    ns2 = typeof(ServiceCategoryMapping).Namespace;
             asm.GetTypes()

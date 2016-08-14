@@ -14,13 +14,17 @@ using System.Threading;
 using System.Linq;
 using System;
 using Gaia.Core.Domain;
+using SimpleInjector.Integration.WebApi;
+using SimpleInjector;
+using SimpleInjector.Extensions.LifetimeScoping;
 
-[assembly: OwinStartup(typeof(Gaia.Server.App_Start.ServerStartup))]
+[assembly: OwinStartup(typeof(Gaia.Server.App_Start.WebapiStartup))]
 
 namespace Gaia.Server.App_Start
 {
-    public class ServerStartup
+    public class WebapiStartup
     {
+        #region Owin Startup
         public void Configuration(IAppBuilder app)
         {
             ConfigureDI(app); //<-- must come first!!!
@@ -29,9 +33,9 @@ namespace Gaia.Server.App_Start
             ConfigureOAuth(app);
         }
 
-        private void ConfigureDI(IAppBuilder app)
+        private static void ConfigureDI(IAppBuilder app)
         {
-            app.Properties[OWINMapKeys.ResolutionContext] = new ResolutionContext(DIRegistration.RegisterTypes);
+            app.Properties[OWINMapKeys.ResolutionContext] = new ResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes);
 
             //shutdown delegate
             var token = new AppProperties(app.Properties).OnAppDisposing;
@@ -39,8 +43,7 @@ namespace Gaia.Server.App_Start
                 token.Register(() => app.Properties[OWINMapKeys.ResolutionContext].As<ResolutionContext>().Dispose());
         }
 
-
-        private void ConfigureWebApi(IAppBuilder app)
+        private static void ConfigureWebApi(IAppBuilder app)
         {
             var config = new HttpConfiguration();
 
@@ -54,29 +57,30 @@ namespace Gaia.Server.App_Start
             app.UseWebApi(config);
         }
 
-        private void ConfigureOAuth(IAppBuilder app)
+        private static void ConfigureOAuth(IAppBuilder app)
         {
-            var resolver = app.Properties[OWINMapKeys.ResolutionContext].As<IServiceResolver>();
-
-            app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
+            app.Properties[OWINMapKeys.ResolutionContext].As<ResolutionContext>().ManagedScope().Using(resolver =>
             {
-                AuthorizeEndpointPath = new PathString(OAuthPaths.ThirdpartyAuthorizationPath),
-                TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
-                ApplicationCanDisplayErrors = true,
-                AccessTokenExpireTimeSpan = DefaultSettings.TokenExpiryInterval,
+                app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
+                {
+                    AuthorizeEndpointPath = new PathString(OAuthPaths.CredentialAuthorizationPath),
+                    TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
+                    ApplicationCanDisplayErrors = true,
+                    AccessTokenExpireTimeSpan = DefaultSettings.TokenExpiryInterval,
 
 #if DEBUG
-                AllowInsecureHttp = true,
+                        AllowInsecureHttp = true,
 #endif
 
-                // Authorization server provider which controls the lifecycle of Authorization Server
-                Provider = resolver.Resolve<IOAuthAuthorizationServerProvider>()
-            });
+                    // Authorization server provider which controls the lifecycle of Authorization Server
+                    Provider = resolver.Resolve<IOAuthAuthorizationServerProvider>()
+                });
 
-            //app.UseCors(CorsOptions.AllowAll); //<-- will configure this appropriately when it is needed
+                //app.UseCors(CorsOptions.AllowAll); //<-- will configure this appropriately when it is needed
 
-            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
-            {
+                app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
+                {
+                });
             });
         }
 
@@ -89,5 +93,6 @@ namespace Gaia.Server.App_Start
         {
             public static readonly TimeSpan TokenExpiryInterval = TimeSpan.FromDays(1);
         }
+        #endregion
     }
 }

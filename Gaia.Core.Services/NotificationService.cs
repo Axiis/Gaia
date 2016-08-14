@@ -68,5 +68,27 @@ namespace Gaia.Core.Services
 
                 notificationstore.Context.CommitChanges();
             });
+
+
+        public Operation<IEnumerable<Notification>> NotificationsFor(string targetUser)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var notificationStore = DataContext.Store<Notification>();
+                return notificationStore.Query
+                    .Where(_notif => _notif.TargetUserId == targetUser)
+                    .Where(_notif => _notif.Status == NotificationStatus.Unseen)
+                    .AsEnumerable();
+            });
+
+        public Operation<IEnumerable<Notification>> Notifications()
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var user = UserContext.CurrentUser;
+                var notificationstore = DataContext.Store<Notification>();
+                return notificationstore.Query
+                    .Where(_notif => _notif.TargetUserId == user.UserId)
+                    .Where(_notif => _notif.Status == NotificationStatus.Unseen)
+                    .AsEnumerable();
+            });
     }
 }

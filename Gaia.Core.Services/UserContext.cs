@@ -13,11 +13,12 @@ namespace Gaia.Core.Services
     {
         private IDataContext _context = null;
 
-        public UserContext(IDataContext dataStore)
+        public UserContext(IDataContext dataStore, IUserLocator locator)
         {
-            ThrowNullArguments(() => dataStore);
+            ThrowNullArguments(() => dataStore, () => locator);
 
             this._context = dataStore;
+            this.Locator = locator;
         }
 
         public IUserLocator Locator { get; set; }
@@ -27,7 +28,7 @@ namespace Gaia.Core.Services
         {
             get
             {
-                return _user ?? (_user = Locator?.CurrentUser.Pipe(_uid => _context.Store<User>().Query.FirstOrDefault(_user => _user.EntityId == _uid)));
+                return _user ?? (_user = Locator?.CurrentUser().Pipe(_uid => _context.Store<User>().Query.FirstOrDefault(_user => _user.EntityId == _uid)));
             }
             set { _user = value; }
         }
