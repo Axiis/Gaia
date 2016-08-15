@@ -110,6 +110,10 @@
       <Project>{448bf5cd-3f94-4e96-95dd-1b96e896e6b9}</Project>
       <Name>Gaia.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gaia.Server\Gaia.Server.csproj">
+      <Project>{b2ab012f-ce25-4241-a6f8-bbb0358b187e}</Project>
+      <Name>Gaia.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

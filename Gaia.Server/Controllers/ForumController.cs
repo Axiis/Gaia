@@ -22,7 +22,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/forums/topics/@{title}")]
-        IHttpActionResult CreateTopic(string title)
+        public IHttpActionResult CreateTopic(string title)
             => _forumService.CreateTopic(title)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -30,7 +30,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/forums/topics")]
-        IHttpActionResult ModifyTopic([FromBody]ForumModels.ForumTopic topic)
+        public IHttpActionResult ModifyTopic([FromBody]ForumModels.ForumTopic topic)
             => Operation.Try(() => topic.ToDomain())
                 .Then(opr => _forumService.ModifyTopic(opr.Result))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
@@ -39,7 +39,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/forums/topics/flagged/@{topicId}")]
-        IHttpActionResult FlagTopic(long topicId)
+        public IHttpActionResult FlagTopic(long topicId)
             => _forumService.FlagTopic(topicId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -47,7 +47,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/forums/topics/@{topic}/threads/@{title}")]
-        IHttpActionResult CreateThread(string title, long topic)
+        public IHttpActionResult CreateThread(string title, long topic)
             => _forumService.CreateThread(title, topic)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -55,7 +55,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/forums/threads")]
-        IHttpActionResult ModifyThread([FromBody]ForumModels.ForumThread thread)
+        public IHttpActionResult ModifyThread([FromBody]ForumModels.ForumThread thread)
             => Operation.Try(() => thread.ToDomain())
                 .Then(opr => _forumService.ModifyThread(opr.Result))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
@@ -64,7 +64,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/forums/threads/@{threadId}")]
-        IHttpActionResult FlagThread(long threadId)
+        public IHttpActionResult FlagThread(long threadId)
             => _forumService.FlagThread(threadId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -72,7 +72,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/forums/threads/@{threadId}/watched")]
-        IHttpActionResult WatchThread(long threadId)
+        public IHttpActionResult WatchThread(long threadId)
             => _forumService.WatchThread(threadId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))

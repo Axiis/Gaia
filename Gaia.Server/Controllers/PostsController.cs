@@ -22,7 +22,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/posts/@{title}")]
-        IHttpActionResult CreatePost(string title)
+        public IHttpActionResult CreatePost(string title)
             => _postService.CreatePost(title)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -30,7 +30,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/posts")]
-        IHttpActionResult EditPost([FromBody]PostModels.Post post)
+        public IHttpActionResult EditPost([FromBody]PostModels.Post post)
             => Operation.Try(() => post.ToDomain())
                 .Then(opr => _postService.EditPost(opr.Result))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
@@ -40,7 +40,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/posts/published/@{postId}")]
-        IHttpActionResult Publish(long postId)
+        public IHttpActionResult Publish(long postId)
             => _postService.Publish(postId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -49,7 +49,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/posts/archived/@{postId}")]
-        IHttpActionResult Archive(long postId)
+        public IHttpActionResult Archive(long postId)
             => _postService.Archive(postId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))

@@ -27,7 +27,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/profiles")]
-        IHttpActionResult RegisterUser([FromBody]RegistrationInfo info)
+        public IHttpActionResult RegisterUser([FromBody]RegistrationInfo info)
             => _profileService.RegisterUser(info.TargetUser, info.AccountType, info.Credentials)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -35,7 +35,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/admin-profiles")]
-        IHttpActionResult RegisterAdminUser([FromBody]RegistrationInfo info)
+        public IHttpActionResult RegisterAdminUser([FromBody]RegistrationInfo info)
             => _profileService.RegisterAdminUser(info.TargetUser, info.AccountType, info.Credentials)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -43,7 +43,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/profiles/verirfication/@{targetUser}")]
-        IHttpActionResult CreateRegistrationVerification(string targetUser)
+        public IHttpActionResult CreateRegistrationVerification(string targetUser)
             => _profileService.CreateRegistrationVerification(targetUser)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -51,7 +51,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/profiles/verificaftion/@{targetUser}/@{contextToken}")]
-        IHttpActionResult VerifyUserRegistration(string targetUser, string contextToken)
+        public IHttpActionResult VerifyUserRegistration(string targetUser, string contextToken)
             => _profileService.VerifyUserRegistration(targetUser, contextToken)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -59,7 +59,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/profiles/data")]
-        IHttpActionResult AddData([FromBody]UserDataInfo data)
+        public IHttpActionResult AddData([FromBody]UserDataInfo data)
             => _profileService.AddData(data.DataList)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -67,7 +67,7 @@ namespace Gaia.Server.Controllers
 
         [HttpDelete]
         [Route("api/profiles/data")]
-        IHttpActionResult RemoveData([FromBody]UserDataInfo dataNames)
+        public IHttpActionResult RemoveData([FromBody]UserDataInfo dataNames)
             => _profileService.RemoveData(dataNames.DataList.Select(_d => _d.Name).ToArray())
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -75,7 +75,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/profiles/archives/@{targetUser}")]
-        IHttpActionResult ArchiveUser(string targetUser)
+        public IHttpActionResult ArchiveUser(string targetUser)
             => _profileService.ArchiveUser(targetUser)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -83,7 +83,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/profiles/activation/@{targetUser}")]
-        IHttpActionResult CreateUserActivationVerification(string targetUser)
+        public IHttpActionResult CreateUserActivationVerification(string targetUser)
             => _profileService.CreateUserActivationVerification(targetUser)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -91,7 +91,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/profiles/activation/@{targetUser}/@{contextToken}")]
-        IHttpActionResult VerifyUserActivation(string targetUser, string contextToken)
+        public IHttpActionResult VerifyUserActivation(string targetUser, string contextToken)
             => _profileService.VerifyUserActivation(targetUser, contextToken)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -99,7 +99,7 @@ namespace Gaia.Server.Controllers
 
         [HttpGet]
         [Route("api/profiles/discovered")]
-        IHttpActionResult Discover()
+        public IHttpActionResult Discover()
             => _profileService.Discover()
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))

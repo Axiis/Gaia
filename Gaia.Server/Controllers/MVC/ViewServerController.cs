@@ -1,19 +1,43 @@
 ﻿using Axis.Luna.Extensions;
+using Gaia.Core.Services;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web.Hosting;
 using System.Web.Http;
+using static Axis.Luna.Extensions.ExceptionExtensions;
+using static Axis.Luna.Extensions.OperationExtensions;
 
 namespace Gaia.Server.Controllers.MVC
 {
     public class ViewServerController : ApiController
     {
+        private INotificationService _notificationService = null;
+
+        public ViewServerController(INotificationService notificationService)
+        {
+            ThrowNullArguments(() => notificationService);
+
+            this._notificationService = notificationService;
+        }
+
         [HttpGet]
         [Route("xviews/{viewPath}")]
-        public IHttpActionResult GetView(string viewPath) 
+        public HttpResponseMessage GetView(string viewPath) 
             => Render($"~/views/{viewPath.ThrowIfNull()}");
 
-        private IHttpActionResult Render(string viewPath)
+        private HttpResponseMessage Render(string viewPath)
         {
-            //find the view page, apply interpolation, and send it to the response
-            return this.Content<string>(System.Net.HttpStatusCode.OK, "interpolated view returned");
+            var mapped = HostingEnvironment.MapPath(viewPath);
+            var content = new FileInfo(mapped)
+                .OpenRead()
+                .Pipe(strm => new StreamReader(strm))
+                .Using(rdr => rdr.ReadToEnd());
+            
+            var response = new HttpResponseMessage();
+            response.Content = new StringContent(content);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+            return response;
         }
     }
 }

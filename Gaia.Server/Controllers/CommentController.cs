@@ -17,11 +17,10 @@ namespace Gaia.Server.Controllers
 
             this._commentService = commentService;
         }
-
-
+        
         [HttpGet]
         [Route("api/comments/@{contextName}/@{contextId}")]
-        IHttpActionResult CommentsFor(string contextName, long contextId)
+        public IHttpActionResult CommentsFor(string contextName, long contextId)
             => _commentService.CommentsFor(contextName, contextId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -30,7 +29,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/comments")]
-        IHttpActionResult CommentOn([FromBody]Comment comment)
+        public IHttpActionResult CommentOn([FromBody]Comment comment)
             => _commentService.CommentOn(comment?.ContextName, comment?.ContextId ?? 0, comment?.CommentText)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -39,7 +38,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/comments/replies")]
-        IHttpActionResult ReplyTo([FromBody]Comment comment)
+        public IHttpActionResult ReplyTo([FromBody]Comment comment)
             => _commentService.ReplyTo(comment?.ContextId ?? 0, comment?.CommentText)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))
@@ -48,7 +47,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/reactions")]
-        IHttpActionResult ReactTo([FromBody]Reaction reaction)
+        public IHttpActionResult ReactTo([FromBody]Reaction reaction)
             => _commentService.ReactTo(reaction?.ContextName, reaction?.ContextId ?? 0, reaction?.ReactionCode)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))

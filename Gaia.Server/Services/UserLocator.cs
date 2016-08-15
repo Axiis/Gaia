@@ -11,10 +11,9 @@ namespace Gaia.Server.Services
     public class UserLocator : IUserLocator
     {
         private IOwinContext _owin = null;
-        public UserLocator(IOwinContext owin)
+        public UserLocator()
         {
-            ThrowNullArguments(() => owin);
-            this._owin = owin;
+            this._owin = HttpContext.Current.GetOwinContext();
         }
 
 

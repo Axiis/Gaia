@@ -21,7 +21,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/system-settings")]
-        IHttpActionResult ModifySetting([FromBody]SettingsModels.SystemSetting settings)
+        public IHttpActionResult ModifySetting([FromBody]SettingsModels.SystemSetting settings)
             => Operation.Try(() => settings.ToDomain())
                 .Then(opr => _systemSettingsService.ModifySetting(opr.Result.Name, opr.Result.Data))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
@@ -30,7 +30,7 @@ namespace Gaia.Server.Controllers
 
         [HttpGet]
         [Route("api/system-settings")]
-        IHttpActionResult GetSettings()
+        public IHttpActionResult GetSettings()
             => _systemSettingsService.GetSettings()
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => InternalServerError(opr.GetException()))

@@ -24,7 +24,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/adverts")]
-        IHttpActionResult CreateAdvert()
+        public IHttpActionResult CreateAdvert()
             => _advert.CreateAdvert()
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -33,7 +33,7 @@ namespace Gaia.Server.Controllers
 
         [HttpDelete]
         [Route("api/adverts/drafts")]
-        IHttpActionResult DeleteDraft(long advertId)
+        public IHttpActionResult DeleteDraft(long advertId)
             => _advert.DeleteDraft(advertId)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -42,7 +42,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/adverts")]
-        IHttpActionResult UpdateAdvert([FromBody]Advert advert)
+        public IHttpActionResult UpdateAdvert([FromBody]Advert advert)
             => _advert.UpdateAdvert(advert)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -50,7 +50,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/adverts/reviews/@{advertId}")]
-        IHttpActionResult SubmitForReview(long advertId)
+        public IHttpActionResult SubmitForReview(long advertId)
             => _advert.SubmitForReview(advertId)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -58,7 +58,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/adverts/published/@{advertId}")]
-        IHttpActionResult Publish(long advertId)
+        public IHttpActionResult Publish(long advertId)
             => _advert.Publish(advertId)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -66,7 +66,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/adverts/suspended/@{advertId}")]
-        IHttpActionResult Suspend(long advertId)
+        public IHttpActionResult Suspend(long advertId)
             => _advert.Suspend(advertId)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -74,7 +74,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/adverts/archived/@{advertId}")]
-        IHttpActionResult Archive(long advertId)
+        public IHttpActionResult Archive(long advertId)
             => _advert.Archive(advertId)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -92,7 +92,7 @@ namespace Gaia.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("api/adverts/sequence")]
-        IHttpActionResult NextAdvert(string exposed)
+        public IHttpActionResult NextAdvert(string exposed)
             => Operation.Try(() => exposed.Split(',').Select(v => long.Parse(v)).ToArray())
                   .Then(opr => _advert.NextAdvert(opr.Result))
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())
@@ -102,7 +102,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/adverts/hits/@{advertId}")]
-        IHttpActionResult Hit(long advertId)
+        public IHttpActionResult Hit(long advertId)
             => _advert.Hit(advertId)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))

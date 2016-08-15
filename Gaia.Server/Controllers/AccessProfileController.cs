@@ -3,10 +3,6 @@ using static Axis.Luna.Extensions.ExceptionExtensions;
 using static Axis.Luna.Extensions.OperationExtensions;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Axis.Jupiter;
 using Axis.Luna.Extensions;
@@ -30,7 +26,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/access-profiles/@{profileCode}/@{title}")]
-        IHttpActionResult CreateFeatureAccessProfile(string profileCode, string title)
+        public IHttpActionResult CreateFeatureAccessProfile(string profileCode, string title)
             => _accessProfile.CreateFeatureAccessProfile(profileCode, title)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -38,7 +34,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/access-profiles")]
-        IHttpActionResult ModifyFeatureAccessProfile([FromBody]AccessProfileInfo info)
+        public IHttpActionResult ModifyFeatureAccessProfile([FromBody]AccessProfileInfo info)
             => _accessProfile.ModifyFeatureAccessProfile(info.Profile, info.Granted, info.Denied)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -47,7 +43,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/access-profiles/archives/@{profileId}")]
-        IHttpActionResult ArchiveAccessProfile(long profileId)
+        public IHttpActionResult ArchiveAccessProfile(long profileId)
             => _accessProfile.ArchiveAccessProfile(profileId)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -56,7 +52,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/access-profiles/applications")]
-        IHttpActionResult ApplyAccessProfile([FromBody]AccessProfileApplication application)
+        public IHttpActionResult ApplyAccessProfile([FromBody]AccessProfileApplication application)
             => _accessProfile.ApplyAccessProfile(application.UserId, application.Code, application.ExpiryDate)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -65,7 +61,7 @@ namespace Gaia.Server.Controllers
 
         [HttpDelete]
         [Route("api/access-profiles/@{userId}/@{accessProfileCode}")]
-        IHttpActionResult RevokeAccessProfile(string userId, string accessProfileCode)
+        public IHttpActionResult RevokeAccessProfile(string userId, string accessProfileCode)
             => _accessProfile.RevokeAccessProfile(userId, accessProfileCode)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -74,7 +70,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/access-profiles/migrations")]
-        IHttpActionResult MigrateAccessProfile([FromBody]AccessProfileMigration migration)
+        public IHttpActionResult MigrateAccessProfile([FromBody]AccessProfileMigration migration)
             => _accessProfile.MigrateAccessProfile(migration.UserId, migration.OldAccessProfileCode, migration.NewAccessProfileCode, migration.NewExpiry)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
@@ -83,7 +79,7 @@ namespace Gaia.Server.Controllers
 
         [HttpGet]
         [Route("api/access-profiles/@{userId}")]
-        IHttpActionResult ActiveUserAccessProfiles(string userId)
+        public IHttpActionResult ActiveUserAccessProfiles(string userId)
             => _accessProfile.ActiveUserAccessProfiles(userId)
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))

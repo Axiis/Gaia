@@ -2,9 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimpleInjector;
 using SimpleInjector.Extensions.LifetimeScoping;
-using Gaia.Server.DI;
 using Axis.Luna.Extensions;
 using Microsoft.Owin.Security.OAuth;
+using Gaia.Server.DI;
 
 namespace Gaia.Server.Test
 {

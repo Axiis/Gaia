@@ -1062,7 +1062,6 @@
     <Compile Include="Controllers\AdvertController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\ContextVerificationController.cs" />
-    <Compile Include="Controllers\FeatureAccessProfileController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\MVC\ViewServerController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
@@ -1090,10 +1089,6 @@
     <ProjectReference Include="..\Gaia.Core\Gaia.Core.csproj">
       <Project>{448bf5cd-3f94-4e96-95dd-1b96e896e6b9}</Project>
       <Name>Gaia.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gaia.Server.Test\Gaia.Server.Test.csproj">
-      <Project>{d1fa924a-f424-40a0-b56c-e17331bad063}</Project>
-      <Name>Gaia.Server.Test</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

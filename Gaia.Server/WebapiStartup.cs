@@ -62,7 +62,7 @@ namespace Gaia.Server
 
         private static void ConfigureWebApi(IAppBuilder app)
         {
-            GlobalConfiguration.Configure(config =>
+            new HttpConfiguration().Pipe(config =>
             {
                 //conigure dependency injection
                 config.DependencyResolver = app.Properties[OWINMapKeys.ResolutionContext].As<IDependencyResolver>();
