@@ -35,7 +35,7 @@ namespace Gaia.Core.Services
         Operation<PinnedFeedEntry> UnpinEntry(long pinId);
 
         [Feature("system/User/ActivityFeed/@unpin-context")]
-        Operation<PinnedFeedEntry> UnpinEntry(string pinContextId, string pinContextType);
+        Operation<PinnedFeedEntry> UnpinEntry(long pinContextId, string pinContextType);
 
 
         /// <summary>

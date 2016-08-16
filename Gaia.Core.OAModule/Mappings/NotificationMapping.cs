@@ -14,7 +14,7 @@ namespace Gaia.Core.OAModule.Mappings
             this.Property(e => e.TargetUserId).HasMaxLength(250);
             this.HasRequired(e => e.TargetUser)
                 .WithMany()
-                .HasForeignKey(e => e.TargetUser);
+                .HasForeignKey(e => e.TargetUserId);
 
             this.Property(e => e.Title).HasMaxLength(500);
             this.Property(e => e.Message).IsMaxLength();

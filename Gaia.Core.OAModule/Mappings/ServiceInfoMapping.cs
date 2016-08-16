@@ -14,7 +14,7 @@ namespace Gaia.Core.OAModule.Mappings
             this.Property(e => e.OwnerId).HasMaxLength(250);
             this.HasRequired(e => e.Owner)
                 .WithMany()
-                .HasForeignKey(e => e.Owner);
+                .HasForeignKey(e => e.OwnerId);
 
             this.HasRequired(e => e.Category)
                 .WithMany();

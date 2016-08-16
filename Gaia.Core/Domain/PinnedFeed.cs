@@ -9,9 +9,9 @@ namespace Gaia.Core.Domain
             get { return get<string>(); }
             set { set(ref value); }
         }
-        public string ContextId
+        public long ContextId
         {
-            get { return get<string>(); }
+            get { return get<long>(); }
             set { set(ref value); }
         }
 

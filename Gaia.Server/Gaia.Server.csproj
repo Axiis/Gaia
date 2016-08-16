@@ -188,6 +188,14 @@
       <HintPath>..\packages\SimpleInjector.Extensions.LifetimeScoping.3.2.0\lib\net40-client\SimpleInjector.Extensions.LifetimeScoping.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SimpleInjector.Integration.Web, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.3.2.0\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc, Version=3.2.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.3.2.1\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SimpleInjector.Integration.WebApi, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.Integration.WebApi.3.2.0\lib\net45\SimpleInjector.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
@@ -267,28 +275,219 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bootstrap\Londinium\css\bootstrap.min.css" />
+    <Content Include="Bootstrap\Londinium\css\icons.css" />
+    <Content Include="Bootstrap\Londinium\css\icons\icons.dev.svg" />
+    <Content Include="Bootstrap\Londinium\css\icons\icons.svg" />
+    <Content Include="Bootstrap\Londinium\css\londinium-theme.css" />
+    <Content Include="Bootstrap\Londinium\css\styles.css" />
+    <Content Include="Bootstrap\Londinium\css\wysihtml5\wysiwyg-color.css" />
+    <Content Include="Bootstrap\Londinium\images\colorpicker\alpha.png" />
+    <Content Include="Bootstrap\Londinium\images\colorpicker\hue.png" />
+    <Content Include="Bootstrap\Londinium\images\colorpicker\saturation.png" />
+    <Content Include="Bootstrap\Londinium\images\flags\english.png" />
+    <Content Include="Bootstrap\Londinium\images\flags\german.png" />
+    <Content Include="Bootstrap\Londinium\images\flags\hungarian.png" />
+    <Content Include="Bootstrap\Londinium\images\flags\spanish.png" />
+    <Content Include="Bootstrap\Londinium\images\flags\ukrainian.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\add_files.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\check.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\checkbox.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\checkbox_blue.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\checkbox_dark.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\checkbox_green.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\checkbox_red.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\check_white.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\choice.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\choice_white.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\clear_results.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\dropdown_arrow_down.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\dropdown_arrow_up.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\radio.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\radio_blue.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\radio_dark.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\radio_green.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\radio_red.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\select_multiple_add.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\spinner_bottom.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\spinner_top.png" />
+    <Content Include="Bootstrap\Londinium\images\forms\switch_handler.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\arrow_left.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\arrow_right.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\breadcrumb_home.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\datepicker_trigger.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\filter.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\lightbox_overlay.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\loader.gif" />
+    <Content Include="Bootstrap\Londinium\images\interface\minus.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\nav_arrow_left.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\nav_arrow_right.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\plupload_done.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\plupload_error.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\plupload_remove.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\plupload_title.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\plus.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\slider_handle.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\tables\filter.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\tables\sort_asc.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\tables\sort_asc_disabled.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\tables\sort_both.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\tables\sort_desc.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\tables\sort_desc_disabled.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\typing.gif" />
+    <Content Include="Bootstrap\Londinium\images\interface\user_arrow_default.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\user_arrow_hover.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\user_menu_arrow.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\vertical_arrows.png" />
+    <Content Include="Bootstrap\Londinium\images\interface\zoom.png" />
+    <Content Include="Bootstrap\Londinium\images\logo.png" />
+    <Content Include="Bootstrap\Londinium\images\logo_dark.png" />
+    <Content Include="Bootstrap\Londinium\js\application.js" />
+    <Content Include="Bootstrap\Londinium\js\application_blank.js" />
+    <Content Include="Bootstrap\Londinium\js\bootstrap.min.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\animated_1.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\animated_2.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\animated_3.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\auto_empty.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\auto_filled.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\donut.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\horizontal_bars.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\multiple_axes.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\pie.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\pie_full.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\simple_graph.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\full\vertical_bars.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\filled_blue.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\filled_green.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\filled_red.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\updating_1.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\updating_2.js" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\updating_3.js" />
+    <Content Include="Bootstrap\Londinium\js\globalize\globalize.culture.de-DE.js" />
+    <Content Include="Bootstrap\Londinium\js\globalize\globalize.culture.ja-JP.js" />
+    <Content Include="Bootstrap\Londinium\js\globalize\globalize.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\excanvas.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\flot.animator.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\flot.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\flot.orderbars.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\flot.pie.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\flot.resize.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\flot.time.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\sparkline.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\autosize.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\inputlimit.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\inputmask.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\listbox.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\multiselect.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\select2.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\switch.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\tags.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\uniform.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\uploader\plupload.full.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\uploader\plupload.queue.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\validate.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\wysihtml5\toolbar.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\wysihtml5\wysihtml5.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\collapsible.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\colorpicker.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\datatables.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\daterangepicker.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\fancybox.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\fullcalendar.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\hover_dropdown.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\jgrowl.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\moment.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\mousewheel.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\prettify.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\tabletools.min.js" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\timepicker.min.js" />
+    <Content Include="Bootstrap\Londinium\media\datatable_ajax_source.txt" />
+    <Content Include="Bootstrap\Londinium\media\swf\copy_csv_xls.swf" />
+    <Content Include="Bootstrap\Londinium\media\swf\copy_csv_xls_pdf.swf" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="fonts\cyrillic-ext.css" />
     <Content Include="Global.asax" />
+    <Content Include="Index.html" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="sample.html" />
-    <None Include="scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="scripts\jquery-1.10.2.js" />
-    <Content Include="scripts\jquery-1.10.2.min.js" />
+    <Content Include="Bootstrap\Londinium\css\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\css\icons\icons.eot" />
+    <Content Include="Bootstrap\Londinium\css\icons\icons.ttf" />
+    <Content Include="Bootstrap\Londinium\css\icons\icons.woff" />
+    <Content Include="Bootstrap\Londinium\images\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\images\flags\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\images\interface\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\charts\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\charts\widgets\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\plugins\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\plugins\charts\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\plugins\forms\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\js\plugins\interface\.DS_Store" />
+    <Content Include="Bootstrap\Londinium\media\.DS_Store" />
+    <None Include="scripts\jquery-1.12.4.intellisense.js" />
+    <Content Include="scripts\jquery-1.12.4.js" />
+    <Content Include="scripts\jquery-1.12.4.min.js" />
     <Content Include="scripts\jquery-3.1.0.slim.min.map" />
     <Content Include="scripts\jquery-3.1.0.min.map" />
+    <Content Include="scripts\jquery-1.12.4.min.map" />
     <None Include="scripts\jquery.validate-vsdoc.js" />
+    <Content Include="scripts\jquery-ui-1.12.0.js" />
+    <Content Include="scripts\jquery-ui-1.12.0.min.js" />
     <Content Include="scripts\jquery.validate.js" />
     <Content Include="scripts\jquery.validate.min.js" />
     <Content Include="scripts\jquery.validate.unobtrusive.js" />
     <Content Include="scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="Views\home.html" />
     <Content Include="Views\index.cshtml" />
     <Content Include="Views\login.cshtml" />
+    <Content Include="Views\re-login.cshtml" />
+    <None Include="Views\Secured\Errors\Error.cshtml" />
     <Content Include="Views\web.config" />
-    <Content Include="scripts\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1118,14 +1317,14 @@
     <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Controllers\ContextVerificationController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
-    <Compile Include="Controllers\MVC\ViewServer2Controller.cs" />
     <Compile Include="Controllers\MVC\ViewServerController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SystemSettingsController.cs" />
     <Compile Include="DI\DIRegistration.cs" />
-    <Compile Include="DI\ResolutionContext.cs" />
+    <Compile Include="DI\MvcResolutionContext.cs" />
+    <Compile Include="DI\WebApiResolutionContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1151,6 +1350,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="scripts\gaia\Models.ts" />
+    <TypeScriptCompile Include="scripts\gaia\Root.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-component-router.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-cookies.d.ts" />
@@ -1167,7 +1368,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="scripts\gaia\directives\" />
+    <Folder Include="scripts\gaia\services\" />
+    <Folder Include="scripts\gaia\utils\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

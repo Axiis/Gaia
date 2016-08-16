@@ -14,7 +14,7 @@ namespace Gaia.Core.OAModule.Mappings
         public FeatureAccessDescriptorMapping()
         {
             this.Property(e => e.AccessDescriptor).IsMaxLength();
-            this.Property(e => e.AccessProfileCode).IsIndex("FeatureAccessProfileCodeIndex", true).HasMaxLength(250);
+            this.Property(e => e.AccessProfileCode).IsIndex("FeatureAccessProfileCodeIndex", false).HasMaxLength(250);
         }
     }
     public class FeatureAccessProfileMapping : GaiaMap<FeatureAccessProfile, long>

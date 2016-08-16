@@ -32,7 +32,8 @@ namespace Gaia.Core.OAModule.Mappings
             
             this.HasRequired(e => e.Advert)
                 .WithMany()
-                .HasForeignKey(e => e.AdvertId);
+                .HasForeignKey(e => e.AdvertId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

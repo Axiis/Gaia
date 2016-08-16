@@ -62,7 +62,7 @@ namespace Gaia.Server.Controllers
 
         [HttpDelete]
         [Route("api/activity-feeds/pinned-entries/@{pinContextId}/@{pinContextType}")]
-        public IHttpActionResult UnpinEntry(string pinContextId, string pinContextType)
+        public IHttpActionResult UnpinEntry(long pinContextId, string pinContextType)
             => _activityFeed.UnpinEntry(pinContextId, pinContextType)
                 .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                 .Instead(opr => this.InternalServerError(opr.GetException()))

@@ -18,7 +18,8 @@
    Upon registering a new User, the default Profiles MUST be applied to them. So this needs to be added too. [Done]
 
 7. Enforce that any access to the system without logging in will be done as a "Guest" user. This will be done via the UserContextService: if
-   no user is logged in, it will fetch and return the guest user.
+   no user is logged in, it will fetch and return the guest user. This can be implemented from within the UserContext class. Simply return
+   the Load and cache the guest user upon creation, then return it when no other user is logged into the system.
 
 8. Creating SystemAdmin and PolicyAdmin accounts will require an extra process...maybe an invite sent from the "root" admin to the email of a user
    with a link to enter the necessary details and supply back to a special method on the service authrized to create admin accounts.
@@ -31,3 +32,8 @@
 2. Verify that logging in form WebApi will also log in the user into MVC, so that all our "cshtml" pages can be guarded by the [authorize] attribute.
    This will ensure that only the login page can be peeked at. Refer to [2016/06/17]#7 as it explains that all access into the system will have a user
    account - unauthorized users will be "borrowed" the guest account access, and will be limited to only unrestricted places.
+
+
+2016/08/16 ====================================================================================
+
+1. I should consider building a html cache for html view files that the ViewServerController serves

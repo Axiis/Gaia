@@ -52,12 +52,12 @@ namespace Gaia.Server
 
         private static void ConfigureDI(IAppBuilder app)
         {
-            app.Properties[OWINMapKeys.ResolutionContext] = new ResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes);
+            app.Properties[OWINMapKeys.ResolutionContext] = new WebApiResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes);
 
             //shutdown delegate
             var token = new AppProperties(app.Properties).OnAppDisposing;
             if (token != CancellationToken.None)
-                token.Register(() => app.Properties[OWINMapKeys.ResolutionContext].As<ResolutionContext>().Dispose());
+                token.Register(() => app.Properties[OWINMapKeys.ResolutionContext].As<WebApiResolutionContext>().Dispose());
         }
 
         private static void ConfigureWebApi(IAppBuilder app)
@@ -77,7 +77,7 @@ namespace Gaia.Server
 
         private static void ConfigureOAuth(IAppBuilder app)
         {
-            app.Properties[OWINMapKeys.ResolutionContext].As<ResolutionContext>().ManagedScope().Using(resolver =>
+            app.Properties[OWINMapKeys.ResolutionContext].As<WebApiResolutionContext>().ManagedScope().Using(resolver =>
             {
                 app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
                 {

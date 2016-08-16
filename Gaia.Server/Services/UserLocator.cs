@@ -17,6 +17,6 @@ namespace Gaia.Server.Services
         }
 
 
-        public string CurrentUser() => _owin?.Authentication?.User.Identity.Name;
+        public string CurrentUser() => _owin?.Authentication?.User?.Identity.Name;
     }
 }

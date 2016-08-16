@@ -45,7 +45,7 @@ namespace Gaia.Server.Controllers
                 .Result;
 
         [HttpGet]
-        [Route("api/xxx")]
+        [Route("api/user-notifications")]
         public IHttpActionResult Notifications()
             => _notificationService.Notifications()
                 .Then(opr => Ok(opr).As<IHttpActionResult>())

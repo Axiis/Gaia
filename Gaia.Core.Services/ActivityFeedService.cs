@@ -53,7 +53,7 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
 
                 var q = from post in postStore
-                        join pin in pinnedStore on post.EntityId.ToString() equals pin.ContextId
+                        join pin in pinnedStore on post.EntityId equals pin.ContextId
                         where pin.ContextType == postDomainType && pin.CreatedOn < _from && pin.OwnerId == user.UserId
                         select new { pin, post };
 
@@ -85,7 +85,7 @@ namespace Gaia.Core.Services
                     var user = UserContext.CurrentUser;
 
                     var post = postStore.Query.FirstOrDefault(_post => _post.EntityId == postId);
-                    var pin = pinStore.Query.FirstOrDefault(_pin => _pin.ContextId == postId.ToString() && _pin.OwnerId == user.UserId) ??
+                    var pin = pinStore.Query.FirstOrDefault(_pin => _pin.ContextId == postId && _pin.OwnerId == user.UserId) ??
                               pinStore.NewObject().With(new
                               {
                                   ContextId = post.ThrowIfNull("post not found").ToString(),
@@ -112,19 +112,19 @@ namespace Gaia.Core.Services
 
                 if (pin.ContextType == typeof(Post).GaiaDomainTypeName())
                     return DataContext.Store<Post>().Query
-                                      .FirstOrDefault(_post => _post.EntityId.ToString() == pin.ContextId)
+                                      .FirstOrDefault(_post => _post.EntityId == pin.ContextId)
                                       .ThrowIfNull("post not found")
                                       .ToPinnedFeedEntry(pin);
 
                 else throw new Exception("unknown post type");
             });
 
-        public Operation<PinnedFeedEntry> UnpinEntry(string contextId, string contextType)
+        public Operation<PinnedFeedEntry> UnpinEntry(long contextId, string contextType)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 if (contextType == typeof(Post).GaiaDomainTypeName())
                 {
-                    var postId = long.Parse(contextId);
+                    var postId = contextId;
                     var post = DataContext.Store<Post>().Query
                                           .FirstOrDefault(_post => _post.EntityId == postId)
                                           .ThrowIfNull("post not found");

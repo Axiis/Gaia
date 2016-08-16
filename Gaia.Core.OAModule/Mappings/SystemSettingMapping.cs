@@ -8,7 +8,9 @@ namespace Gaia.Core.OAModule.Mappings
         public SystemSettingMapping()
         {
             this.Property(e => e.Data).IsMaxLength();
-            this.Property(e => e.Name).IsIndex("SystemSettingName", true);
+            this.Property(e => e.Name)
+                .HasMaxLength(400)
+                .IsIndex("SystemSettingName", true);
         }
     }
 }
