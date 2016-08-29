@@ -4,9 +4,9 @@ namespace Gaia.Core.Domain
 {
     public class Rating: GaiaEntity<long>
     {
-        public virtual string ContextId
+        public virtual long ContextId
         {
-            get { return get<string>(); }
+            get { return get<long>(); }
             set { set(ref value); }
         }
         public virtual string ContextType

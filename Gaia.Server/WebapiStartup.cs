@@ -109,7 +109,7 @@ namespace Gaia.Server
 
         public class DefaultSettings
         {
-            public static readonly TimeSpan TokenExpiryInterval = TimeSpan.FromDays(1);
+            public static readonly TimeSpan TokenExpiryInterval = TimeSpan.FromHours(1);
         }
         #endregion
     }

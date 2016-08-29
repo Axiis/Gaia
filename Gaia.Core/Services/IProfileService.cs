@@ -26,6 +26,16 @@ namespace Gaia.Core.Services
         Operation<User> VerifyUserRegistration(string targetUser, string contextToken);
 
 
+        [Feature("system/Profiles/BioData/@modify")]
+        Operation ModifyBioData(BioData data);
+
+        [Feature("system/Profiles/ContactData/@modify")]
+        Operation ModifyContactData(ContactData data);
+
+        [Feature("system/Profiles/Corporate/@modify")]
+        Operation ModifyCorporateData(CorporateData data);
+
+
         [Feature("system/User/Profile/@add-data")]
         Operation AddData(UserData[] data);
 

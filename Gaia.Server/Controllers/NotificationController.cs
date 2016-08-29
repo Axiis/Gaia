@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace Gaia.Server.Controllers
 {
+    [Authorize]
     public class NotificationController : ApiController
     {
         private INotificationService _notificationService = null;

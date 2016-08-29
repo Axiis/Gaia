@@ -3,8 +3,22 @@
 <head>
     <title></title>
 	<meta charset="utf-8" />
+
+    <script type="text/javascript" src="../scripts/jquery-3.1.0.js"></script>
 </head>
 <body>
-
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                success: function (x, y, z) {
+                    alert('succeeded');
+                },
+                error: function (x, y, z) {
+                    alert('failed [status: ' + y + ', error:' + z + ']');
+                },
+                url: "/api/user-notifications"
+            });
+        });
+    </script>
 </body>
 </html>

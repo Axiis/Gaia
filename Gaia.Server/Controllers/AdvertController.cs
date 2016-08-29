@@ -137,7 +137,7 @@ namespace Gaia.Server.Controllers
             public Core.Domain.Advert ToDomainAdvert() => new Core.Domain.Advert
             {
                 EntityId = Id,
-                ExpiryDate = ExpiryDate.ThrowIfNull("invalid expiration date").Value,
+                ExpiresOn = ExpiryDate.ThrowIfNull("invalid expiration date").Value,
                 MediaType = MediaType,
                 MediaURI = MediaURI,
                 OwnerId = Owner,

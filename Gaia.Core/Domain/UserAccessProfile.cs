@@ -35,7 +35,7 @@ namespace Gaia.Core.Domain
             set { set(ref value); }
         }
 
-        public DateTime? ExpiryDate
+        public DateTime? ExpiresOn
         {
             get { return get<DateTime?>(); }
             set { set(ref value); }

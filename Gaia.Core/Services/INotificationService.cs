@@ -9,7 +9,7 @@ namespace Gaia.Core.Services
     public interface INotificationService : IUserContextAware
     {
         [Feature("system/Notifications/@notify")]
-        Operation<Notification> Notify(string targetUser, string title, string message, string contextName, string contextId);
+        Operation<Notification> Notify(string targetUser, string title, string message, string contextName, long contextId);
 
         [Feature("system/User/Notification/@clear")]
         Operation ClearNotification(long notificationId);

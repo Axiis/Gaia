@@ -75,7 +75,7 @@ namespace Gaia.Core.Services
             {
                 var advertStore = DataContext.Store<Advert>();
                 var now = DateTime.Now;
-                var allIds = advertStore.Query.Where(advert => advert.ExpiryDate <= now).Select(advert => advert.EntityId);
+                var allIds = advertStore.Query.Where(advert => advert.ExpiresOn <= now).Select(advert => advert.EntityId);
                 var unexposed = allIds.ToArray().Except(exposedIds).ToArray();
                 if (unexposed.Length == 0) return null;
                 var nextId = unexposed[new Random(unexposed.GetHashCode()).Next(unexposed.Length)];
@@ -159,7 +159,7 @@ namespace Gaia.Core.Services
                                   .ThrowIfNull("could not find advert")
                                   .UsingValue(_advert =>
                                   {
-                                      _advert.ExpiryDate = advert.ExpiryDate;
+                                      _advert.ExpiresOn = advert.ExpiresOn;
                                       _advert.MediaType = advert.MediaType;
                                       _advert.MediaURI = advert.MediaURI;
 

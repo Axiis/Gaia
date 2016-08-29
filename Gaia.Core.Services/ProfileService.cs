@@ -109,6 +109,55 @@ namespace Gaia.Core.Services
                 }
             });
 
+        public Operation ModifyBioData(BioData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the biodata
+
+                //persist the biodata
+                var _biostore = DataContext.Store<BioData>();
+                if (!_biostore.Query.Any(_bd => _bd.OwnerId == _user.UserId))
+                    _biostore.Add(data).Context.CommitChanges();
+
+                else _biostore.Modify(data, true);
+            });
+        
+        public Operation ModifyContactData(ContactData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the contact data
+
+                //persist the contact data
+                var _contactStore = DataContext.Store<ContactData>();
+                if (!_contactStore.Query.Any(_bd => _bd.OwnerId == _user.UserId))
+                    _contactStore.Add(data).Context.CommitChanges();
+
+                else _contactStore.Modify(data, true);
+            });
+
+        public Operation ModifyCorporateData(CorporateData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the corporate data
+
+                //persist the corporate data
+                var _corporateStore = DataContext.Store<CorporateData>();
+                if (!_corporateStore.Query.Any(_bd => _bd.OwnerId == _user.UserId))
+                    _corporateStore.Add(data).Context.CommitChanges();
+
+                else _corporateStore.Modify(data, true);
+            });
+
+
         public Operation<ContextVerification> CreateRegistrationVerification(string targetUser)
             => FeatureAccess.Guard(UserContext, () =>
             {

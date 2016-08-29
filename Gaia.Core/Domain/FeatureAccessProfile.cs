@@ -43,6 +43,7 @@ namespace Gaia.Core.Domain
             this.AccessDescriptors = new List<FeatureAccessDescriptor>();
         }
     }
+
     public enum FeatureAccessProfileStatus
     {
         Active,

@@ -66,6 +66,7 @@ namespace Gaia.Server.Controllers.MVC
                 .Instead(opr => new HttpStatusCodeResult(HttpStatusCode.InternalServerError))
                 .Result;
 
-        private ActionResult Razor(string viewPath) => View(viewPath);
+        private ActionResult Razor(string viewPath)
+            => View($"{viewPath}{(viewPath.ToLower().EndsWith(".cshtml") ? "" : ".cshtml")}");
     }
 }

@@ -26,7 +26,7 @@ namespace Gaia.Core.Services
             this.DataContext = dataContext;
         }
 
-        public Operation<Notification> Notify(string targetUser, string title, string message, string contextName, string contextId)
+        public Operation<Notification> Notify(string targetUser, string title, string message, string contextName, long contextId)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var user = UserContext.CurrentUser;

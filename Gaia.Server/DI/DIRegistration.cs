@@ -22,6 +22,7 @@ using Axis.Pollux.Authentication.OAModule;
 using Axis.Pollux.RBAC.OAModule;
 using Gaia.Core.OAModule;
 using Axis.Pollux.CoreAuthentication;
+using System.Configuration;
 
 namespace Gaia.Server.DI
 {
@@ -43,19 +44,18 @@ namespace Gaia.Server.DI
             #region domain/domain-service registration
 
             #region Jupiter
-            c.Register<IDataContext>(() =>
-            {
-                var config = new ContextConfiguration()
-                    .WithConnection("EuropaContext")
-                    .WithInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<EuropaContext>())
-                    .UsingModule(new IdentityAccessModuleConfig())
-                    .UsingModule(new AuthenticationAccessModuleConfig())
-                    .UsingModule(new RBACAccessModuleConfig())
-                    .UsingModule(new GaiaDomainModuleConfig());
 
-                return new EuropaContext(config);
-            }, 
-            Lifestyle.Scoped);
+            //shared context configuration.
+            var config = new ContextConfiguration<EuropaContext>()
+                .WithConnection(ConfigurationManager.ConnectionStrings["EuropaContext"].ConnectionString)
+                .WithInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<EuropaContext>())
+                .UsingModule(new IdentityAccessModuleConfig())
+                .UsingModule(new AuthenticationAccessModuleConfig())
+                .UsingModule(new RBACAccessModuleConfig())
+                .UsingModule(new GaiaDomainModuleConfig());
+
+            c.Register<IDataContext>(() => new EuropaContext(config), Lifestyle.Scoped);
+
             #endregion
 
             #region Axis.Pollux.Identity
