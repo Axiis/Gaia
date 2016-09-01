@@ -1,4 +1,10 @@
-"use strict";
-var _gaia = angular.module("gaia", []);
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = _gaia;
+var Gaia;
+(function (Gaia) {
+    var Root;
+    (function (Root) {
+        //module for large/mid screen devices
+        Root.gaia = angular.module("gaia", ['ui.router']);
+        //module for tiny screen devices (moblie)
+        Root.gaiaMobile = angular.module("gaia-mobile", ['ui.router']);
+    })(Root = Gaia.Root || (Gaia.Root = {}));
+})(Gaia || (Gaia = {}));

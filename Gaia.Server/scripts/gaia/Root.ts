@@ -1,6 +1,10 @@
 ﻿
-const _gaia = angular.module("gaia", []);
+module Gaia.Root {
+
+    //module for large/mid screen devices
+    export const gaia = angular.module("gaia", ['ui.router']);
 
 
-
-export default _gaia;
+    //module for tiny screen devices (moblie)
+    export const gaiaMobile = angular.module("gaia-mobile", ['ui.router']);    
+}

@@ -1,1 +1,3 @@
 ﻿
+module Gaia.ViewModels {
+}

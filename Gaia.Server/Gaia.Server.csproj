@@ -327,6 +327,8 @@
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
     <TypeScriptCompile Include="scripts\gaia\services\pollux-services.ts" />
     <TypeScriptCompile Include="scripts\gaia\utils\extensions.ts" />
+    <Content Include="scripts\angular-ui-router.js" />
+    <Content Include="scripts\angular-ui-router.min.js" />
     <Content Include="scripts\jquery-1.12.4.js" />
     <Content Include="scripts\jquery-1.12.4.min.js" />
     <Content Include="scripts\jquery-3.1.0.slim.min.map" />
@@ -1417,6 +1419,7 @@
     <TypeScriptCompile Include="scripts\gaia\root.ts" />
     <TypeScriptCompile Include="scripts\gaia\services\gaia-services.ts" />
     <TypeScriptCompile Include="scripts\gaia\utils\tools.ts" />
+    <TypeScriptCompile Include="scripts\gaia\view-models\mobile-models.ts" />
     <TypeScriptCompile Include="scripts\gaia\view-models\models.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-component-router.d.ts" />
