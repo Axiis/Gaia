@@ -8,6 +8,7 @@ using Axis.Jupiter;
 using Axis.Luna.Extensions;
 using Gaia.Core.Domain;
 using Gaia.Server.Controllers.AccessProfileModel;
+using System.Collections.Generic;
 
 namespace Gaia.Server.Controllers
 {
@@ -35,7 +36,7 @@ namespace Gaia.Server.Controllers
         [HttpPut]
         [Route("api/access-profiles")]
         public IHttpActionResult ModifyFeatureAccessProfile([FromBody]AccessProfileInfo info)
-            => _accessProfile.ModifyFeatureAccessProfile(info.Profile, info.Granted, info.Denied)
+            => _accessProfile.ModifyFeatureAccessProfile(info.Profile, info.Granted.ToArray(), info.Denied.ToArray())
                   .Then(opr => this.Ok().As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -93,8 +94,8 @@ namespace Gaia.Server.Controllers
         public class AccessProfileInfo
         {
             public FeatureAccessProfile Profile { get; set; }
-            public string[] Granted { get; set; }
-            public string[] Denied { get; set; }
+            public List<string> Granted { get; set; }
+            public List<string> Denied { get; set; }
         }
 
         public class AccessProfileApplication

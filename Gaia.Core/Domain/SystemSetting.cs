@@ -1,28 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Axis.Luna;
+using System;
+using static Axis.Luna.Extensions.ObjectExtensions;
 
 namespace Gaia.Core.Domain
 {
-    public class SystemSetting: GaiaEntity<long>
+    public class SystemSetting: GaiaEntity<long>, IDataAttribute
     {
-        public enum CommonDataType
-        {
-            String,
-            Integer,
-            Float,
-            Boolean,
-            Binary,
-
-            DateTime,
-            TimeSpan,
-            Url,
-
-            Object
-        }
-
         public virtual string Data
         {
             get { return get<string>(); }
@@ -39,6 +22,28 @@ namespace Gaia.Core.Domain
         {
             get { return get<CommonDataType>(); }
             set { set(ref value); }
+        }
+
+        public override string ToString() => $"[{Name}: {DisplayData()}]";
+
+        private string DisplayData()
+        {
+            switch (Type)
+            {
+                case CommonDataType.Boolean:
+                case CommonDataType.Real:
+                case CommonDataType.Integer:
+                case CommonDataType.String:
+                case CommonDataType.Url:
+                case CommonDataType.TimeSpan:
+                case CommonDataType.JsonObject: return Data;
+                case CommonDataType.DateTime: return Eval(() => DateTime.Parse(Data).ToString(), ex => "");
+
+                case CommonDataType.Binary: return "Binary-Data";
+
+                case CommonDataType.UnknownType:
+                default: return "Unknown-Type";
+            }
         }
 
 

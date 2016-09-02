@@ -117,8 +117,8 @@ namespace Gaia.Server.Controllers
             public long Id { get; set; }
             public string Owner { get; set; }
             
-            public virtual string MediaURI { get; set; }
-            public virtual AdvertMediaType MediaType { get; set; }
+            public  string MediaURI { get; set; }
+            public  AdvertMediaType MediaType { get; set; }
 
             public DateTime? ExpiryDate { get; set; }
 

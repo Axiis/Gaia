@@ -8,6 +8,7 @@ using Gaia.Server.Controllers.ProfileModels;
 using System.Linq;
 using System.Web.Http;
 using Axis.Luna.Extensions;
+using System.Collections.Generic;
 
 namespace Gaia.Server.Controllers
 {
@@ -28,7 +29,7 @@ namespace Gaia.Server.Controllers
         [HttpPost]
         [Route("api/profiles")]
         public IHttpActionResult RegisterUser([FromBody]RegistrationInfo info)
-            => _profileService.RegisterUser(info.TargetUser, info.AccountType, info.Credentials)
+            => _profileService.RegisterUser(info.TargetUser, info.AccountType, info.Credentials.ToArray())
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -36,7 +37,7 @@ namespace Gaia.Server.Controllers
         [HttpPost]
         [Route("api/admin-profiles")]
         public IHttpActionResult RegisterAdminUser([FromBody]RegistrationInfo info)
-            => _profileService.RegisterAdminUser(info.TargetUser, info.AccountType, info.Credentials)
+            => _profileService.RegisterAdminUser(info.TargetUser, info.AccountType, info.Credentials.ToArray())
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -60,7 +61,7 @@ namespace Gaia.Server.Controllers
         [HttpPut]
         [Route("api/profiles/data")]
         public IHttpActionResult AddData([FromBody]UserDataInfo data)
-            => _profileService.AddData(data.DataList)
+            => _profileService.AddData(data.DataList.ToArray())
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -114,12 +115,12 @@ namespace Gaia.Server.Controllers
         {
             public string TargetUser { get; set; }
             public AccountType AccountType { get; set; }
-            public Credential[] Credentials { get; set; }
+            public List<Credential> Credentials { get; set; }
         }
 
         public class UserDataInfo
         {
-            public UserData[] DataList { get; set; }
+            public List<UserData> DataList { get; set; }
         }
     }
 }

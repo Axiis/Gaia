@@ -19,7 +19,7 @@ namespace Gaia.Core.Utils
         {
             var frame = new StackFrame(1);
             var profiles = context.UserAccessProfiles();
-            return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI))
+            return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI).ToList())
                                     .Any(featureUri => profiles.Any(profile => profile.AllowsAccessTo(featureUri))) ?
                                      Operation.Run(() => function()) :
                                      Operation.Fail<Out>(new FeatureAccessException());
@@ -28,7 +28,7 @@ namespace Gaia.Core.Utils
         {
             var frame = new StackFrame(1);
             var profiles = context.UserAccessProfiles();
-            return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI))
+            return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI).ToList())
                                     .Any(featureUri => profiles.Any(profile => profile.AllowsAccessTo(featureUri))) ?
                                      Operation.Run(() => function()) :
                                      Operation.Fail<Out>(new FeatureAccessException());
@@ -38,7 +38,7 @@ namespace Gaia.Core.Utils
         {
             var frame = new StackFrame(1);
             var profiles = context.UserAccessProfiles();
-            return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI))
+            return CachedDescriptors.GetOrAdd(frame.GetMethod().As<MethodInfo>(), mi => mi.GetFeatureAttributes().Select(fatt => fatt.URI).ToList())
                                     .Any(featureUri => profiles.Any(profile => profile.AllowsAccessTo(featureUri))) ?
                                      Operation.Run(() => action()) :
                                      Operation.Fail(new FeatureAccessException());
@@ -55,7 +55,7 @@ namespace Gaia.Core.Utils
         private static bool HasSameSignature(this MethodInfo method1, MethodInfo method2)
             => method1.Name == method2.Name &&
                method1.ReturnType == method2.ReturnType &&
-               method1.GetParameters().SequenceEqual(method2.GetParameters());
+               method1.GetParameters().Select(_p => _p.ParameterType).SequenceEqual(method2.GetParameters().Select(_p => _p.ParameterType));
 
         /// <summary>
         /// Review this method!
@@ -80,7 +80,7 @@ namespace Gaia.Core.Utils
                                  else if (pair.Key.Trim().Equals("+") && pair.Value.Trim().StartsWith("@")) return true;
                                  else if (!pair.Key.Trim().Equals(pair.Value.Trim())) return false;
                              }
-                             return false;
+                             return true;
                          });
 
         /// <summary>

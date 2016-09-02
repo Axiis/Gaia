@@ -53,7 +53,7 @@ namespace Gaia.Core.Services
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
-                if (UserContext.CurrentUser != null || userstore.Query.Any(_user => _user.UserId == userId))
+                if (UserContext.CurrentUser == null || userstore.Query.Any(_user => _user.EntityId == userId))
                     throw new Exception($"{userId} already exists");
                 else
                 {
@@ -83,7 +83,7 @@ namespace Gaia.Core.Services
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
-                if (UserContext.CurrentUser != null || userstore.Query.Any(_user => _user.UserId == userId))
+                if (UserContext.CurrentUser == null || userstore.Query.Any(_user => _user.EntityId == userId))
                     throw new Exception($"{userId} already exists");
                 else
                 {
@@ -119,7 +119,7 @@ namespace Gaia.Core.Services
 
                 //persist the biodata
                 var _biostore = DataContext.Store<BioData>();
-                if (!_biostore.Query.Any(_bd => _bd.OwnerId == _user.UserId))
+                if (!_biostore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
                     _biostore.Add(data).Context.CommitChanges();
 
                 else _biostore.Modify(data, true);
@@ -135,7 +135,7 @@ namespace Gaia.Core.Services
 
                 //persist the contact data
                 var _contactStore = DataContext.Store<ContactData>();
-                if (!_contactStore.Query.Any(_bd => _bd.OwnerId == _user.UserId))
+                if (!_contactStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
                     _contactStore.Add(data).Context.CommitChanges();
 
                 else _contactStore.Modify(data, true);
@@ -151,7 +151,7 @@ namespace Gaia.Core.Services
 
                 //persist the corporate data
                 var _corporateStore = DataContext.Store<CorporateData>();
-                if (!_corporateStore.Query.Any(_bd => _bd.OwnerId == _user.UserId))
+                if (!_corporateStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
                     _corporateStore.Add(data).Context.CommitChanges();
 
                 else _corporateStore.Modify(data, true);
@@ -172,7 +172,7 @@ namespace Gaia.Core.Services
                 var userstore = DataContext.Store<User>();
                 return ContextVerifier.VerifyContext(userId, UserRegistrationContext, token)
                                       .Then(opr => userstore.Query
-                                                            .Where(_user => _user.UserId == userId)
+                                                            .Where(_user => _user.EntityId == userId)
                                                             .Where(_user => _user.Status == UserStatus.Unverified)
                                                             .FirstOrDefault()
                                                             .ThrowIfNull("could not find user")
@@ -192,7 +192,7 @@ namespace Gaia.Core.Services
                 {
                     var names = batch.Select(_ud => _ud.Name).ToArray();
                     userdatastore.Query
-                                 .Where(_ud => _ud.OwnerId == user.UserId && names.Contains(_ud.Name))
+                                 .Where(_ud => _ud.OwnerId == user.EntityId && names.Contains(_ud.Name))
                                  .Pipe(_uds => existingData.AddRange(_uds));
                 });
 
@@ -212,7 +212,7 @@ namespace Gaia.Core.Services
                 {
                     var nar = _batch.ToArray();
                     userdatastore.Query
-                                 .Where(_ud => _ud.OwnerId == user.UserId)
+                                 .Where(_ud => _ud.OwnerId == user.EntityId)
                                  .Where(_ud => nar.Contains(_ud.Name))
                                  .Pipe(_uds => userdatastore.Delete(_uds.AsEnumerable()));
                 });
@@ -226,7 +226,7 @@ namespace Gaia.Core.Services
             {
                 var userstore = DataContext.Store<User>();
                 return userstore.Query
-                                .Where(_user => _user.UserId == userid)
+                                .Where(_user => _user.EntityId == userid)
                                 .Where(_user => _user.Status != UserStatus.Archived)
                                 .FirstOrDefault()
                                 .ThrowIfNull("could not find the non-archived user")
@@ -247,7 +247,7 @@ namespace Gaia.Core.Services
                 var userstore = DataContext.Store<User>();
                 return ContextVerifier.VerifyContext(targetUser, UserRegistrationContext, contextToken)
                                       .Then(opr => userstore.Query
-                                                            .Where(_user => _user.UserId == targetUser)
+                                                            .Where(_user => _user.EntityId == targetUser)
                                                             .Where(_user => _user.Status == UserStatus.Archived)
                                                             .FirstOrDefault()
                                                             .ThrowIfNull("could not find user")

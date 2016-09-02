@@ -17,7 +17,6 @@ namespace Gaia.Core.OAModule.Mappings
                 .HasForeignKey(e => e.OwnerId);
 
             this.Property(e => e.ContextType).HasMaxLength(500);
-            this.Property(e => e.ContextId).HasMaxLength(250);
         }
     }
 }

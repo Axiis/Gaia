@@ -19,3 +19,4 @@ var Gaia;
         Utils.NewGuid = NewGuid;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=tools.js.map

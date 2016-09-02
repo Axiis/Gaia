@@ -8,3 +8,4 @@ var Gaia;
         Root.gaiaMobile = angular.module("gaia-mobile", ['ui.router']);
     })(Root = Gaia.Root || (Gaia.Root = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=root.js.map

@@ -100,7 +100,7 @@ namespace Gaia.Core.Services
             {
                 var uapstore = DataContext.Store<UserAccessProfile>();
                 if (uapstore.Query.Any(_uap => _uap.OwnerId == userId && _uap.AccessProfileCode == accessProfileCode)
-                   || !DataContext.Store<User>().Query.Any(_user => _user.UserId == userId)
+                   || !DataContext.Store<User>().Query.Any(_user => _user.EntityId == userId)
                    || !DataContext.Store<FeatureAccessProfile>().Query.Any(_fap => _fap.AccessCode == accessProfileCode))
                     throw new Exception("could not apply the access profile");
 

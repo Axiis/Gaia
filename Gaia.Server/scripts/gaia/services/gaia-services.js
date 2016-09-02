@@ -52,3 +52,4 @@ var Gaia;
         gmobile.service("ProfileService", ProfileService);
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=gaia-services.js.map

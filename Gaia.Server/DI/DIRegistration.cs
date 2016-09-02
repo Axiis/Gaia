@@ -1,6 +1,6 @@
-﻿using Gaia.Core.Domain;
+﻿#region imports
+using Gaia.Core.Domain;
 using Gaia.Server.OAuth;
-using Microsoft.Owin.Security.Infrastructure;
 using Microsoft.Owin.Security.OAuth;
 using SimpleInjector;
 using System.Linq;
@@ -23,6 +23,7 @@ using Axis.Pollux.RBAC.OAModule;
 using Gaia.Core.OAModule;
 using Axis.Pollux.CoreAuthentication;
 using System.Configuration;
+#endregion
 
 namespace Gaia.Server.DI
 {
@@ -36,8 +37,8 @@ namespace Gaia.Server.DI
             c.Register<IOAuthAuthorizationServerProvider>(() => c.GetInstance<AuthorizationServer>());
 
 
-            c.Register<ICredentialAuthentication, CredentialAuthentication>();
-            c.Register<ICredentialHasher, DefaultHasher>();
+            c.Register<ICredentialAuthentication, CredentialAuthentication>(Lifestyle.Scoped);
+            c.Register<ICredentialHasher, DefaultHasher>(Lifestyle.Scoped);
             #endregion
 
 
@@ -140,7 +141,7 @@ namespace Gaia.Server.DI
             var wapict = typeof(ApiController);
             typeof(DIRegistration).Assembly.GetTypes()
                                   .Where(_t => _t.BaseTypes().Contains(wapict))
-                                  .ForAll((_cnt, _t) => c.Register(_t));
+                                  .ForAll((_cnt, _t) => c.Register(_t, _t, Lifestyle.Scoped));
             #endregion
 
         }

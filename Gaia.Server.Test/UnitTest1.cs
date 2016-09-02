@@ -46,7 +46,7 @@ namespace Gaia.Server.Test
         [TestMethod]
         public void TestMethod3()
         {
-            var config = new ContextConfiguration()
+            var config = new ContextConfiguration<EuropaContext>()
                 .WithConnection("EuropaContext")
                 .WithEFConfiguraton(dbconfig => dbconfig.LazyLoadingEnabled = true)
                 .WithInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<EuropaContext>())

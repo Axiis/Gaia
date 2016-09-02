@@ -46,11 +46,20 @@ namespace Gaia.Core.Services
         public IEnumerable<FeatureAccessProfile> UserAccessProfiles()
             => CurrentUser?.UserId.Pipe(uid =>
             {
-                return from uap in _context.Store<UserAccessProfile>().Query
+                //Consider caching this list against IDs.
+                //the cache can be cleared whenever the user owning the ID is assigned new AccessProfiles.
+                return (from uap in _context.Store<UserAccessProfile>().Query
                        join fap in _context.Store<FeatureAccessProfile>().Query
                        on uap.AccessProfileCode equals fap.AccessCode
                        where uap.OwnerId == uid
-                       select fap;
+                       select fap)
+                       .ToList()
+                       .UsingEach(_fap =>
+                       {
+                           _context.Store<FeatureAccessDescriptor>().Query
+                               .Where(_fad => _fad.AccessProfileCode == _fap.AccessCode)
+                               .Pipe(_fads => _fap.AccessDescriptors.AddRange(_fads));
+                       });
             })
             ?.ToArray()
             ?? new FeatureAccessProfile[0];
