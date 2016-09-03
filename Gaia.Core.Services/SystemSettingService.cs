@@ -33,7 +33,11 @@ namespace Gaia.Core.Services
                 store.Query
                      .FirstOrDefault(st => st.Name == settingName)
                      .ThrowIfNull("could not find setting")
-                     .Do(st => store.Modify(st.With(new { Data = settingValue }), true));
+                     .Do(st =>
+                     {
+                         st.Data = settingValue;
+                         store.Modify(st, true);
+                     });
             });
 
         public Operation<IEnumerable<SystemSetting>> GetSettings()

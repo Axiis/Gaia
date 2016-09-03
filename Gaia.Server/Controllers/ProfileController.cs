@@ -42,18 +42,10 @@ namespace Gaia.Server.Controllers
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
 
-        [HttpPost]
-        [Route("api/profiles/verirfication/@{targetUser}")]
-        public IHttpActionResult CreateRegistrationVerification(string targetUser)
-            => _profileService.CreateRegistrationVerification(targetUser)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
-                  .Result;
-
         [HttpPut]
-        [Route("api/profiles/verificaftion/@{targetUser}/@{contextToken}")]
-        public IHttpActionResult VerifyUserRegistration(string targetUser, string contextToken)
-            => _profileService.VerifyUserRegistration(targetUser, contextToken)
+        [Route("api/profiles/verificaftion")]
+        public IHttpActionResult VerifyUserRegistration([FromBody]UserValueInfo userValue)
+            => _profileService.VerifyUserRegistration(userValue.User, userValue.Value)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -75,25 +67,25 @@ namespace Gaia.Server.Controllers
                   .Result;
 
         [HttpPut]
-        [Route("api/profiles/archives/@{targetUser}")]
-        public IHttpActionResult ArchiveUser(string targetUser)
-            => _profileService.ArchiveUser(targetUser)
+        [Route("api/profiles/archives")]
+        public IHttpActionResult ArchiveUser([FromBody]UserValueInfo userValue)
+            => _profileService.ArchiveUser(userValue.User)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
 
         [HttpPost]
-        [Route("api/profiles/activation/@{targetUser}")]
-        public IHttpActionResult CreateUserActivationVerification(string targetUser)
-            => _profileService.CreateUserActivationVerification(targetUser)
+        [Route("api/profiles/activation")]
+        public IHttpActionResult CreateUserActivationVerification([FromBody]UserValueInfo userValue)
+            => _profileService.CreateUserActivationVerification(userValue.User)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
 
         [HttpPut]
-        [Route("api/profiles/activation/@{targetUser}/@{contextToken}")]
-        public IHttpActionResult VerifyUserActivation(string targetUser, string contextToken)
-            => _profileService.VerifyUserActivation(targetUser, contextToken)
+        [Route("api/profiles/activation")]
+        public IHttpActionResult VerifyUserActivation([FromBody]UserValueInfo userValue)
+            => _profileService.VerifyUserActivation(userValue.User, userValue.Value)
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -121,6 +113,12 @@ namespace Gaia.Server.Controllers
         public class UserDataInfo
         {
             public List<UserData> DataList { get; set; }
+        }
+
+        public class UserValueInfo
+        {
+            public string User { get; set; }
+            public string Value { get; set; }
         }
     }
 }

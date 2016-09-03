@@ -57,12 +57,15 @@ namespace Gaia.Core.Services
                     throw new Exception($"{userId} already exists");
                 else
                 {
-                    var _user = userstore.NewObject().With(new
+                    userstore.NewObject().Do(__user =>
                     {
-                        Status = UserStatus.Unverified,
-                        UserId = userId
+                        __user.Status = UserStatus.Unverified;
+                        __user.UserId = userId;
+
+                        userstore.Add(__user).Context
+                            .CommitChanges()
+                            .ThrowIf(r => r <= 0, r => new Exception("failed to register user"));
                     });
-                    userstore.Add(_user).Context.CommitChanges().ThrowIf(r => r <= 0, r => new Exception("failed to register user"));
 
                     //assign credentials
                     secretCredentials.Where(scred => scred.Metadata.Access == Access.Secret).ForAll((cnt, cred)
@@ -87,12 +90,15 @@ namespace Gaia.Core.Services
                     throw new Exception($"{userId} already exists");
                 else
                 {
-                    var _user = userstore.NewObject().With(new
+                    userstore.NewObject().Do(__user =>
                     {
-                        Status = UserStatus.Unverified,
-                        UserId = userId
-                    });
-                    userstore.Add(_user).Context.CommitChanges().ThrowIf(r => r <= 0, r => new Exception("failed to register user"));
+                        __user.Status = UserStatus.Unverified;
+                        __user.UserId = userId;
+
+                        userstore.Add(__user).Context
+                            .CommitChanges()
+                            .ThrowIf(r => r <= 0, r => new Exception("failed to register user"));
+                    });                    
 
                     //assign credentials
                     secretCredentials.Where(scred => scred.Metadata.Access == Access.Secret).ForAll((cnt, cred)
@@ -170,13 +176,21 @@ namespace Gaia.Core.Services
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
-                return ContextVerifier.VerifyContext(userId, UserRegistrationContext, token)
-                                      .Then(opr => userstore.Query
-                                                            .Where(_user => _user.EntityId == userId)
-                                                            .Where(_user => _user.Status == UserStatus.Unverified)
-                                                            .FirstOrDefault()
-                                                            .ThrowIfNull("could not find user")
-                                                            .UsingValue(_user => userstore.Modify(_user.With(new { Status = UserStatus.Active }), true)));
+                if (userstore.Query.Any(_user => _user.EntityId == userId && _user.Status != UserStatus.Unverified))
+                    throw new Exception("invalid operation: user is already Active");
+
+                else
+                    return ContextVerifier.VerifyContext(userId, UserRegistrationContext, token)
+                        .Then(opr => userstore.Query
+                            .Where(_user => _user.EntityId == userId)
+                            .Where(_user => _user.Status == UserStatus.Unverified)
+                            .FirstOrDefault()
+                            .ThrowIfNull("could not find user")
+                            .UsingValue(_user =>
+                            {
+                                _user.Status = UserStatus.Active;
+                                userstore.Modify(_user, true);
+                            }));
             });
 
 
@@ -186,7 +200,7 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 var userdatastore = DataContext.Store<UserData>();
                 List<UserData> existingData = new List<UserData>();
-
+                
                 //retrieve from storage, all data-objects with the same name, belonging to the current user
                 data.Batch(200).ForAll((cnt, batch) =>
                 {
@@ -198,9 +212,8 @@ namespace Gaia.Core.Services
 
                 //persist the difference
                 data.Except(existingData, new DataNameComparer())
-                    .ForAll((cnt, _data) => userdatastore.Add(_data.With(new { OwnerId = user.UserId })));
-
-                DataContext.CommitChanges();
+                    .UsingEach((_data) => _data.OwnerId = user.UserId)
+                    .Do(_data => userdatastore.Add(_data).Context.CommitChanges());
             });
 
         public Operation RemoveData(string[] names)
@@ -230,7 +243,11 @@ namespace Gaia.Core.Services
                                 .Where(_user => _user.Status != UserStatus.Archived)
                                 .FirstOrDefault()
                                 .ThrowIfNull("could not find the non-archived user")
-                                .UsingValue(_user => userstore.Modify(_user.With(new { Status = UserStatus.Archived }), true));
+                                .UsingValue(_user =>
+                                {
+                                    _user.Status = UserStatus.Archived;
+                                    userstore.Modify(_user, true);
+                                });
             });
 
         public Operation<ContextVerification> CreateUserActivationVerification(string targetUser)
@@ -251,7 +268,11 @@ namespace Gaia.Core.Services
                                                             .Where(_user => _user.Status == UserStatus.Archived)
                                                             .FirstOrDefault()
                                                             .ThrowIfNull("could not find user")
-                                                            .UsingValue(_user => userstore.Modify(_user.With(new { Status = UserStatus.Active }), true)));
+                                                            .UsingValue(_user =>
+                                                            {
+                                                                _user.Status = UserStatus.Active;
+                                                                userstore.Modify(_user, true);
+                                                            }));
             });
 
 

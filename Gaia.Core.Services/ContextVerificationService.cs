@@ -41,17 +41,18 @@ namespace Gaia.Core.Services
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var cvstore = DataContext.Store<ContextVerification>();
-                if (!DataContext.Store<User>().Query.Any(_u => _u.UserId == userId)) throw new Exception("could not find user");
-                return cvstore.NewObject().With(new
+                if (!DataContext.Store<User>().Query.Any(_u => _u.EntityId == userId)) throw new Exception("could not find user");
+                return cvstore.NewObject().UsingValue(_cv =>
                 {
-                    CreatedBy = UserContext.CurrentUser.UserId,
-                    Context = verificationContext,
-                    ExpiryDate = expiryDate,
-                    UserId = userId,
-                    VerificationToken = GenerateToken(),
-                    Verified = false
-                })
-                .UsingValue(_cv => cvstore.Add(_cv).Context.CommitChanges());
+                    _cv.CreatedBy = UserContext.CurrentUser.UserId;
+                    _cv.Context = verificationContext;
+                    _cv.ExpiresOn = expiryDate;
+                    _cv.UserId = userId;
+                    _cv.VerificationToken = GenerateToken();
+                    _cv.Verified = false;
+
+                    cvstore.Add(_cv).Context.CommitChanges();
+                });
             });
 
         public Operation VerifyContext(string userId, string verificationContext, string token)
@@ -62,9 +63,14 @@ namespace Gaia.Core.Services
                        .Where(_cv => _cv.UserId == userId)
                        .Where(_cv => _cv.Context == verificationContext)
                        .Where(_cv => _cv.VerificationToken == token)
+                       .Where(_cv => _cv.Verified == false)
                        .FirstOrDefault()
-                       .ThrowIfNull("could not find verification object")
-                       .Do(_cv => cvstore.Modify(_cv.With(new { Verified = true }), true));
+                       .ThrowIfNull("verification token is invalid")
+                       .Do(_cv =>
+                       {
+                           _cv.Verified = true;
+                           cvstore.Modify(_cv, true);
+                       });
             });
 
         private string GenerateToken() => RandomAlphaNumericGenerator.RandomAlphaNumeric(50);

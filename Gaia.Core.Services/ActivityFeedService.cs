@@ -54,7 +54,7 @@ namespace Gaia.Core.Services
 
                 var q = from post in postStore
                         join pin in pinnedStore on post.EntityId equals pin.ContextId
-                        where pin.ContextType == postDomainType && pin.CreatedOn < _from && pin.OwnerId == user.UserId
+                        where pin.ContextType == postDomainType && pin.CreatedOn < _from && pin.OwnerId == user.EntityId
                         select new { pin, post };
 
                 return q.Take(count).ToArray().Select(v => v.post.ToPinnedFeedEntry(v.pin));
@@ -85,7 +85,7 @@ namespace Gaia.Core.Services
                     var user = UserContext.CurrentUser;
 
                     var post = postStore.Query.FirstOrDefault(_post => _post.EntityId == postId);
-                    var pin = pinStore.Query.FirstOrDefault(_pin => _pin.ContextId == postId && _pin.OwnerId == user.UserId) ??
+                    var pin = pinStore.Query.FirstOrDefault(_pin => _pin.ContextId == postId && _pin.OwnerId == user.EntityId) ??
                               pinStore.NewObject().With(new
                               {
                                   ContextId = post.ThrowIfNull("post not found").ToString(),
@@ -106,7 +106,7 @@ namespace Gaia.Core.Services
             {
                 var user = UserContext.CurrentUser;
                 var pin = DataContext.Store<PinnedFeed>().Query
-                                     .FirstOrDefault(_pin => _pin.EntityId == pinId && _pin.OwnerId == user.UserId)
+                                     .FirstOrDefault(_pin => _pin.EntityId == pinId && _pin.OwnerId == user.EntityId)
                                      .ThrowIfNull("pin not found");
                 DataContext.Store<PinnedFeed>().Delete(pin);
 
@@ -131,7 +131,7 @@ namespace Gaia.Core.Services
 
                     var user = UserContext.CurrentUser;
                     var pin = DataContext.Store<PinnedFeed>().Query
-                                         .FirstOrDefault(_pin => _pin.ContextId == contextId && _pin.ContextType == contextType && _pin.OwnerId == user.UserId)
+                                         .FirstOrDefault(_pin => _pin.ContextId == contextId && _pin.ContextType == contextType && _pin.OwnerId == user.EntityId)
                                          .ThrowIfNull("pin not found");
 
                     DataContext.Store<PinnedFeed>().Delete(pin, true);

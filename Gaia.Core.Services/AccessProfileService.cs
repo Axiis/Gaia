@@ -32,14 +32,14 @@ namespace Gaia.Core.Services
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var fapstore = DataContext.Store<FeatureAccessProfile>();
-                return fapstore.NewObject().With(new
+                return fapstore.NewObject().UsingValue(_fap =>
                 {
-                    Title = title.ThrowIf(_t => string.IsNullOrWhiteSpace(_t), "invalid title"),
-                    AccessCode = profileCode.ThrowIf(_t => string.IsNullOrWhiteSpace(_t), "invalid title"), //dont need to bother checking for existence, as this is unique in the db.
-                    CreatedBy = UserContext.CurrentUser.UserId,
-                    Status = FeatureAccessProfileStatus.Active
-                })
-                .UsingValue(_fap => fapstore.Add(_fap).Context.CommitChanges());
+                    _fap.Title = title.ThrowIf(_t => string.IsNullOrWhiteSpace(_t), "invalid title");
+                    _fap.AccessCode = profileCode.ThrowIf(_t => string.IsNullOrWhiteSpace(_t), "invalid title"); //dont need to bother checking for existence, as this is unique in the db.
+                    _fap.CreatedBy = UserContext.CurrentUser.UserId;
+                    _fap.Status = FeatureAccessProfileStatus.Active;
+                    fapstore.Add(_fap).Context.CommitChanges();
+                });
             });
 
         public Operation<FeatureAccessProfile> ModifyFeatureAccessProfile(FeatureAccessProfile profile,
@@ -57,19 +57,19 @@ namespace Gaia.Core.Services
                         .Context.CommitChanges();
 
                 //attach the new descriptors
-                grantedDescriptors.Select(_g => fadstore.NewObject().With(new
+                grantedDescriptors.Select(_g => fadstore.NewObject().UsingValue(_fap =>
                 {
-                    AccessDescriptor = _g,
-                    AccessProfileCode = profile.AccessCode,
-                    CreatedBy = UserContext.CurrentUser.UserId,
-                    Permission = AccessPermission.Grant
+                    _fap.AccessDescriptor = _g;
+                    _fap.AccessProfileCode = profile.AccessCode;
+                    _fap.CreatedBy = UserContext.CurrentUser.UserId;
+                    _fap.Permission = AccessPermission.Grant;
                 }))
-                .Union(deniedDescriptors.Select(_d => fadstore.NewObject().With(new
+                .Union(deniedDescriptors.Select(_d => fadstore.NewObject().UsingValue(_fap =>
                 {
-                    AccessDescriptor = _d,
-                    AccessProfileCode = profile.AccessCode,
-                    CreatedBy = UserContext.CurrentUser.UserId,
-                    Permission = AccessPermission.Deny
+                    _fap.AccessDescriptor = _d;
+                    _fap.AccessProfileCode = profile.AccessCode;
+                    _fap.CreatedBy = UserContext.CurrentUser.UserId;
+                    _fap.Permission = AccessPermission.Deny;
                 })))
                 .Do(descriptors => fadstore.Add(descriptors).Context.CommitChanges());
 
@@ -78,11 +78,12 @@ namespace Gaia.Core.Services
                 return fapstore.Query
                                .FirstOrDefault(_fap => _fap.AccessCode == profile.AccessCode)
                                .ThrowIfNull("could not find access profile")
-                               .UsingValue(_fap => fapstore.Modify(_fap.With(new
+                               .UsingValue(_fap =>
                                {
-                                   Description = profile.Description,
-                                   Title = profile.Title
-                               }), true));
+                                   _fap.Description = profile.Description;
+                                   _fap.Title = profile.Title;
+                                   fapstore.Modify(_fap, true);
+                               });
             });
 
         public Operation ArchiveAccessProfile(long profileId)
@@ -92,7 +93,11 @@ namespace Gaia.Core.Services
                 fapstore.Query
                         .FirstOrDefault(_fap => _fap.EntityId == profileId)
                         .ThrowIfNull("could not find access profile")
-                        .Do(_fap => fapstore.Modify(_fap.With(new { Status = FeatureAccessProfileStatus.Archived }), true));
+                        .Do(_fap =>
+                        {
+                            _fap.Status = FeatureAccessProfileStatus.Archived;
+                            fapstore.Modify(_fap, true);
+                        });
             });
 
         public Operation<UserAccessProfile> ApplyAccessProfile(string userId, string accessProfileCode, DateTime? expiryDate)
@@ -104,15 +109,16 @@ namespace Gaia.Core.Services
                    || !DataContext.Store<FeatureAccessProfile>().Query.Any(_fap => _fap.AccessCode == accessProfileCode))
                     throw new Exception("could not apply the access profile");
 
-                else return uapstore.NewObject().With(new
+                else return uapstore.NewObject().UsingValue(_uap =>
                 {
-                    CreatedBy = UserContext.CurrentUser.UserId,
-                    ExpiryDate = expiryDate.ThrowIf(ed => ed < DateTime.Now, "invalid expiry date"),
-                    FeatureProfileCode = accessProfileCode,
-                    OwnerId = userId,
-                    UserCancelled = false
-                })
-                .UsingValue(_uap => uapstore.Add(_uap).Context.CommitChanges());
+                    _uap.CreatedBy = UserContext.CurrentUser.UserId;
+                    _uap.ExpiresOn = expiryDate.ThrowIf(ed => ed < DateTime.Now, "invalid expiry date");
+                    _uap.AccessProfileCode = accessProfileCode;
+                    _uap.OwnerId = userId;
+                    _uap.UserCancelled = false;
+
+                    uapstore.Add(_uap).Context.CommitChanges();
+                });
             });
 
         public Operation<UserAccessProfile> RevokeAccessProfile(string userId, string accessProfileCode)

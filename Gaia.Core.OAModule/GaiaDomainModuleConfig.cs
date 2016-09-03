@@ -183,8 +183,11 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/@create-activation-verification",
                         "system/Profiles/@verify-activation-verification",
                         "system/Profiles/@create-registration-verification",
-                        "system/Profiles/@verify-activation-verification",
-                        "system/User/AccessProfile/@apply"
+                        "system/Profiles/@verify-registration-verification",
+                        "system/User/AccessProfile/@apply",
+                        "system/User/ContextVerification/@create-default",
+                        "system/User/ContextVerification/@create",
+                        "system/User/ContextVerification/@verify"
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -387,6 +390,26 @@ namespace Gaia.Core.OAModule
                     store.Context.CommitChanges();
             });
             #endregion
+
+            //3. default System settings
+            this.UsingContext(context =>
+            {
+                var store = context.Store<SystemSetting>();
+                System.SystemSettings.SettingsList().ForAll((_cnt, _setting) =>
+                {
+                    if (!store.Query.Any(_ss => _ss.Name == _setting.Name))
+                    {
+                        store.Add(new SystemSetting
+                        {
+                            Name = _setting.Name,
+                            CreatedBy = DomainConstants.RootAccount,
+                            Data = _setting.Data,
+                            Type = _setting.Type
+                        });
+                    }
+                });
+                store.Context.CommitChanges();
+            });
         }
     }
 

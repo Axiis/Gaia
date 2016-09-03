@@ -28,11 +28,15 @@ namespace Gaia.Core.Services
                 var poststore = DataContext.Store<Post>();
                 return poststore.Query
                                 .Where(post => post.EntityId == postId)
-                                .Where(post => post.OwnerId == user.UserId)
+                                .Where(post => post.OwnerId == user.EntityId)
                                 .Where(post => post.Status != PostStatus.Archived)
                                 .FirstOrDefault()
                                 .ThrowIfNull("could not find post")
-                                .UsingValue(post => poststore.Modify(post.With(new { Status = PostStatus.Archived }), true));
+                                .UsingValue(post =>
+                                {
+                                    post.Status = PostStatus.Archived;
+                                    poststore.Modify(post, true);
+                                });
             });
 
         public Operation<Post> CreatePost(string title)
@@ -40,15 +44,16 @@ namespace Gaia.Core.Services
             {
                 var user = UserContext.CurrentUser;
                 var poststore = DataContext.Store<Post>();
-                return poststore.NewObject().With(new
+                return poststore.NewObject().UsingValue(_post =>
                 {
-                    Title = title,
-                    CreatedBy = user.UserId,
-                    OwnerId = user.UserId,
-                    Status = PostStatus.Private,
-                    ParentPostId = 0
-                })
-                .UsingValue(_post => poststore.Add(_post).Context.CommitChanges());
+                    _post.Title = title;
+                    _post.CreatedBy = user.UserId;
+                    _post.OwnerId = user.UserId;
+                    _post.Status = PostStatus.Private;
+                    _post.ParentPostId = 0;
+
+                    poststore.Add(_post).Context.CommitChanges();
+                });
             });
 
         public Operation<Post> EditPost(Post post)
@@ -57,7 +62,7 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 var poststore = DataContext.Store<Post>();
                 return poststore.Query
-                                .Where(_post => _post.OwnerId == user.UserId)
+                                .Where(_post => _post.OwnerId == user.EntityId)
                                 .Where(_post => _post.EntityId == post.EntityId)
                                 .Where(_post => _post.Status != PostStatus.Archived)
                                 .FirstOrDefault()
@@ -70,23 +75,28 @@ namespace Gaia.Core.Services
                                         var oldHistory = poststore.Query.FirstOrDefault(_history => _history.ParentPostId == _post.EntityId);
 
                                         //create and persist a new history snapshot
-                                        var newHistory = poststore.NewObject().With(new
+                                        var newHistory = poststore.NewObject().UsingValue(_history =>
                                         {
-                                            CreatedBy = user.UserId,
-                                            CreatedOn = _post.CreatedOn,
-                                            Message = _post.Message,
-                                            OwnerId = user.UserId,
-                                            Status = _post.Status,
-                                            TargetDemographic = _post.TargetDemographic,
-                                            Title = _post.Title,
-                                            ParentPostId = _post.EntityId,
-                                            ModifiedBy = user.UserId,
-                                            ModifiedOn = _post.ModifiedOn
+                                            _history.CreatedBy = user.UserId;
+                                            _history.CreatedOn = _post.CreatedOn;
+                                            _history.Message = _post.Message;
+                                            _history.OwnerId = user.UserId;
+                                            _history.Status = _post.Status;
+                                            _history.TargetDemographic = _post.TargetDemographic;
+                                            _history.Title = _post.Title;
+                                            _history.ParentPostId = _post.EntityId;
+                                            _history.ModifiedBy = user.UserId;
+                                            _history.ModifiedOn = _post.ModifiedOn;
+
+                                            poststore.Add(_history).Context.CommitChanges();
                                         });
-                                        poststore.Add(newHistory).Context.CommitChanges();
 
                                         //chain and persist the old history
-                                        if(oldHistory != null) poststore.Modify(oldHistory.With(new { ParentPostId = newHistory.EntityId }), true);
+                                        if (oldHistory != null)
+                                        {
+                                            oldHistory.ParentPostId = newHistory.EntityId;
+                                            poststore.Modify(oldHistory, true);
+                                        }
                                     }
 
                                     _post.Message = post.Message;
@@ -102,11 +112,15 @@ namespace Gaia.Core.Services
                 var poststore = DataContext.Store<Post>();
                 return poststore.Query
                                 .Where(post => post.EntityId == postId)
-                                .Where(post => post.OwnerId == user.UserId)
+                                .Where(post => post.OwnerId == user.EntityId)
                                 .Where(post => post.Status == PostStatus.Private)
                                 .FirstOrDefault()
                                 .ThrowIfNull("could not find post")
-                                .UsingValue(post => poststore.Modify(post.With(new { Status = PostStatus.Published }), true));
+                                .UsingValue(post =>
+                                {
+                                    post.Status = PostStatus.Published;
+                                    poststore.Modify(post, true);
+                                });
             });
     }
 }

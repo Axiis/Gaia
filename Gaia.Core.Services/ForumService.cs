@@ -28,14 +28,15 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 var threadstore = DataContext.Store<ForumThread>();
                 if (!DataContext.Store<ForumTopic>().Query.Any(topic => topic.EntityId == topicId)) throw new Exception("could not find topic");
-                return threadstore.NewObject().With(new
+                return threadstore.NewObject().UsingValue(_thread =>
                 {
-                    Title = title,
-                    CreatedBy = user.UserId,
-                    OwnerId = user.UserId,
-                    Topic = topicId
-                })
-                .UsingValue(_thread => threadstore.Add(_thread).Context.CommitChanges());
+                    _thread.Title = title;
+                    _thread.CreatedBy = user.UserId;
+                    _thread.OwnerId = user.UserId;
+                    _thread.TopicId = topicId;
+
+                    threadstore.Add(_thread).Context.CommitChanges();
+                });
             });
 
         public Operation<ForumTopic> CreateTopic(string title)
@@ -43,12 +44,13 @@ namespace Gaia.Core.Services
             {
                 var user = UserContext.CurrentUser;
                 var topicstore = DataContext.Store<ForumTopic>();
-                return topicstore.NewObject().With(new
+                return topicstore.NewObject().UsingValue(_topic =>
                 {
-                    Title = title,
-                    CreatedBy = user.UserId
-                })
-                .UsingValue(_topic => topicstore.Add(_topic).Context.CommitChanges());
+                    _topic.Title = title;
+                    _topic.CreatedBy = user.UserId;
+
+                    topicstore.Add(_topic).Context.CommitChanges();
+                });
             });
 
         public Operation<ForumThread> ModifyThread(ForumThread thread)
@@ -133,15 +135,16 @@ namespace Gaia.Core.Services
                 var watchstore = DataContext.Store<ForumThreadWatch>();
                 return watchstore.Query
                                  .Where(_watch => _watch.ThreadId == threadId)
-                                 .Where(_watch => _watch.OwnerId == user.UserId)
+                                 .Where(_watch => _watch.OwnerId == user.EntityId)
                                  .FirstOrDefault() ??
-                                 watchstore.NewObject().With(new
+                                 watchstore.NewObject().UsingValue(_watch =>
                                  {
-                                     CreatedBy = user.UserId,
-                                     OwnerId = user.UserId,
-                                     ThreadId = threadId
-                                 })
-                                 .UsingValue(_watch => watchstore.Add(_watch).Context.CommitChanges());
+                                     _watch.CreatedBy = user.UserId;
+                                     _watch.OwnerId = user.UserId;
+                                     _watch.ThreadId = threadId;
+
+                                     watchstore.Add(_watch).Context.CommitChanges();
+                                 });
             });
     }
 }

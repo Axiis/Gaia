@@ -28,15 +28,16 @@ namespace Gaia.Core.Services
             {
                 var user = UserContext.CurrentUser;
                 var commentstore = DataContext.Store<Comment>();
-                return commentstore.NewObject().With(new
+                return commentstore.NewObject().UsingValue(_c =>
                 {
-                    Text = comment,
-                    CreatedBy = user.UserId,
-                    OwnerId = user.UserId,
-                    ContextType = contextName,
-                    ContextId = contextId
-                })
-                .UsingValue(_comment => commentstore.Add(_comment).Context.CommitChanges());
+                    _c.Text = comment;
+                    _c.CreatedBy = user.UserId;
+                    _c.OwnerId = user.UserId;
+                    _c.ContextType = contextName;
+                    _c.ContextId = contextId;
+
+                    commentstore.Add(_c).Context.CommitChanges();
+                });
             });
 
         public Operation<UserReaction> ReactTo(string contextName, long contextId, string reaction)
@@ -46,18 +47,23 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 return (rxstore.Query
                                .Where(rx => rx.ContextId == contextId)
-                               .Where(rx => rx.OwnerId == user.UserId)
+                               .Where(rx => rx.OwnerId == user.EntityId)
                                .Where(rx => rx.ContextType == contextName)
-                               .FirstOrDefault()??
-                        rxstore.NewObject().With(new
+                               .FirstOrDefault() ??
+                        rxstore.NewObject().UsingValue(_rx =>
                         {
-                            ContextId = contextId,
-                            ContextType = contextName,
-                            CreatedBy = user.UserId,
-                            OwnerId = user.UserId
-                        })
-                        .UsingValue(rx => rxstore.Add(rx).Context.CommitChanges()))
-                        .UsingValue(rx => rxstore.Modify(rx.With(new { Reaction = reaction }), true));
+                            _rx.ContextId = contextId;
+                            _rx.ContextType = contextName;
+                            _rx.CreatedBy = user.UserId;
+                            _rx.OwnerId = user.UserId;
+
+                            rxstore.Add(_rx).Context.CommitChanges();
+                        }))
+                        .UsingValue(_rx =>
+                        {
+                            _rx.Reaction = reaction;
+                            rxstore.Modify(_rx, true);
+                        });
             });
 
         public Operation<Comment> ReplyTo(long parentCommentId, string comment)
@@ -66,15 +72,16 @@ namespace Gaia.Core.Services
                 var commentStore = DataContext.Store<Comment>();
                 var user = UserContext.CurrentUser;
                 var parentComment = commentStore.Query.FirstOrDefault(cmt => cmt.EntityId == parentCommentId);
-                return commentStore.NewObject().With(new
+                return commentStore.NewObject().UsingValue(_c =>
                 {
-                    ContextId = parentComment.EntityId.ToString(),
-                    ContextType = typeof(Comment).GaiaDomainTypeName(),
-                    OwnerId = user.UserId,
-                    CreatedBy = user.UserId,
-                    Text = comment
-                })
-                .UsingValue(cmt => commentStore.Add(cmt).Context.CommitChanges());
+                    _c.ContextId = parentComment.EntityId;
+                    _c.ContextType = typeof(Comment).GaiaDomainTypeName();
+                    _c.OwnerId = user.UserId;
+                    _c.CreatedBy = user.UserId;
+                    _c.Text = comment;
+
+                    commentStore.Add(_c).Context.CommitChanges();
+                });
             });
 
         public Operation<IEnumerable<Comment>> CommentsFor(string contextName, long contextId)

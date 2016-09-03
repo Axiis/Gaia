@@ -38,7 +38,7 @@ namespace Gaia.Core.Domain
             set { set(ref value); }
         }
 
-        public virtual DateTime ExpiresOn
+        public DateTime ExpiresOn
         {
             get { return get<DateTime>(); }
             set { set(ref value); }

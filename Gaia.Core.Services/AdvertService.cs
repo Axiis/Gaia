@@ -51,7 +51,7 @@ namespace Gaia.Core.Services
 
                 var user = UserContext.CurrentUser;
                 var ahstore = DataContext.Store<AdvertHit>();
-                var hit = ahstore.Query.FirstOrDefault(ah => ah.AdvertId == advertId && ah.OwnerId == user.UserId) ??
+                var hit = ahstore.Query.FirstOrDefault(ah => ah.AdvertId == advertId && ah.OwnerId == user.EntityId) ??
                           ahstore.NewObject().With(new
                           {
                               AdvertId = advert.EntityId,
@@ -153,7 +153,7 @@ namespace Gaia.Core.Services
                 var advertStore = DataContext.Store<Advert>();
                 return advertStore.Query
                                   .Where(_advert => _advert.EntityId == advert.EntityId)
-                                  .Where(_advert => user.UserId == _advert.OwnerId)
+                                  .Where(_advert => user.EntityId == _advert.OwnerId)
                                   .Where(_advert => _advert.Status == AdvertStatus.Draft)
                                   .FirstOrDefault()
                                   .ThrowIfNull("could not find advert")
@@ -174,7 +174,7 @@ namespace Gaia.Core.Services
                 var advertStore = DataContext.Store<Advert>();
                 return advertStore.Query
                                   .Where(_advert => _advert.EntityId == advertId)
-                                  .Where(_advert => user.UserId == _advert.OwnerId)
+                                  .Where(_advert => user.EntityId == _advert.OwnerId)
                                   .Where(_advert => _advert.Status == AdvertStatus.Draft)
                                   .FirstOrDefault()
                                   .ThrowIfNull("could not find advert")

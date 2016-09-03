@@ -31,17 +31,18 @@ namespace Gaia.Core.Services
             {
                 var user = UserContext.CurrentUser;
                 var notifstore = DataContext.Store<Notification>();
-                return notifstore.NewObject().With(new
+                return notifstore.NewObject().UsingValue(_notif =>
                 {
-                    CreatedBy = user.UserId,
-                    TargetUserId = user.UserId,
-                    ContextId = contextId,
-                    ContextType = contextName,
-                    Title = title,
-                    Message = message,
-                    Status = NotificationStatus.Unseen
-                })
-                .UsingValue(_notif => notifstore.Add(_notif).Context.CommitChanges());
+                    _notif.CreatedBy = user.UserId;
+                    _notif.TargetUserId = user.UserId;
+                    _notif.ContextId = contextId;
+                    _notif.ContextType = contextName;
+                    _notif.Title = title;
+                    _notif.Message = message;
+                    _notif.Status = NotificationStatus.Unseen;
+
+                    notifstore.Add(_notif).Context.CommitChanges();
+                });
             });
 
         public Operation ClearNotification(long notificationId)
@@ -50,10 +51,14 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 DataContext.Store<Notification>().Query
                            .Where(_notif => _notif.EntityId == notificationId)
-                           .Where(_notif => _notif.TargetUserId == user.UserId)
+                           .Where(_notif => _notif.TargetUserId == user.EntityId)
                            .Where(_notif => _notif.Status == NotificationStatus.Unseen)
                            .FirstOrDefault()
-                           .PipeOrDefault(_notif => DataContext.Store<Notification>().Modify(_notif.With(new { Status = NotificationStatus.Seen }), true));
+                           .PipeOrDefault(_notif =>
+                           {
+                               _notif.Status = NotificationStatus.Seen;
+                               DataContext.Store<Notification>().Modify(_notif, true);
+                           });
             });
 
         public Operation ClearAllNotifications()
@@ -62,11 +67,10 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 var notificationstore = DataContext.Store<Notification>();
                 notificationstore.Query
-                                 .Where(_notif => _notif.TargetUserId == user.UserId)
-                                 .Where(_notif => _notif.Status == NotificationStatus.Unseen)
-                                 .ForAll((cnt, _notif) => notificationstore.Modify(_notif.With(new { Status = NotificationStatus.Seen }), false));
-
-                notificationstore.Context.CommitChanges();
+                    .Where(_notif => _notif.TargetUserId == user.EntityId)
+                    .Where(_notif => _notif.Status == NotificationStatus.Unseen)
+                    .UsingEach(_notif => { _notif.Status = NotificationStatus.Seen; })
+                    .Do(_notifs => notificationstore.Modify(_notifs, true));
             });
 
 
@@ -86,7 +90,7 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 var notificationstore = DataContext.Store<Notification>();
                 return notificationstore.Query
-                    .Where(_notif => _notif.TargetUserId == user.UserId)
+                    .Where(_notif => _notif.TargetUserId == user.EntityId)
                     .Where(_notif => _notif.Status == NotificationStatus.Unseen)
                     .AsEnumerable();
             });
