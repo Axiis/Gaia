@@ -74,8 +74,9 @@
     <Reference Include="Axis.Pollux.Identity">
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.Identity\bin\Debug\Axis.Pollux.Identity.dll</HintPath>
     </Reference>
-    <Reference Include="Axis.Pollux.Identity.OAModule">
-      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.RBAC.OAModule\bin\Debug\Axis.Pollux.Identity.OAModule.dll</HintPath>
+    <Reference Include="Axis.Pollux.Identity.OAModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.Identity.OAModule\bin\Debug\Axis.Pollux.Identity.OAModule.dll</HintPath>
     </Reference>
     <Reference Include="Axis.Pollux.RBAC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -275,6 +276,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\fonts\jura\OFL.txt" />
+    <Content Include="Content\images\GaiaLogo.svg" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -324,17 +327,28 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\fonts\jura\Jura-DemiBold.ttf" />
+    <Content Include="Content\fonts\jura\Jura-Light.ttf" />
+    <Content Include="Content\fonts\jura\Jura-Medium.ttf" />
+    <Content Include="Content\fonts\jura\Jura-Regular.ttf" />
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
-    <TypeScriptCompile Include="scripts\gaia\services\pollux-services.ts" />
-    <TypeScriptCompile Include="scripts\gaia\utils\extensions.ts" />
+    <TypeScriptCompile Include="app\dashboard-app.ts" />
+    <TypeScriptCompile Include="app\login-app.ts" />
+    <TypeScriptCompile Include="app\services\pollux-services.ts" />
+    <TypeScriptCompile Include="app\services\utility-services.ts" />
+    <TypeScriptCompile Include="app\utils\extensions.ts" />
     <Content Include="scripts\angular-ui-router.js" />
     <Content Include="scripts\angular-ui-router.min.js" />
+    <Content Include="scripts\jquery-1.10.1.js" />
+    <Content Include="scripts\jquery-1.10.1.min.js" />
     <Content Include="scripts\jquery-1.12.4.js" />
     <Content Include="scripts\jquery-1.12.4.min.js" />
     <Content Include="scripts\jquery-3.1.0.slim.min.map" />
     <Content Include="scripts\jquery-3.1.0.min.map" />
     <Content Include="scripts\jquery-1.12.4.min.map" />
     <None Include="scripts\jquery.validate-vsdoc.js" />
+    <Content Include="scripts\jquery-ui-1.10.1.js" />
+    <Content Include="scripts\jquery-ui-1.10.1.min.js" />
     <Content Include="scripts\jquery-ui-1.12.0.js" />
     <Content Include="scripts\jquery-ui-1.12.0.min.js" />
     <Content Include="scripts\jquery.validate.js" />
@@ -435,8 +449,6 @@
     <Content Include="Themes\Londinium\images\interface\user_menu_arrow.png" />
     <Content Include="Themes\Londinium\images\interface\vertical_arrows.png" />
     <Content Include="Themes\Londinium\images\interface\zoom.png" />
-    <Content Include="Themes\Londinium\images\logo.png" />
-    <Content Include="Themes\Londinium\images\logo_dark.png" />
     <Content Include="Themes\Londinium\index.html" />
     <Content Include="Themes\Londinium\info_blocks.html" />
     <Content Include="Themes\Londinium\invoice.html" />
@@ -529,10 +541,11 @@
     <Content Include="Themes\Londinium\validation.html" />
     <Content Include="Themes\Londinium\visuals.html" />
     <Content Include="Themes\Londinium\wysiwyg.html" />
+    <Content Include="Views\recovery-request.cshtml" />
+    <None Include="Views\recover-password.cshtml" />
     <Content Include="Views\home.html" />
     <Content Include="Views\index.cshtml" />
-    <Content Include="Views\login.cshtml" />
-    <Content Include="Views\re-login.cshtml" />
+    <Content Include="Views\login-shell.cshtml" />
     <Content Include="Themes\Londinium\.DS_Store" />
     <Content Include="Themes\Londinium\css\.DS_Store" />
     <Content Include="Themes\Londinium\css\icons\icons.eot" />
@@ -549,6 +562,9 @@
     <Content Include="Themes\Londinium\js\plugins\forms\.DS_Store" />
     <Content Include="Themes\Londinium\js\plugins\interface\.DS_Store" />
     <Content Include="Themes\Londinium\media\.DS_Store" />
+    <Content Include="Views\dashboard-shell.cshtml" />
+    <Content Include="Views\signin.cshtml" />
+    <Content Include="Views\signup.cshtml" />
     <None Include="Views\Secured\Errors\Error.cshtml" />
     <Content Include="Views\web.config" />
     <None Include="Web.Debug.config">
@@ -1415,12 +1431,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="scripts\gaia\domian-models\models.ts" />
-    <TypeScriptCompile Include="scripts\gaia\root.ts" />
-    <TypeScriptCompile Include="scripts\gaia\services\gaia-services.ts" />
-    <TypeScriptCompile Include="scripts\gaia\utils\tools.ts" />
-    <TypeScriptCompile Include="scripts\gaia\view-models\mobile-models.ts" />
-    <TypeScriptCompile Include="scripts\gaia\view-models\models.ts" />
+    <TypeScriptCompile Include="app\domian-models\models.ts" />
+    <TypeScriptCompile Include="app\apps.ts" />
+    <TypeScriptCompile Include="app\services\gaia-services.ts" />
+    <TypeScriptCompile Include="app\utils\tools.ts" />
+    <TypeScriptCompile Include="app\view-models\login-viewmodels.ts" />
+    <TypeScriptCompile Include="scripts\typings\angular-ui-router\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-component-router.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-cookies.d.ts" />
@@ -1436,9 +1452,9 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\directives\" />
+    <Folder Include="app\modules\" />
     <Folder Include="App_Data\" />
-    <Folder Include="scripts\gaia\directives\" />
-    <Folder Include="scripts\gaia\modules\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

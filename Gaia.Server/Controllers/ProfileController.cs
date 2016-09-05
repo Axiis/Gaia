@@ -29,7 +29,7 @@ namespace Gaia.Server.Controllers
         [HttpPost]
         [Route("api/profiles")]
         public IHttpActionResult RegisterUser([FromBody]RegistrationInfo info)
-            => _profileService.RegisterUser(info.TargetUser, info.AccountType, info.Credentials.ToArray())
+            => _profileService.RegisterUser(info.TargetUser, info.Credentials.ToArray())
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -37,7 +37,7 @@ namespace Gaia.Server.Controllers
         [HttpPost]
         [Route("api/admin-profiles")]
         public IHttpActionResult RegisterAdminUser([FromBody]RegistrationInfo info)
-            => _profileService.RegisterAdminUser(info.TargetUser, info.AccountType, info.Credentials.ToArray())
+            => _profileService.RegisterAdminUser(info.TargetUser, info.Credentials.ToArray())
                   .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
                   .Instead(opr => this.InternalServerError(opr.GetException()))
                   .Result;
@@ -106,7 +106,6 @@ namespace Gaia.Server.Controllers
         public class RegistrationInfo
         {
             public string TargetUser { get; set; }
-            public AccountType AccountType { get; set; }
             public List<Credential> Credentials { get; set; }
         }
 

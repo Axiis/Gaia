@@ -17,9 +17,12 @@ namespace Gaia.Core.System
         public static readonly KeyValuePair<string, TimeSpan> DefaultUserRegistrationVerificationExpiration 
             = "System.Profiles.UserRegistration.DefaultExpiration".ValuePair(TimeSpan.FromDays(2));
 
-        public static readonly KeyValuePair<string, TimeSpan> DefaultUserActivationVerificationExpiration 
+        public static readonly KeyValuePair<string, TimeSpan> DefaultUserActivationVerificationExpiration
             = "System.Profiles.UserActivation.DefaultExpiration".ValuePair(TimeSpan.FromDays(2));
 
+        public static readonly KeyValuePair<string, TimeSpan?> DefaultPasswordExpiration
+            = "System.Profiles.Credentials.PasswordExpiration".ValuePair<string,TimeSpan?>(null);
+        
 
         public static IEnumerable<SystemSetting> SettingsList()
         {
@@ -49,6 +52,15 @@ namespace Gaia.Core.System
                 Data = DefaultUserActivationVerificationExpiration.Value.ToString(),
                 CreatedBy = DomainConstants.RootAccount,
                 Name = DefaultUserActivationVerificationExpiration.Key,
+                Type = Axis.Luna.CommonDataType.TimeSpan
+            });
+
+            //DefaultPasswordExpiration
+            l.Add(new SystemSetting
+            {
+                Data = DefaultPasswordExpiration.Value.ToString(),
+                CreatedBy = DomainConstants.RootAccount,
+                Name = DefaultPasswordExpiration.Key,
                 Type = Axis.Luna.CommonDataType.TimeSpan
             });
 

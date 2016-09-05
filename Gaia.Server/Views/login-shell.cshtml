@@ -1,0 +1,95 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <title>Gaia - Login</title>
+
+    <link href="~/themes/londinium/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/themes/londinium/css/londinium-theme.css" rel="stylesheet" type="text/css">
+    <link href="~/themes/londinium/css/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/themes/londinium/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="~/fonts/cyrillic-ext.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css">
+
+
+    <script type="text/javascript" src="~/scripts/jquery-1.10.1.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery-ui-1.10.1.min.js"></script>
+    @*
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uniform.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/select2.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/inputmask.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/autosize.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/inputlimit.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/listbox.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/multiselect.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/validate.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/tags.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/switch.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uploader/plupload.full.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uploader/plupload.queue.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/wysihtml5/wysihtml5.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/wysihtml5/toolbar.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/daterangepicker.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/fancybox.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/moment.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/datatables.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/colorpicker.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/timepicker.min.js"></script>
+    *@
+
+    <script type="text/javascript" src="/themes/londinium/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="~/scripts/angular.min.js"></script>
+    <script type="text/javascript" src="~/scripts/angular-route.min.js"></script>
+    <script type="text/javascript" src="~/scripts/angular-ui-router.min.js"></script>
+
+</head>
+<body class="full-width page-condensed" ng-app="gaiaLogin">
+    <!-- Navbar -->
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="padding:1px;" href="#">
+                <img src="~/Content/images/GaiaLogo.svg" style="height:50px; width:40px;" alt="Gaia"> 
+                <span style="display:inline-block;margin-bottom:5px; vertical-align:bottom; font-family:jura; font-size:x-large">Gaia</span>
+            </a>
+        </div>
+    </div>
+    <!-- /navbar -->
+
+    <!-- Login wrapper -->
+    <div ui-view></div>
+    <!-- /login wrapper -->
+
+    <!-- Footer -->
+    <div class="footer clearfix">
+        <div class="pull-left"><b>&copy; &nbsp;@DateTime.Now.Year.</b> &nbsp; Powered By <a href="http://DevSoft.net.ng">DevSoft</a></div>
+        <div class="pull-right icons-group">
+            <a href="#"><i class="icon-screen2"></i></a>
+            <a href="#"><i class="icon-balance"></i></a>
+            <a href="#"><i class="icon-cog3"></i></a>
+        </div>
+    </div>
+    <!-- /footer -->
+
+
+
+    <script type="text/javascript" src="~/app/utils/extensions.js"></script>
+    <script type="text/javascript" src="~/app/utils/tools.js"></script>
+    <script type="text/javascript" src="~/app/login-app.js"></script>
+    <script type="text/javascript" src="~/app/domian-models/models.js"></script>
+    <script type="text/javascript" src="~/app/services/gaia-services.js"></script>
+    <script type="text/javascript" src="~/app/services/pollux-services.js"></script>
+    <script type="text/javascript" src="~/app/view-models/login-viewmodels.js"></script>
+
+</body>
+</html>

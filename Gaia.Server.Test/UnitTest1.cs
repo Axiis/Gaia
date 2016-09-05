@@ -15,9 +15,18 @@ using Axis.Pollux.RBAC.OAModule;
 using Gaia.Core.OAModule;
 using Axis.Pollux.Identity.Principal;
 using System.Linq;
+using Axis.Jupiter;
+using Gaia.Server.Controllers;
+using Gaia.Core.Services;
 
 namespace Gaia.Server.Test
 {
+    public class XLocator : IUserLocator
+    {
+        public string CurrentUser() => "@root";
+    }
+
+
     [TestClass]
     public class UnitTest1
     {
@@ -26,13 +35,24 @@ namespace Gaia.Server.Test
         {
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new LifetimeScopeLifestyle();
+            container.Options.AllowOverridingRegistrations = true;
 
+
+            var start = DateTime.Now;
             DIRegistration.RegisterTypes(container);
+            container.Register<IUserLocator, XLocator>(Lifestyle.Scoped);
+            Console.WriteLine($"registration: {DateTime.Now - start}");
 
-            container.BeginLifetimeScope().Using(scoped =>
+            using (var b = container.BeginLifetimeScope())
             {
-                var server = scoped.GetInstance<IOAuthAuthorizationServerProvider>();
-            });
+                start = DateTime.Now;
+                var x = b.GetInstance<IDataContext>();
+                Console.WriteLine($"dbcontext: {DateTime.Now - start}");
+
+                start = DateTime.Now;
+                var y = b.GetInstance<ProfileController>();
+                Console.WriteLine($"profile controller: {DateTime.Now - start}");
+            }
         }
 
         [TestMethod]

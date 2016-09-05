@@ -37,3 +37,9 @@
 2016/08/16 ====================================================================================
 
 1. I should consider building a html cache for html view files that the ViewServerController serves
+
+
+2016/09/04 ====================================================================================
+
+1.   The default Client Account is ment for non service-providers, i.e, people who will only have access to the marketplace to purchase goods and services.
+	 This means that i will have to flesh-out the market place service, and identify resources to grant the client-account.

@@ -65,7 +65,7 @@
     </Reference>
     <Reference Include="Axis.Pollux.Identity.OAModule, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.RBAC.OAModule\bin\Debug\Axis.Pollux.Identity.OAModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.Identity.OAModule\bin\Debug\Axis.Pollux.Identity.OAModule.dll</HintPath>
     </Reference>
     <Reference Include="Axis.Pollux.RBAC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -14,10 +14,10 @@ namespace Gaia.Core.Services
         ICredentialAuthentication CredentialAuth { get; }
 
         [Feature("system/Profiles/@register")]
-        Operation<ContextVerification> RegisterUser(string targetUser, AccountType accType, Credential[] secretCredentials);
+        Operation<ContextVerification> RegisterUser(string targetUser, Credential[] secretCredentials);
 
         [Feature("system/Profiles/@register-admin")]
-        Operation<ContextVerification> RegisterAdminUser(string targetUser, AccountType accType, Credential[] secretCredentials);
+        Operation<ContextVerification> RegisterAdminUser(string targetUser, Credential[] secretCredentials);
 
         [Feature("system/Profiles/@create-registration-verification")]
         Operation<ContextVerification> CreateRegistrationVerification(string targetUser);
@@ -59,9 +59,7 @@ namespace Gaia.Core.Services
 
     public enum AccountType
     {
-        Farmer,
-        ServiceProvider,
-        PolicyAdmin,
-        SystemAdmin
+        SystemUser,
+        AdminUser
     }
 }

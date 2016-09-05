@@ -10,6 +10,7 @@ namespace Gaia.Core.Utils
     public static class Extensions
     {
         public static string GaiaDomainTypeName(this Type type) => $"Gaia.Domain.[{type.Name}]"; //i may have to add other checks later
+        public static string ContextName(this Type type) => type.GaiaDomainTypeName();
 
         public static FeedEntry ToFeedEntry(this Post post) => new FeedEntry
         {
@@ -32,5 +33,8 @@ namespace Gaia.Core.Utils
             Title = post.Title, 
             ModifiedOn = post.ModifiedOn
         };
+
+        public static GeoArea ToGeoArea(this string data) => GeoArea.Parse(data);
+        public static GeoLocation ToGeoLocation(this string data) => GeoLocation.Parse(data);
     }
 }

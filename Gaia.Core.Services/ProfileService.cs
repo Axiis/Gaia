@@ -49,7 +49,7 @@ namespace Gaia.Core.Services
             this.SystemSettings = DataContext.Store<SystemSetting>().Query.ToDictionary(_st => _st.Name);
         }
 
-        public Operation<ContextVerification> RegisterUser(string userId, AccountType accountType, Credential[] secretCredentials)
+        public Operation<ContextVerification> RegisterUser(string userId, Credential[] secretCredentials)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
@@ -68,21 +68,31 @@ namespace Gaia.Core.Services
                     });
 
                     //assign credentials
-                    secretCredentials.Where(scred => scred.Metadata.Access == Access.Secret).ForAll((cnt, cred)
-                        => CredentialAuth.AssignCredential(userId, cred)
-                                         .ThrowIf(op => !op.Succeeded, op => new Exception("failed to assign credential")));
+                    //load all credential expiration dates from settings
+                    var settings = DataContext.Store<SystemSetting>().Query.ToArray();
+                    secretCredentials.Where(scred => scred.Metadata.Access == Access.Secret).ToArray().ForAll((cnt, cred) =>
+                    {
+                        settings.FirstOrDefault(s => s.Name.Contains($"{cred.Metadata.Name}Expiration"))
+                            .DoIf(s => s != null, s =>
+                            {
+                                TimeSpan temp;
+                                if (TimeSpan.TryParse(s.Data, out temp)) cred.ExpiresIn = temp;
+                                else cred.ExpiresIn = null; //<-- never expires
+                            });
+                        CredentialAuth.AssignCredential(userId, cred)
+                            .ThrowIf(op => !op.Succeeded, op => new Exception("failed to assign credential"));
+                    });
 
                     //apply the necessary access profile
                     return AccessManager.ApplyAccessProfile(userId,
-                                                            accountType == AccountType.Farmer ? DefaultFarmerAccessProfile :
-                                                            DefaultServiceProviderAccessProfile,
+                                                            DefaultClientAccessProfile,
                                                             null) //<-- null means this profile will never expire
 
                                         .Then(opr => CreateRegistrationVerification(userId)); //<-- verification
                 }
             });
 
-        public Operation<ContextVerification> RegisterAdminUser(string userId, AccountType accountType, Credential[] secretCredentials)
+        public Operation<ContextVerification> RegisterAdminUser(string userId, Credential[] secretCredentials)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
@@ -107,7 +117,6 @@ namespace Gaia.Core.Services
 
                     //apply the necessary access profile
                     return AccessManager.ApplyAccessProfile(userId,
-                                                            accountType == AccountType.SystemAdmin ? DefaultSystemAdminAccessProfile :
                                                             DefaultPolicyAdminAccessProfile,
                                                             null) //<-- null means this profile will never expire
 

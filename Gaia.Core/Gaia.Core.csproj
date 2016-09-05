@@ -58,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainConstants.cs" />
+    <Compile Include="Domain\Accounts\Farm.cs" />
+    <Compile Include="Domain\Accounts\Service.cs" />
     <Compile Include="Domain\Advert.cs" />
     <Compile Include="Domain\AdvertHit.cs" />
     <Compile Include="Domain\ForumThreadWatch.cs" />
@@ -85,7 +87,9 @@
     <Compile Include="Domain\Rating.cs" />
     <Compile Include="Services\IActivityFeedService.cs" />
     <Compile Include="Services\IAdvertService.cs" />
+    <Compile Include="Services\IBlobService.cs" />
     <Compile Include="Services\IContextVerificationService.cs" />
+    <Compile Include="Services\IMarketPlaceService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ICommentService.cs" />
     <Compile Include="Services\IUserContextService.cs" />
@@ -102,11 +106,13 @@
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\FeatureAccess.cs" />
     <Compile Include="Utils\FeatureAttribute.cs" />
+    <Compile Include="Utils\GeoData.cs" />
     <Compile Include="Utils\NamedQueries.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

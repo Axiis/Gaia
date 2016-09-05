@@ -1,3 +1,0 @@
-﻿
-module Gaia.MobileViewModels {
-}
