@@ -2,3 +2,45 @@
 @{
     Layout = null;
 }
+
+
+
+<div class="login-wrapper" style="width:400px !important; margin-top:-200px !important; margin-left:-200px !important;">
+    <form action="#" role="form">
+        <div class="popup-header">
+            <span class="text-semibold" style="font-size:medium; margin:8px !important;">Sign-up Request</span>
+        </div>
+        <div class="well">
+            <div class="form-group has-feedback">
+                <label>Email</label>
+                <input type="email" ng-model="vm.email" class="form-control" placeholder="Email address" required>
+                <i class="icon-users form-control-feedback"></i>
+            </div>
+
+            <div class="form-group has-feedback" style="margin-top:35px !important;">
+                <label class="text-warning">Password</label>
+                <input type="password" ng-model="vm.password" class="form-control" placeholder="Password" required>
+                <i class="icon-lock form-control-feedback"></i>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="text-warning">Verify Password</label>
+                <input type="password" ng-model="vm.verifyPassword" class="form-control" placeholder="Re-type password" required>
+                <i class="text-warning icon-lock form-control-feedback"></i>
+            </div>
+            <div class="row form-actions">
+                <div class="col-xs-6 col-xs-offset-6">
+                    <button type="button" ng-click="vm.signup()" class="btn btn-default pull-right"><i class="icon-arrow-right5"></i> Sign up</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div style="margin-top:20px;" class="alert-wrapper jgrowl-showcase" ng-class="{hidden:!vm.hasMessage()}">
+        <div class="jGrowl">
+            <div class="jGrowl-notification" ng-class="{'growl-error':vm.hasErrorMessage(), 'growl-success':vm.hasSuccessMessage()}">
+                <div class="jGrowl-header"><strong>{{vm.messageHeader}}</strong></div>
+                <div class="jGrowl-message" ng-bind-html="vm.message()"></div>
+            </div>
+        </div>
+    </div>
+</div>

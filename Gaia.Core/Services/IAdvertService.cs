@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface IAdvertService : IUserContextAware
+    public interface IAdvertService : IGaiaService, IUserContextAware
     {
         [Feature("system/User/Advert/@create")]
         Operation<Advert> CreateAdvert();

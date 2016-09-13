@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -89,6 +90,7 @@
     <Compile Include="Services\IAdvertService.cs" />
     <Compile Include="Services\IBlobService.cs" />
     <Compile Include="Services\IContextVerificationService.cs" />
+    <Compile Include="Services\IGaiaService.cs" />
     <Compile Include="Services\IMarketPlaceService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ICommentService.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Services\ISystemSettingsService.cs" />
     <Compile Include="Services\IUserLocator.cs" />
     <Compile Include="System\IContextAware.cs" />
+    <Compile Include="System\IMailPushService.cs" />
     <Compile Include="System\SystemSettings.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\FeatureAccess.cs" />

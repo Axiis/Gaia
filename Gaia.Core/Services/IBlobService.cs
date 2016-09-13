@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gaia.Core.Services
 {
-    public interface IBlobService: IUserContextService
+    public interface IBlobService : IGaiaService, IUserContextService
     {
     }
 }

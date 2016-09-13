@@ -49,3 +49,4 @@ var Gaia;
         Gaia.Utils.moduleConfig.withService('profileService', ProfileService); //<-- adds this service to all modules
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=gaia-services.js.map

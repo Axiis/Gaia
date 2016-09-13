@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface IActivityFeedService: IUserContextAware
+    public interface IActivityFeedService : IGaiaService, IUserContextAware
     {
         /// <summary>
         /// Loads a specified number of feeds from the source in descending order, starting from the date specified.

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface IAccessProfileService : IUserContextAware
+    public interface IAccessProfileService : IGaiaService, IUserContextAware
     {
         [Feature("system/AccessProfile/@create")]
         Operation<FeatureAccessProfile> CreateFeatureAccessProfile(string profileCode, string title);

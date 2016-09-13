@@ -15,6 +15,8 @@ using System.Linq;
 using Axis.Pollux.Authentication;
 using Axis.Pollux.Identity.Principal;
 using Axis.Pollux.Authentication.Service;
+using Gaia.Core.System;
+using Mail = System.Net.Mail;
 
 namespace Gaia.Core.Services
 {
@@ -25,13 +27,15 @@ namespace Gaia.Core.Services
         public ICredentialAuthentication CredentialAuth { get; private set; }
         public IContextVerificationService ContextVerifier { get; private set; }
         public IAccessProfileService AccessManager { get; private set; }
+        public IMailPushService MessagePush { get; private set; }
         public Dictionary<string, SystemSetting> SystemSettings { get; private set; }
 
 
         public ProfileService(IUserContextService userContext, IDataContext dataContext,
                               ICredentialAuthentication credentialAuthentication,
                               IContextVerificationService contextVerifier,
-                              IAccessProfileService accessManager)
+                              IAccessProfileService accessManager,
+                              IMailPushService messagePush)
         {
             ThrowNullArguments(() => userContext,
                                () => dataContext,
@@ -49,7 +53,7 @@ namespace Gaia.Core.Services
             this.SystemSettings = DataContext.Store<SystemSetting>().Query.ToDictionary(_st => _st.Name);
         }
 
-        public Operation<ContextVerification> RegisterUser(string userId, Credential[] secretCredentials)
+        public Operation RegisterUser(string userId, Credential[] secretCredentials)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
@@ -84,15 +88,23 @@ namespace Gaia.Core.Services
                     });
 
                     //apply the necessary access profile
-                    return AccessManager.ApplyAccessProfile(userId,
+                    AccessManager.ApplyAccessProfile(userId,
                                                             DefaultClientAccessProfile,
                                                             null) //<-- null means this profile will never expire
 
-                                        .Then(opr => CreateRegistrationVerification(userId)); //<-- verification
+                                 .Then(opr => CreateRegistrationVerification(userId)) //<-- verification
+
+                                 .Then(opr =>
+                                 {
+                                     //construct the email that gets sent to the user
+                                     var mail = new Mail.MailMessage();
+
+                                     MessagePush.Push(mail);
+                                 });
                 }
             });
 
-        public Operation<ContextVerification> RegisterAdminUser(string userId, Credential[] secretCredentials)
+        public Operation RegisterAdminUser(string userId, Credential[] secretCredentials)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
@@ -116,11 +128,19 @@ namespace Gaia.Core.Services
                                          .ThrowIf(op => !op.Succeeded, op => new Exception("failed to assign credential")));
 
                     //apply the necessary access profile
-                    return AccessManager.ApplyAccessProfile(userId,
+                    AccessManager.ApplyAccessProfile(userId,
                                                             DefaultPolicyAdminAccessProfile,
                                                             null) //<-- null means this profile will never expire
 
-                                        .Then(opr => CreateRegistrationVerification(userId)); //<-- verification
+                                 .Then(opr => CreateRegistrationVerification(userId)) //<-- verification
+
+                                 .Then(opr =>
+                                  {
+                                      //construct the email that gets sent to the user
+                                      var mail = new Mail.MailMessage();
+
+                                      MessagePush.Push(mail);
+                                  });
                 }
             });
 

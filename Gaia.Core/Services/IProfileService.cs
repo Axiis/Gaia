@@ -14,10 +14,10 @@ namespace Gaia.Core.Services
         ICredentialAuthentication CredentialAuth { get; }
 
         [Feature("system/Profiles/@register")]
-        Operation<ContextVerification> RegisterUser(string targetUser, Credential[] secretCredentials);
+        Operation RegisterUser(string targetUser, Credential[] secretCredentials);
 
         [Feature("system/Profiles/@register-admin")]
-        Operation<ContextVerification> RegisterAdminUser(string targetUser, Credential[] secretCredentials);
+        Operation RegisterAdminUser(string targetUser, Credential[] secretCredentials);
 
         [Feature("system/Profiles/@create-registration-verification")]
         Operation<ContextVerification> CreateRegistrationVerification(string targetUser);

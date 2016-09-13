@@ -17,6 +17,7 @@ var Gaia;
                 lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
         }
         Utils.NewGuid = NewGuid;
+        //Class that implements pagination
         var SequencePage = (function () {
             function SequencePage(page, pageIndex, pageSize, sequenceLength) {
                 this.Page = [];
@@ -56,6 +57,7 @@ var Gaia;
             return SequencePage;
         }());
         Utils.SequencePage = SequencePage;
+        //Used to configure the registered angular modules with services and controllers
         var ModuleConfigurer = (function () {
             function ModuleConfigurer() {
                 this._modules = [];
@@ -84,5 +86,8 @@ var Gaia;
             return ModuleConfigurer;
         }());
         Utils.moduleConfig = new ModuleConfigurer();
+        //constant for fetching authorization from local browser keystore
+        Utils.OAuthTokenKey = 'Gaia.Security.OAuth.AuthorizationToken#KEY';
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=tools.js.map

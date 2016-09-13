@@ -4,7 +4,7 @@ var Gaia;
     (function (App) {
         var Login;
         (function (Login) {
-            Login.module = angular.module("gaiaLogin", ['ngRoute', 'ui.router']);
+            Login.module = angular.module("gaiaLogin", ['ngRoute', 'ui.router', 'ngSanitize']);
             Gaia.Utils.moduleConfig.addModule(Login.module);
             //configure states
             Login.module.config(function ($stateProvider, $urlRouterProvider) {
@@ -13,24 +13,29 @@ var Gaia;
                     .state('signin', {
                     url: '/signin',
                     templateUrl: 'signin',
-                    controller: 'SigninViewModel'
+                    controller: 'SigninViewModel',
+                    controllerAs: 'vm'
                 })
                     .state('signup', {
                     url: '/signup',
                     templateUrl: 'signup',
-                    controller: 'SignUpViewModel'
+                    controller: 'SignupViewModel',
+                    controllerAs: 'vm'
                 })
                     .state('passwordRecoveryRequest', {
                     url: '/recovery-request',
                     templateUrl: 'recovery-request',
-                    controller: 'RecoveryRequestViewModel'
+                    controller: 'RecoveryRequestViewModel',
+                    controllerAs: 'vm'
                 })
                     .state('recoverPassword', {
                     url: '/recover/:recoveryToken',
                     templateUrl: 'recover-password',
-                    controller: 'RecoverPasswordViewModel'
+                    controller: 'RecoverPasswordViewModel',
+                    controllerAs: 'vm'
                 });
             });
         })(Login = App.Login || (App.Login = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=login-app.js.map

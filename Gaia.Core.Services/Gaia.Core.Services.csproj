@@ -72,6 +72,7 @@
     <Compile Include="AccessProfileService.cs" />
     <Compile Include="SystemSettingService.cs" />
     <Compile Include="UserContext.cs" />
+    <Compile Include="Utils\MailClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gaia.Core\Gaia.Core.csproj">

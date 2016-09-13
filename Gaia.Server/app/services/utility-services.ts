@@ -22,19 +22,19 @@ module Gaia.Utils.Services {
         }
         
         jsonp<T>(url: string, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
-            return this.jsonp(url, config);
+            return this.http.jsonp(url, config);
         }
         
         post<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
-            return this.post(url, config);
+            return this.http.post(url, data, config);
         }
         
         put<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
-            return this.put(url, config);
+            return this.http.put(url, data, config);
         }
         
         patch<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
-            return this.patch(url, config);
+            return this.http.patch(url, data, config);
         }
     }
     Gaia.Utils.moduleConfig.withService('DomainTransport', DomainTransport);

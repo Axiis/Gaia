@@ -2,7 +2,7 @@
 module Gaia.App.Login {
 
     
-    export const module = angular.module("gaiaLogin", ['ngRoute', 'ui.router']);
+    export const module = angular.module("gaiaLogin", ['ngRoute', 'ui.router', 'ngSanitize']);
     Gaia.Utils.moduleConfig.addModule(module);
 
     //configure states
@@ -13,22 +13,26 @@ module Gaia.App.Login {
             .state('signin', {
                 url: '/signin',
                 templateUrl: 'signin', //<-- /view-server/signin
-                controller: 'SigninViewModel'
+                controller: 'SigninViewModel',
+                controllerAs: 'vm'
             })
             .state('signup', {
                 url: '/signup',
                 templateUrl: 'signup', //<-- /view-server/signup
-                controller: 'SignUpViewModel'
+                controller: 'SignupViewModel',
+                controllerAs: 'vm'
             })
             .state('passwordRecoveryRequest', {
                 url: '/recovery-request',
                 templateUrl: 'recovery-request', //<-- /view-server/recovery-request
-                controller: 'RecoveryRequestViewModel'
+                controller: 'RecoveryRequestViewModel',
+                controllerAs: 'vm'
             })
             .state('recoverPassword', {
                 url: '/recover/:recoveryToken',
                 templateUrl: 'recover-password', //<-- /view-server/recover-password
-                controller: 'RecoverPasswordViewModel'
+                controller: 'RecoverPasswordViewModel',
+                controllerAs: 'vm'
             });
     });
 

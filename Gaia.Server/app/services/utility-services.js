@@ -20,16 +20,16 @@ var Gaia;
                     return this.http.head(url, config);
                 };
                 DomainTransport.prototype.jsonp = function (url, config) {
-                    return this.jsonp(url, config);
+                    return this.http.jsonp(url, config);
                 };
                 DomainTransport.prototype.post = function (url, data, config) {
-                    return this.post(url, config);
+                    return this.http.post(url, data, config);
                 };
                 DomainTransport.prototype.put = function (url, data, config) {
-                    return this.put(url, config);
+                    return this.http.put(url, data, config);
                 };
                 DomainTransport.prototype.patch = function (url, data, config) {
-                    return this.patch(url, config);
+                    return this.http.patch(url, data, config);
                 };
                 return DomainTransport;
             }());
@@ -38,3 +38,4 @@ var Gaia;
         })(Services = Utils.Services || (Utils.Services = {}));
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=utility-services.js.map

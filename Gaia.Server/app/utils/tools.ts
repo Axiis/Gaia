@@ -13,7 +13,7 @@ module Gaia.Utils {
                lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
     }
 
-
+    //Class that implements pagination
     export class SequencePage<Data>{
 
         PageIndex: number;
@@ -64,6 +64,8 @@ module Gaia.Utils {
 
     }
 
+
+    //Used to configure the registered angular modules with services and controllers
     class ModuleConfigurer {
         private _modules: Array<ng.IModule> = [];
 
@@ -90,5 +92,9 @@ module Gaia.Utils {
         }
     }
     export const moduleConfig = new ModuleConfigurer();
+
+
+    //constant for fetching authorization from local browser keystore
+    export const OAuthTokenKey = 'Gaia.Security.OAuth.AuthorizationToken#KEY';
 
 }
