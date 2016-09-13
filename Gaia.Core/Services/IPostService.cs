@@ -5,7 +5,7 @@ using Gaia.Core.Utils;
 
 namespace Gaia.Core.Services
 {
-    public interface IPostService : IUserContextAware
+    public interface IPostService : IGaiaService, IUserContextAware
     {
         [Feature("system/User/Post/@create")]
         Operation<Post> CreatePost(string title);

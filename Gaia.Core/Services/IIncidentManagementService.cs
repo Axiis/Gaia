@@ -2,7 +2,7 @@
 
 namespace Gaia.Core.Services
 {
-    public interface IIncidentManagementService : IUserContextAware
+    public interface IIncidentManagementService : IGaiaService, IUserContextAware
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Gaia.Core.Services
 {
-    public interface IRatingService : IUserContextAware
+    public interface IRatingService : IGaiaService, IUserContextAware
     {
     }
 }

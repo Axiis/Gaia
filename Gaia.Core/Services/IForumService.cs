@@ -5,7 +5,7 @@ using Gaia.Core.Utils;
 
 namespace Gaia.Core.Services
 {
-    public interface IForumService : IUserContextAware
+    public interface IForumService : IGaiaService, IUserContextAware
     {
         [Feature("system/Forums/Topic/@create")]
         Operation<ForumTopic> CreateTopic(string title);

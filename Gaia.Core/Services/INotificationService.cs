@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface INotificationService : IUserContextAware
+    public interface INotificationService : IGaiaService, IUserContextAware
     {
         [Feature("system/Notifications/@notify")]
         Operation<Notification> Notify(string targetUser, string title, string message, string contextName, long contextId);

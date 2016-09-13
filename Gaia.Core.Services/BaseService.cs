@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Gaia.Core.Services
 {
-    public abstract class BaseService : IUserContextAware
+    public abstract class BaseService : IGaiaService, IUserContextAware
     {
         public virtual IUserContextService UserContext { get; protected set; }
     }

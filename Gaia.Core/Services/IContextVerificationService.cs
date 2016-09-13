@@ -6,7 +6,7 @@ using System;
 
 namespace Gaia.Core.Services
 {
-    public interface IContextVerificationService: IUserContextAware
+    public interface IContextVerificationService : IGaiaService, IUserContextAware
     {
         [Feature("system/User/ContextVerification/@create-default")]
         Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext);

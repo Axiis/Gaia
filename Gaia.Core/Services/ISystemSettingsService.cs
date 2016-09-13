@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface ISystemSettingsService: IUserContextAware
+    public interface ISystemSettingsService : IGaiaService, IUserContextAware
     {
 
         [Feature("system/Settings/@modify")]

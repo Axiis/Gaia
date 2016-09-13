@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gaia.Core.Services
 {
-    public interface IUserContextService
+    public interface IUserContextService : IGaiaService
     {
         User CurrentUser { get; }
 

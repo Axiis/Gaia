@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gaia.Core.Services
 {
-    public interface IUserLocator
+    public interface IUserLocator : IGaiaService
     {
         /// <summary>
         /// retrieves and returns the name of the currently authenticated user in the execution context (or request context)

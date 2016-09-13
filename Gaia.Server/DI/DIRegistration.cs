@@ -31,6 +31,8 @@ namespace Gaia.Server.DI
     {
         public static void RegisterTypes(Container c)
         {
+            var coreAssembly = typeof(GaiaEntity<>).Assembly;
+            var serviceAssembly = typeof(BaseService).Assembly;
 
             #region infrastructure service registration
             c.Register<AuthorizationServer>();
@@ -113,19 +115,19 @@ namespace Gaia.Server.DI
 
             //objects
             var gaiaEntityType = typeof(GaiaEntity<>);
-            gaiaEntityType.Assembly.GetTypes()
-                          .Where(_t => _t.BaseTypes().Any(_bt => !_bt.IsGenericTypeDefinition && _bt.IsGenericType && _bt.GetGenericTypeDefinition().Equals(gaiaEntityType)))
-                          .ForAll((_cnt, _t) => c.Register(_t));
+            coreAssembly.GetTypes()
+                .Where(_t => _t.BaseTypes().Any(_bt => !_bt.IsGenericTypeDefinition && _bt.IsGenericType && _bt.GetGenericTypeDefinition().Equals(gaiaEntityType)))
+                .ForAll((_cnt, _t) => c.Register(_t));
 
             //services
+            var gaiaService = typeof(IGaiaService);
             var gaiaBaseService = typeof(BaseService);
-            var serviceImplAssembly = gaiaBaseService.Assembly;
             gaiaEntityType.Assembly.GetTypes()
-                          .Where(_t => _t.Namespace?.Equals("Gaia.Core.Services") ?? false)
-                          .Where(_t => _t.IsInterface)
-                          .Select(_t => new { @interface = _t, implementation = serviceImplAssembly.GetTypes().FirstOrDefault(_impl => _impl.GetInterfaces().Contains(_t)) })
-                          .Where(_pair => _pair.implementation != null)
-                          .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation, Lifestyle.Scoped));
+                .Where(_t => _t.IsInterface)
+                .Where(_t => _t.GetInterfaces().Contains(gaiaService))
+                .Select(_t => new { @interface = _t, implementation = serviceAssembly.GetTypes().FirstOrDefault(_impl => _impl.GetInterfaces().Contains(_t)) })
+                .Where(_pair => _pair.implementation != null)
+                .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation, Lifestyle.Scoped));
             #endregion
 
             #region Others

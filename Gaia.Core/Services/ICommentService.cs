@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface ICommentService : IUserContextAware
+    public interface ICommentService : IGaiaService, IUserContextAware
     {
         [Feature("system/Comments/@comments-for")]
         Operation<IEnumerable<Comment>> CommentsFor(string contextName, long contextId);

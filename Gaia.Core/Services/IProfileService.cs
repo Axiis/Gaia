@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Gaia.Core.Services
 {
-    public interface IProfileService : IUserContextAware
+    public interface IProfileService : IGaiaService, IUserContextAware
     {
         ICredentialAuthentication CredentialAuth { get; }
 
