@@ -28,8 +28,8 @@ namespace Gaia.Server.Controllers
         [Route("api/activity-feeds/@{count}/@{from}")]
         public IHttpActionResult LoadPastFeeds(int count, DateTime? from)
             => _activityFeed.LoadPastFeeds(count, from)
-                .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                .Instead(opr => this.InternalServerError(opr.GetException()))
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -37,8 +37,8 @@ namespace Gaia.Server.Controllers
         [Route("api/activity-feeds/recent/@{count}/@{from}")]
         public IHttpActionResult LoadRecentFeeds(int count, DateTime from)
             => _activityFeed.LoadRecentFeeds(count, from)
-                .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                .Instead(opr => this.InternalServerError(opr.GetException()))
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -46,8 +46,8 @@ namespace Gaia.Server.Controllers
         [Route("api/activity-feeds/pinned-entries/@{postId}/@{postType}")]
         public IHttpActionResult PinEntry(long postId, string postType)
             => _activityFeed.PinEntry(postId, postType)
-                .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                .Instead(opr => this.InternalServerError(opr.GetException()))
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -55,8 +55,8 @@ namespace Gaia.Server.Controllers
         [Route("api/activity-feeds/pinned-entries/@{pinId}")]
         public IHttpActionResult UnpinEntry(long pinId)
             => _activityFeed.UnpinEntry(pinId)
-                .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                .Instead(opr => this.InternalServerError(opr.GetException()))
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -64,8 +64,8 @@ namespace Gaia.Server.Controllers
         [Route("api/activity-feeds/pinned-entries/@{pinContextId}/@{pinContextType}")]
         public IHttpActionResult UnpinEntry(long pinContextId, string pinContextType)
             => _activityFeed.UnpinEntry(pinContextId, pinContextType)
-                .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                .Instead(opr => this.InternalServerError(opr.GetException()))
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -73,8 +73,8 @@ namespace Gaia.Server.Controllers
         [Route("api/activity-feeds/pinned-entries/@{count}/@{from}")]
         public IHttpActionResult LoadPinnedFeeds(int count, DateTime? from)
             => _activityFeed.LoadPinnedFeeds(count, from)
-                .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                .Instead(opr => this.InternalServerError(opr.GetException()))
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
     }

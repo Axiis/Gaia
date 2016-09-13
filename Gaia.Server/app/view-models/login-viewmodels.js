@@ -33,7 +33,8 @@ var Gaia;
             Login.Signin = Signin;
             Gaia.Utils.moduleConfig.withController('SigninViewModel', Signin);
             var Signup = (function () {
-                function Signup(transport) {
+                function Signup($state, transport) {
+                    this.$state = $state;
                     this.transport = transport;
                     this.errorMessage = null;
                     this.successMessage = null;
@@ -79,20 +80,31 @@ var Gaia;
                     }
                     this.transport.post('/api/profiles', {
                         'TargetUser': this.email,
+                        'Credentials': [{
+                                'Value': this.password,
+                                'Metadata': {
+                                    'Name': 'Password',
+                                    'Access': 1
+                                }
+                            }]
                     }, {
                         headers: {
                             Accept: 'application/json'
                         }
                     })
                         .success(function (s) {
-                        _this.setMessage('Splendid!', 'An email has been sent to <strong>' + _this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers', false);
+                        //this.setMessage('Splendid!', '', false);
+                        _this.$state.go('message', {
+                            back: 'signin',
+                            message: '<h2>Splendid!<h2>An email has been sent to <strong>' + _this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
+                        });
                     })
                         .error(function (e) {
-                        //report the error
-                        _this.setMessage('Oops!', 'Error message here', true);
+                        _this.setMessage('Oops!', e.Message, true);
+                        _this.password = _this.verifyPassword = null;
                     });
                 };
-                Signup.$inject = ['DomainTransport'];
+                Signup.$inject = ['$state', 'DomainTransport'];
                 return Signup;
             }());
             Login.Signup = Signup;
@@ -111,7 +123,22 @@ var Gaia;
             }());
             Login.RecoverPassword = RecoverPassword;
             Gaia.Utils.moduleConfig.withController('RecoverPasswordViewModel', RecoverPassword);
+            var MessageViewModel = (function () {
+                function MessageViewModel($state, $stateParams) {
+                    this.$state = $state;
+                    this.$stateParams = $stateParams;
+                }
+                MessageViewModel.prototype.ok = function () {
+                    this.$state.go(this.$stateParams['back'] || 'signin');
+                };
+                MessageViewModel.prototype.message = function () {
+                    return this.$stateParams['message'];
+                };
+                MessageViewModel.$inject = ['$state', '$stateParams'];
+                return MessageViewModel;
+            }());
+            Login.MessageViewModel = MessageViewModel;
+            Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
         })(Login = ViewModels.Login || (ViewModels.Login = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=login-viewmodels.js.map

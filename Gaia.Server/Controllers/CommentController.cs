@@ -23,7 +23,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CommentsFor(string contextName, long contextId)
             => _commentService.CommentsFor(contextName, contextId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -32,7 +32,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CommentOn([FromBody]Comment comment)
             => _commentService.CommentOn(comment?.ContextName, comment?.ContextId ?? 0, comment?.CommentText)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -41,7 +41,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult ReplyTo([FromBody]Comment comment)
             => _commentService.ReplyTo(comment?.ContextId ?? 0, comment?.CommentText)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -50,7 +50,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult ReactTo([FromBody]Reaction reaction)
             => _commentService.ReactTo(reaction?.ContextName, reaction?.ContextId ?? 0, reaction?.ReactionCode)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
     }
 

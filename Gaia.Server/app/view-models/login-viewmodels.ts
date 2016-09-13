@@ -90,30 +90,34 @@ module Gaia.ViewModels.Login {
 
             this.transport.post('/api/profiles', {
                 'TargetUser': this.email,
-                //'Credentials': [{
-                //    'Value': this.password,
-                //    'Metadata': {
-                //        'Name': 'Password',
-                //        'Access': 1
-                //    }
-                //}]
+                'Credentials': [{
+                    'Value': this.password,
+                    'Metadata': {
+                        'Name': 'Password',
+                        'Access': 1
+                    }
+                }]
             }, {
                 headers: {
                     Accept: 'application/json'
                 }
             })
             .success(s => {//success
-                    this.setMessage('Splendid!', 'An email has been sent to <strong>' + this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers', false);
+                //this.setMessage('Splendid!', '', false);
+                this.$state.go('message', {
+                    back: 'signin',
+                    message: '<h2>Splendid!<h2>An email has been sent to <strong>' + this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
+                });
             })
             .error(e => {//error
-                //report the error
-                this.setMessage('Oops!', 'Error message here', true);
+                this.setMessage('Oops!', e.Message, true);
+                this.password = this.verifyPassword = null;
             });
         }
 
 
-        static $inject = ['DomainTransport'];
-        constructor(private transport: Gaia.Utils.Services.DomainTransport) {
+        static $inject = ['$state', 'DomainTransport'];
+        constructor(private $state: angular.ui.IStateService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
     Gaia.Utils.moduleConfig.withController('SignupViewModel', Signup);
@@ -133,4 +137,22 @@ module Gaia.ViewModels.Login {
         }
     }
     Gaia.Utils.moduleConfig.withController('RecoverPasswordViewModel', RecoverPassword);
+
+
+    export class MessageViewModel {
+
+        static $inject = ['$state', '$stateParams'];
+        constructor(private $state: angular.ui.IStateService, private $stateParams: angular.ui.IStateParamsService) {
+        }
+
+        ok() {
+            this.$state.go(this.$stateParams['back'] || 'signin');
+        }
+
+        message(): string {
+            return this.$stateParams['message'];
+        }
+    }
+    Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
+
 }

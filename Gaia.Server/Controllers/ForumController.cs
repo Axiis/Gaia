@@ -25,7 +25,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CreateTopic(string title)
             => _forumService.CreateTopic(title)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
@@ -34,7 +34,7 @@ namespace Gaia.Server.Controllers
             => Operation.Try(() => topic.ToDomain())
                 .Then(opr => _forumService.ModifyTopic(opr.Result))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
@@ -42,7 +42,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult FlagTopic(long topicId)
             => _forumService.FlagTopic(topicId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CreateThread(string title, long topic)
             => _forumService.CreateThread(title, topic)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
@@ -59,7 +59,7 @@ namespace Gaia.Server.Controllers
             => Operation.Try(() => thread.ToDomain())
                 .Then(opr => _forumService.ModifyThread(opr.Result))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
@@ -67,7 +67,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult FlagThread(long threadId)
             => _forumService.FlagThread(threadId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPost]
@@ -75,7 +75,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult WatchThread(long threadId)
             => _forumService.WatchThread(threadId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
     }
 

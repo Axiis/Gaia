@@ -128,6 +128,7 @@ namespace Gaia.Server.DI
                 .Select(_t => new { @interface = _t, implementation = serviceAssembly.GetTypes().FirstOrDefault(_impl => _impl.GetInterfaces().Contains(_t)) })
                 .Where(_pair => _pair.implementation != null)
                 .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation, Lifestyle.Scoped));
+
             #endregion
 
             #region Others

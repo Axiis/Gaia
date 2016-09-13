@@ -25,7 +25,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CreatePost(string title)
             => _postService.CreatePost(title)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
@@ -34,7 +34,7 @@ namespace Gaia.Server.Controllers
             => Operation.Try(() => post.ToDomain())
                 .Then(opr => _postService.EditPost(opr.Result))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -43,7 +43,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult Publish(long postId)
             => _postService.Publish(postId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -52,7 +52,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult Archive(long postId)
             => _postService.Archive(postId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
     }
 

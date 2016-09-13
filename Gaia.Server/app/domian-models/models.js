@@ -531,4 +531,3 @@ var Gaia;
         Domain.Credential = Credential;
     })(Domain = Gaia.Domain || (Gaia.Domain = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=models.js.map

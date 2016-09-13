@@ -24,7 +24,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CreateVerificationObject(string userId, string verificationContext)
             => _contextVeirification.CreateVerificationObject(userId, verificationContext)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPost]
@@ -32,7 +32,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult CreateVerificationObject(string userId, string verificationContext, DateTime expiryDate)
             => _contextVeirification.CreateVerificationObject(userId, verificationContext, expiryDate)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
@@ -40,7 +40,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult VerifyContext(string userId, string verificationContext, string token)
             => _contextVeirification.VerifyContext(userId, verificationContext, token)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
     }
 }

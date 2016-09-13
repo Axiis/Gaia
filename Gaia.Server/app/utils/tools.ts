@@ -94,6 +94,19 @@ module Gaia.Utils {
     export const moduleConfig = new ModuleConfigurer();
 
 
+    //Operation class
+    export class Operation<R>{
+        Message: string;
+        Result: R;
+        Succeeded: boolean;
+
+        Resolve(): R {
+            if (!this.Succeeded && this.Message) throw this.Message;
+            else return this.Result;
+        }
+    }
+
+
     //constant for fetching authorization from local browser keystore
     export const OAuthTokenKey = 'Gaia.Security.OAuth.AuthorizationToken#KEY';
 

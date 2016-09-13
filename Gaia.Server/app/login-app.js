@@ -33,9 +33,14 @@ var Gaia;
                     templateUrl: 'recover-password',
                     controller: 'RecoverPasswordViewModel',
                     controllerAs: 'vm'
+                })
+                    .state('message', {
+                    url: '/message/:back/:message',
+                    templateUrl: 'login-message',
+                    controller: 'MessageViewModel',
+                    controllerAs: 'vm'
                 });
             });
         })(Login = App.Login || (App.Login = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=login-app.js.map

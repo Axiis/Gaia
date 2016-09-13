@@ -86,8 +86,20 @@ var Gaia;
             return ModuleConfigurer;
         }());
         Utils.moduleConfig = new ModuleConfigurer();
+        //Operation class
+        var Operation = (function () {
+            function Operation() {
+            }
+            Operation.prototype.Resolve = function () {
+                if (!this.Succeeded && this.Message)
+                    throw this.Message;
+                else
+                    return this.Result;
+            };
+            return Operation;
+        }());
+        Utils.Operation = Operation;
         //constant for fetching authorization from local browser keystore
         Utils.OAuthTokenKey = 'Gaia.Security.OAuth.AuthorizationToken#KEY';
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=tools.js.map

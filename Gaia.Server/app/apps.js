@@ -5,4 +5,3 @@
 //    ////module for tiny screen devices (moblie)
 //    //export const gaiaMobile = angular.module("gaia-mobile", ['ui.router']);    
 //} 
-//# sourceMappingURL=apps.js.map

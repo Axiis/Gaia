@@ -25,7 +25,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult ClearNotification(long notificationId)
             => _notificationService.ClearNotification(notificationId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpDelete]
@@ -33,7 +33,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult ClearAllNotifications()
             => _notificationService.ClearAllNotifications()
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
@@ -42,7 +42,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult NotificationsFor(string targetUser)
             => _notificationService.NotificationsFor(targetUser)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpGet]
@@ -50,7 +50,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult Notifications()
             => _notificationService.Notifications()
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
     }
 }

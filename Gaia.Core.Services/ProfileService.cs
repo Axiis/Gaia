@@ -59,6 +59,10 @@ namespace Gaia.Core.Services
                 var userstore = DataContext.Store<User>();
                 if (UserContext.CurrentUser == null || userstore.Query.Any(_user => _user.EntityId == userId))
                     throw new Exception($"{userId} already exists");
+
+                else if (secretCredentials == null || secretCredentials.Length == 0)
+                    throw new Exception("user registration must contain a credential");
+
                 else
                 {
                     userstore.NewObject().Do(__user =>

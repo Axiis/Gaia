@@ -29,16 +29,16 @@ namespace Gaia.Server.Controllers
         [Route("api/access-profiles/@{profileCode}/@{title}")]
         public IHttpActionResult CreateFeatureAccessProfile(string profileCode, string title)
             => _accessProfile.CreateFeatureAccessProfile(profileCode, title)
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
         [HttpPut]
         [Route("api/access-profiles")]
         public IHttpActionResult ModifyFeatureAccessProfile([FromBody]AccessProfileInfo info)
             => _accessProfile.ModifyFeatureAccessProfile(info.Profile, info.Granted.ToArray(), info.Denied.ToArray())
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -46,8 +46,8 @@ namespace Gaia.Server.Controllers
         [Route("api/access-profiles/archives/@{profileId}")]
         public IHttpActionResult ArchiveAccessProfile(long profileId)
             => _accessProfile.ArchiveAccessProfile(profileId)
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -55,8 +55,8 @@ namespace Gaia.Server.Controllers
         [Route("api/access-profiles/applications")]
         public IHttpActionResult ApplyAccessProfile([FromBody]AccessProfileApplication application)
             => _accessProfile.ApplyAccessProfile(application.UserId, application.Code, application.ExpiryDate)
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -64,8 +64,8 @@ namespace Gaia.Server.Controllers
         [Route("api/access-profiles/@{userId}/@{accessProfileCode}")]
         public IHttpActionResult RevokeAccessProfile(string userId, string accessProfileCode)
             => _accessProfile.RevokeAccessProfile(userId, accessProfileCode)
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -73,8 +73,8 @@ namespace Gaia.Server.Controllers
         [Route("api/access-profiles/migrations")]
         public IHttpActionResult MigrateAccessProfile([FromBody]AccessProfileMigration migration)
             => _accessProfile.MigrateAccessProfile(migration.UserId, migration.OldAccessProfileCode, migration.NewAccessProfileCode, migration.NewExpiry)
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -82,8 +82,8 @@ namespace Gaia.Server.Controllers
         [Route("api/access-profiles/@{userId}")]
         public IHttpActionResult ActiveUserAccessProfiles(string userId)
             => _accessProfile.ActiveUserAccessProfiles(userId)
-                  .Then(opr => this.Ok().As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
     }
 

@@ -33,6 +33,12 @@ module Gaia.App.Login {
                 templateUrl: 'recover-password', //<-- /view-server/recover-password
                 controller: 'RecoverPasswordViewModel',
                 controllerAs: 'vm'
+            })
+            .state('message', {
+                url: '/message/:back/:message',
+                templateUrl: 'login-message', //<-- /view-server/account-message
+                controller: 'MessageViewModel',
+                controllerAs: 'vm'
             });
     });
 

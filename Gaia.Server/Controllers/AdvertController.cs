@@ -26,8 +26,8 @@ namespace Gaia.Server.Controllers
         [Route("api/adverts")]
         public IHttpActionResult CreateAdvert()
             => _advert.CreateAdvert()
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -35,8 +35,8 @@ namespace Gaia.Server.Controllers
         [Route("api/adverts/drafts")]
         public IHttpActionResult DeleteDraft(long advertId)
             => _advert.DeleteDraft(advertId)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -44,40 +44,40 @@ namespace Gaia.Server.Controllers
         [Route("api/adverts")]
         public IHttpActionResult UpdateAdvert([FromBody]Advert advert)
             => _advert.UpdateAdvert(advert)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
         [HttpPut]
         [Route("api/adverts/reviews/@{advertId}")]
         public IHttpActionResult SubmitForReview(long advertId)
             => _advert.SubmitForReview(advertId)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
         [HttpPut]
         [Route("api/adverts/published/@{advertId}")]
         public IHttpActionResult Publish(long advertId)
             => _advert.Publish(advertId)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
         [HttpPut]
         [Route("api/adverts/suspended/@{advertId}")]
         public IHttpActionResult Suspend(long advertId)
             => _advert.Suspend(advertId)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
         [HttpPut]
         [Route("api/adverts/archived/@{advertId}")]
         public IHttpActionResult Archive(long advertId)
             => _advert.Archive(advertId)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -96,7 +96,7 @@ namespace Gaia.Server.Controllers
             => Operation.Try(() => exposed.Split(',').Select(v => long.Parse(v)).ToArray())
                   .Then(opr => _advert.NextAdvert(opr.Result))
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
 
@@ -104,8 +104,8 @@ namespace Gaia.Server.Controllers
         [Route("api/adverts/hits/@{advertId}")]
         public IHttpActionResult Hit(long advertId)
             => _advert.Hit(advertId)
-                  .Then(opr => this.Ok(opr.Result).As<IHttpActionResult>())
-                  .Instead(opr => this.InternalServerError(opr.GetException()))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
         
     }

@@ -568,6 +568,7 @@
     <Content Include="Views\signup.cshtml" />
     <None Include="Views\Secured\Errors\Error.cshtml" />
     <Content Include="Views\web.config" />
+    <Content Include="Views\login-messsage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -25,7 +25,7 @@ namespace Gaia.Server.Controllers
             => Operation.Try(() => settings.ToDomain())
                 .Then(opr => _systemSettingsService.ModifySetting(opr.Result.Name, opr.Result.Data))
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult GetSettings()
             => _systemSettingsService.GetSettings()
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => InternalServerError(opr.GetException()))
+                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
     }
 
