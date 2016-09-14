@@ -44,7 +44,7 @@ namespace Gaia.Server.Controllers
                   .Result;
 
         [HttpPut]
-        [Route("api/profiles/verificaftion")]
+        [Route("api/profiles/verification")]
         public IHttpActionResult VerifyUserRegistration([FromBody]UserValueInfo userValue)
             => _profileService.VerifyUserRegistration(userValue.User, userValue.Value)
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())

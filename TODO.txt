@@ -43,3 +43,7 @@
 
 1.   The default Client Account is ment for non service-providers, i.e, people who will only have access to the marketplace to purchase goods and services.
 	 This means that i will have to flesh-out the market place service, and identify resources to grant the client-account.
+
+2.   Added new access descriptors for enabling a client (default/Farmer/Service-Provider) to manage Business, Farm, and Service accounts
+
+3.   Add access descriptors for the market place

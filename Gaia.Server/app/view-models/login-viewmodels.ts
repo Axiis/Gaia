@@ -20,17 +20,18 @@ module Gaia.ViewModels.Login {
                     ContentType: 'application/x-www-form-urlencoded'
                 }
             })
-            .then(s => {//success
-                //redirect to the dashboard app
-            }, e => {//error
-                //report the error
+            .success(s => {//success
+                localStorage.setItem(Gaia.Utils.OAuthTokenKey, '');
+                this.$location.url('secured/dashboard-shell');
+            })
+            .error(e => {//error
                 this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
             });
         }
 
 
-        static $inject = ['DomainTransport'];
-        constructor(private transport: Gaia.Utils.Services.DomainTransport) {
+        static $inject = ['$location', 'DomainTransport'];
+        constructor(private $location: angular.ILocationService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
     Gaia.Utils.moduleConfig.withController('SigninViewModel', Signin);
@@ -106,7 +107,7 @@ module Gaia.ViewModels.Login {
                 //this.setMessage('Splendid!', '', false);
                 this.$state.go('message', {
                     back: 'signin',
-                    message: '<h2>Splendid!<h2>An email has been sent to <strong>' + this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
+                    message: '<h2>Splendid!</h2><span>An email has been sent to <strong class="text-primary">' + this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
                 });
             })
             .error(e => {//error
@@ -154,5 +155,30 @@ module Gaia.ViewModels.Login {
         }
     }
     Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
+
+
+    export class VerifyRegistration {
+
+        hasVerificationError: boolean = false;
+        message: string;
+
+        static $inject = ['$state', '$stateParams', 'DomainTransport'];
+        constructor(private $state: angular.ui.IStateService, private $stateParams: angular.ui.IStateParamsService, transport: Gaia.Utils.Services.DomainTransport) {
+            transport.put('/api/profiles/verification', {
+                User: $stateParams['user'],
+                Value: $stateParams['verificationToken']
+            }, {
+                    headers: { Accept: 'application/json' }
+                })
+                .success(s => {
+                    $state.go('signin');
+                })
+                .error(e => {
+                    this.message = e.Message;
+                    this.hasVerificationError = true;
+                });
+        }
+    }
+    Gaia.Utils.moduleConfig.withController('VerifyRegistrationViewModel', VerifyRegistration);
 
 }

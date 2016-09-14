@@ -41,13 +41,15 @@ namespace Gaia.Core.Services
                                () => dataContext,
                                () => credentialAuthentication,
                                () => contextVerifier,
-                               () => accessManager);
+                               () => accessManager,
+                               () => messagePush);
 
             this.UserContext = userContext;
             this.DataContext = dataContext;
             this.CredentialAuth = credentialAuthentication;
             this.ContextVerifier = contextVerifier;
             this.AccessManager = accessManager;
+            this.MessagePush = messagePush;
 
             //populate system settings
             this.SystemSettings = DataContext.Store<SystemSetting>().Query.ToDictionary(_st => _st.Name);
@@ -80,31 +82,29 @@ namespace Gaia.Core.Services
                     var settings = DataContext.Store<SystemSetting>().Query.ToArray();
                     secretCredentials.Where(scred => scred.Metadata.Access == Access.Secret).ToArray().ForAll((cnt, cred) =>
                     {
-                        settings.FirstOrDefault(s => s.Name.Contains($"{cred.Metadata.Name}Expiration"))
-                            .DoIf(s => s != null, s =>
-                            {
-                                TimeSpan temp;
-                                if (TimeSpan.TryParse(s.Data, out temp)) cred.ExpiresIn = temp;
-                                else cred.ExpiresIn = null; //<-- never expires
-                            });
+                        settings.FirstOrDefault(s => s.Name.Contains($"{cred.Metadata.Name}Expiration")).DoIf(s => s != null, s =>
+                        {
+                            TimeSpan temp;
+                            if (TimeSpan.TryParse(s.Data, out temp)) cred.ExpiresIn = temp;
+                            else cred.ExpiresIn = null; //<-- never expires
+                        });
                         CredentialAuth.AssignCredential(userId, cred)
                             .ThrowIf(op => !op.Succeeded, op => new Exception("failed to assign credential"));
                     });
 
                     //apply the necessary access profile
                     AccessManager.ApplyAccessProfile(userId,
-                                                            DefaultClientAccessProfile,
-                                                            null) //<-- null means this profile will never expire
-
+                                                     DefaultClientAccessProfile,
+                                                     null) //<-- null means this profile will never expire
                                  .Then(opr => CreateRegistrationVerification(userId)) //<-- verification
-
                                  .Then(opr =>
                                  {
                                      //construct the email that gets sent to the user
                                      var mail = new Mail.MailMessage();
 
-                                     MessagePush.Push(mail);
-                                 });
+                                     MessagePush.Push(mail).Resolve();
+                                 })
+                                 .Resolve();
                 }
             });
 
@@ -133,18 +133,17 @@ namespace Gaia.Core.Services
 
                     //apply the necessary access profile
                     AccessManager.ApplyAccessProfile(userId,
-                                                            DefaultPolicyAdminAccessProfile,
-                                                            null) //<-- null means this profile will never expire
-
+                                                     DefaultPolicyAdminAccessProfile,
+                                                     null) //<-- null means this profile will never expire
                                  .Then(opr => CreateRegistrationVerification(userId)) //<-- verification
-
                                  .Then(opr =>
                                   {
                                       //construct the email that gets sent to the user
                                       var mail = new Mail.MailMessage();
 
                                       MessagePush.Push(mail);
-                                  });
+                                  })
+                                  .Resolve();
                 }
             });
 
@@ -205,25 +204,24 @@ namespace Gaia.Core.Services
                 return ContextVerifier.CreateVerificationObject(targetUser, UserRegistrationContext, DateTime.Now + TimeSpan.Parse(setting.Data));
             });
 
-        public Operation<User> VerifyUserRegistration(string userId, string token)
+        public Operation VerifyUserRegistration(string userId, string token)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var userstore = DataContext.Store<User>();
                 if (userstore.Query.Any(_user => _user.EntityId == userId && _user.Status != UserStatus.Unverified))
                     throw new Exception("invalid operation: user is already Active");
 
-                else
-                    return ContextVerifier.VerifyContext(userId, UserRegistrationContext, token)
-                        .Then(opr => userstore.Query
-                            .Where(_user => _user.EntityId == userId)
-                            .Where(_user => _user.Status == UserStatus.Unverified)
-                            .FirstOrDefault()
-                            .ThrowIfNull("could not find user")
-                            .UsingValue(_user =>
-                            {
-                                _user.Status = UserStatus.Active;
-                                userstore.Modify(_user, true);
-                            }));
+                else ContextVerifier.VerifyContext(userId, UserRegistrationContext, token)
+                    .Then(opr => userstore.Query
+                    .Where(_user => _user.EntityId == userId)
+                    .Where(_user => _user.Status == UserStatus.Unverified)
+                    .FirstOrDefault()
+                    .ThrowIfNull("could not find user")
+                    .Do(_user =>
+                    {
+                        _user.Status = UserStatus.Active;
+                        userstore.Modify(_user, true);
+                    }));
             });
 
 

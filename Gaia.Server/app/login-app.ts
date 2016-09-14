@@ -39,6 +39,12 @@ module Gaia.App.Login {
                 templateUrl: 'login-message', //<-- /view-server/account-message
                 controller: 'MessageViewModel',
                 controllerAs: 'vm'
+            })
+            .state('verifyRegistration', {
+                url: '/verify-registration/:verificationToken/:user',
+                templateUrl: 'verify-registration', //<-- /view-server/account-message
+                controller: 'VerifyRegistrationViewModel',
+                controllerAs: 'vm'
             });
     });
 

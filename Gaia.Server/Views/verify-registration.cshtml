@@ -1,0 +1,23 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+<div class="text-center" style="text-align:center; margin-top:150px;">
+    <h2 class="text-primary">Verifying...</h2>
+
+    <div style="margin-top:20px;">
+        <div style="margin-top:0 auto; width:300px;" class="alert-wrapper jgrowl-showcase" ng-class="{hidden:!vm.hasVerificationError}">
+            <div class="jGrowl">
+                <div class="jGrowl-notification" ng-class="growl-error">
+                    <div class="jGrowl-header"><strong>Oops!</strong></div>
+                    <div class="jGrowl-message" ng-bind-html="vm.message"></div>
+                </div>
+
+                <a href="/home" class="btn btn-default" style="margin-top:20px;"><i class="icon-home3"></i>&nbsp;Home</a>
+            </div>
+        </div>
+    </div>
+</div>

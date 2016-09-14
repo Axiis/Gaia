@@ -5,7 +5,8 @@ var Gaia;
         var Login;
         (function (Login) {
             var Signin = (function () {
-                function Signin(transport) {
+                function Signin($location, transport) {
+                    this.$location = $location;
                     this.transport = transport;
                     this.signinErrorMessage = null;
                 }
@@ -20,14 +21,15 @@ var Gaia;
                             ContentType: 'application/x-www-form-urlencoded'
                         }
                     })
-                        .then(function (s) {
-                        //redirect to the dashboard app
-                    }, function (e) {
-                        //report the error
+                        .success(function (s) {
+                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, '');
+                        _this.$location.url('secured/dashboard-shell');
+                    })
+                        .error(function (e) {
                         _this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
                     });
                 };
-                Signin.$inject = ['DomainTransport'];
+                Signin.$inject = ['$location', 'DomainTransport'];
                 return Signin;
             }());
             Login.Signin = Signin;
@@ -96,7 +98,7 @@ var Gaia;
                         //this.setMessage('Splendid!', '', false);
                         _this.$state.go('message', {
                             back: 'signin',
-                            message: '<h2>Splendid!<h2>An email has been sent to <strong>' + _this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
+                            message: '<h2>Splendid!</h2><span>An email has been sent to <strong class="text-primary">' + _this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
                         });
                     })
                         .error(function (e) {
@@ -139,6 +141,32 @@ var Gaia;
             }());
             Login.MessageViewModel = MessageViewModel;
             Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
+            var VerifyRegistration = (function () {
+                function VerifyRegistration($state, $stateParams, transport) {
+                    var _this = this;
+                    this.$state = $state;
+                    this.$stateParams = $stateParams;
+                    this.hasVerificationError = false;
+                    transport.put('/api/profiles/verification', {
+                        User: $stateParams['user'],
+                        Value: $stateParams['verificationToken']
+                    }, {
+                        headers: { Accept: 'application/json' }
+                    })
+                        .success(function (s) {
+                        $state.go('signin');
+                    })
+                        .error(function (e) {
+                        _this.message = e.Message;
+                        _this.hasVerificationError = true;
+                    });
+                }
+                VerifyRegistration.$inject = ['$state', '$stateParams', 'DomainTransport'];
+                return VerifyRegistration;
+            }());
+            Login.VerifyRegistration = VerifyRegistration;
+            Gaia.Utils.moduleConfig.withController('VerifyRegistrationViewModel', VerifyRegistration);
         })(Login = ViewModels.Login || (ViewModels.Login = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=login-viewmodels.js.map

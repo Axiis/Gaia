@@ -365,15 +365,15 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/CorporateData/@modify",
 
                         "system/User/ActivityFeed/*",
-                    
+
                         "system/Adverts/@hit",
                         "system/Adverts/@next",
-                    
+
                         "system/Comments/*",
                         "system/User/Forum/Thread/*",
-                    
+
                         "system/User/ContextVerification/*",
-                    
+
                         "system/Notifications/*",
                         "system/User/Notification/*",
                     }
@@ -387,7 +387,74 @@ namespace Gaia.Core.OAModule
                             Permission = AccessPermission.Grant
                         });
                     });
-                    store.Context.CommitChanges();
+                store.Context.CommitChanges();
+            });
+            #endregion
+
+            #region 2.6 Client profile
+            //the profile object
+            this.UsingContext(context =>
+            {
+                var store = context.Store<FeatureAccessProfile>();
+                if (!store.Query.Any(_u => _u.AccessCode == DomainConstants.DefaultClientAccessProfile))
+                    store.Add(new FeatureAccessProfile
+                    {
+                        AccessCode = DomainConstants.DefaultClientAccessProfile,
+                        Title = "Default Client Access Profile",
+                        Description = "Defines access privileges for a Client",
+                        CreatedBy = DomainConstants.RootAccount,
+                        Status = FeatureAccessProfileStatus.Active
+                    })
+                    .Context.CommitChanges();
+            });
+
+            //the default access descriptors
+            this.UsingContext(context =>
+            {
+                var store = context.Store<FeatureAccessDescriptor>();
+                if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultClientAccessProfile))
+                    new[]
+                    {
+                        "system/User/Profile/@remove-data",
+                        "system/User/Profile/@add-data",
+                        "system/User/Profiles/Account/@add-farm",
+                        "system/User/Profiles/Account/@remove-farm",
+                        "system/User/Profiles/Account/@modify-farm",
+                        "system/User/Profiles/Account/@add-business",
+                        "system/User/Profiles/Account/@remove-business",
+                        "system/User/Profiles/Account/@modify-business",
+                        "system/User/Profiles/Account/@add-service",
+                        "system/User/Profiles/Account/@remove-service",
+                        "system/User/Profiles/Account/@modify-serice",
+                        //"system/Profiles/@discover",
+                        "system/Profiles/BioData/@modify",
+                        "system/Profiles/ContactData/@modify",
+                        "system/Profiles/CorporateData/@modify",
+
+                        "system/User/ActivityFeed/*",
+
+                        "system/Adverts/@hit",
+                        "system/Adverts/@next",
+
+                        "system/Comments/*",
+                        "system/User/Forum/Thread/*",
+
+                        "system/User/ContextVerification/*",
+
+                        "system/Notifications/*",
+                        "system/User/Notification/*",
+                    }
+                    .ForAll((cnt, next) =>
+                    {
+                        store.Add(new FeatureAccessDescriptor
+                        {
+                            AccessDescriptor = next,
+                            AccessProfileCode = DomainConstants.DefaultClientAccessProfile,
+                            CreatedBy = DomainConstants.RootAccount,
+                            Permission = AccessPermission.Grant
+                        });
+                    });
+                store.Context.CommitChanges();
             });
             #endregion
 

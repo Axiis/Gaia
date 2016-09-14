@@ -39,8 +39,15 @@ var Gaia;
                     templateUrl: 'login-message',
                     controller: 'MessageViewModel',
                     controllerAs: 'vm'
+                })
+                    .state('verifyRegistration', {
+                    url: '/verify-registration/:verificationToken/:user',
+                    templateUrl: 'verify-registration',
+                    controller: 'VerifyRegistrationViewModel',
+                    controllerAs: 'vm'
                 });
             });
         })(Login = App.Login || (App.Login = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=login-app.js.map

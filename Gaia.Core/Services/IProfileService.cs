@@ -23,7 +23,7 @@ namespace Gaia.Core.Services
         Operation<ContextVerification> CreateRegistrationVerification(string targetUser);
 
         [Feature("system/Profiles/@verify-registration-verification")]
-        Operation<User> VerifyUserRegistration(string targetUser, string contextToken);
+        Operation VerifyUserRegistration(string targetUser, string contextToken);
 
 
         [Feature("system/Profiles/BioData/@modify")]

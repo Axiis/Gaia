@@ -7,8 +7,9 @@ namespace Gaia.Core.Services.Utils
     public class MailClient1 : BaseService, System.IMailPushService
     {
         public AsyncOperation Push(MailMessage mail)
-        {
-            throw new NotImplementedException();
-        }
+            => Operation.RunAsync(() =>
+            {
+                //send the message here
+            });
     }
 }

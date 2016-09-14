@@ -543,6 +543,7 @@
     <Content Include="Themes\Londinium\visuals.html" />
     <Content Include="Themes\Londinium\wysiwyg.html" />
     <Content Include="Views\recovery-request.cshtml" />
+    <Content Include="Views\verify-registration.cshtml" />
     <None Include="Views\recover-password.cshtml" />
     <Content Include="Views\home.html" />
     <Content Include="Views\index.cshtml" />
@@ -563,12 +564,12 @@
     <Content Include="Themes\Londinium\js\plugins\forms\.DS_Store" />
     <Content Include="Themes\Londinium\js\plugins\interface\.DS_Store" />
     <Content Include="Themes\Londinium\media\.DS_Store" />
-    <Content Include="Views\dashboard-shell.cshtml" />
+    <Content Include="Views\Secured\dashboard-shell.cshtml" />
     <Content Include="Views\signin.cshtml" />
     <Content Include="Views\signup.cshtml" />
-    <None Include="Views\Secured\Errors\Error.cshtml" />
+    <None Include="Views\Errors\Error.cshtml" />
     <Content Include="Views\web.config" />
-    <Content Include="Views\login-messsage.cshtml" />
+    <Content Include="Views\login-message.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
