@@ -14,15 +14,21 @@ module Gaia.ViewModels.Login {
         }
 
         signin() {
-            this.transport.post('/Tokens', { grant_type: 'password', user_name: this.email, password: this.password }, {
+            this.transport.post('/Tokens', { grant_type: 'password', username: this.email, password: this.password }, {
                 headers: {
                     Accept: 'application/json',
-                    ContentType: 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    return str.join("&");
                 }
             })
             .success(s => {//success
-                localStorage.setItem(Gaia.Utils.OAuthTokenKey, '');
-                this.$location.url('secured/dashboard-shell');
+                localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s));
+                this.$window.location.href = 'secured/dashboard-shell';
             })
             .error(e => {//error
                 this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
@@ -30,11 +36,12 @@ module Gaia.ViewModels.Login {
         }
 
 
-        static $inject = ['$location', 'DomainTransport'];
-        constructor(private $location: angular.ILocationService, private transport: Gaia.Utils.Services.DomainTransport) {
+        static $inject = ['$window', 'DomainTransport'];
+        constructor(private $window: angular.IWindowService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
     Gaia.Utils.moduleConfig.withController('SigninViewModel', Signin);
+
 
 
     export class Signup {
@@ -124,6 +131,7 @@ module Gaia.ViewModels.Login {
     Gaia.Utils.moduleConfig.withController('SignupViewModel', Signup);
 
 
+
     export class RecoveryRequest {
 
         constructor() {
@@ -132,12 +140,14 @@ module Gaia.ViewModels.Login {
     Gaia.Utils.moduleConfig.withController('RecoveryRequestViewModel', RecoveryRequest);
 
 
+
     export class RecoverPassword {
 
         constructor() {
         }
     }
     Gaia.Utils.moduleConfig.withController('RecoverPasswordViewModel', RecoverPassword);
+
 
 
     export class MessageViewModel {
@@ -157,13 +167,26 @@ module Gaia.ViewModels.Login {
     Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
 
 
+
     export class VerifyRegistration {
 
         hasVerificationError: boolean = false;
         message: string;
+        messageHeader: string;
+        linkText: string;
 
-        static $inject = ['$state', '$stateParams', 'DomainTransport'];
-        constructor(private $state: angular.ui.IStateService, private $stateParams: angular.ui.IStateParamsService, transport: Gaia.Utils.Services.DomainTransport) {
+        action() {
+            if (this.hasVerificationError) this.$location.url('/home');
+            else this.$state.go('signin');
+        }
+
+        hasMessage(): boolean {
+            return this.message != null || this.messageHeader != null;
+        }
+
+        static $inject = ['$state', '$stateParams', '$location', 'DomainTransport'];
+        constructor(private $state: angular.ui.IStateService, private $stateParams: angular.ui.IStateParamsService,
+            private $location: angular.ILocationService, private transport: Gaia.Utils.Services.DomainTransport) {
             transport.put('/api/profiles/verification', {
                 User: $stateParams['user'],
                 Value: $stateParams['verificationToken']
@@ -171,11 +194,16 @@ module Gaia.ViewModels.Login {
                     headers: { Accept: 'application/json' }
                 })
                 .success(s => {
-                    $state.go('signin');
+                    this.messageHeader = 'Congratulations!';
+                    this.message = 'Your Account has been Verified. You may now follow the link below to login.';
+                    this.hasVerificationError = false;
+                    this.linkText = 'Signin';
                 })
                 .error(e => {
+                    this.messageHeader = 'Oops!';
                     this.message = e.Message;
                     this.hasVerificationError = true;
+                    this.linkText = 'Home';
                 });
         }
     }

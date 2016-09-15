@@ -9,14 +9,14 @@
     <h2 class="text-primary">Verifying...</h2>
 
     <div style="margin-top:20px;">
-        <div style="margin-top:0 auto; width:300px;" class="alert-wrapper jgrowl-showcase" ng-class="{hidden:!vm.hasVerificationError}">
+        <div style="margin:0 auto; width:300px;" class="alert-wrapper jgrowl-showcase" ng-class="{hidden:!vm.hasMessage()}">
             <div class="jGrowl">
-                <div class="jGrowl-notification" ng-class="growl-error">
-                    <div class="jGrowl-header"><strong>Oops!</strong></div>
+                <div class="jGrowl-notification" ng-class="{'growl-error':vm.hasVerificationError, 'growl-success':!vm.hasVerificationError}">
+                    <div class="jGrowl-header"><strong ng-bind-html="vm.messageHeader"></strong></div>
                     <div class="jGrowl-message" ng-bind-html="vm.message"></div>
                 </div>
 
-                <a href="/home" class="btn btn-default" style="margin-top:20px;"><i class="icon-home3"></i>&nbsp;Home</a>
+                <a ng-click="vm.action()" class="btn btn-default" style="margin-top:20px;">{{vm.linkText}}</a>
             </div>
         </div>
     </div>

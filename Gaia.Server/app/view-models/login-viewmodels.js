@@ -5,8 +5,8 @@ var Gaia;
         var Login;
         (function (Login) {
             var Signin = (function () {
-                function Signin($location, transport) {
-                    this.$location = $location;
+                function Signin($window, transport) {
+                    this.$window = $window;
                     this.transport = transport;
                     this.signinErrorMessage = null;
                 }
@@ -15,21 +15,27 @@ var Gaia;
                 };
                 Signin.prototype.signin = function () {
                     var _this = this;
-                    this.transport.post('/Tokens', { grant_type: 'password', user_name: this.email, password: this.password }, {
+                    this.transport.post('/Tokens', { grant_type: 'password', username: this.email, password: this.password }, {
                         headers: {
                             Accept: 'application/json',
-                            ContentType: 'application/x-www-form-urlencoded'
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        transformRequest: function (obj) {
+                            var str = [];
+                            for (var p in obj)
+                                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                            return str.join("&");
                         }
                     })
                         .success(function (s) {
-                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, '');
-                        _this.$location.url('secured/dashboard-shell');
+                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s));
+                        _this.$window.location.href = 'secured/dashboard-shell';
                     })
                         .error(function (e) {
                         _this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
                     });
                 };
-                Signin.$inject = ['$location', 'DomainTransport'];
+                Signin.$inject = ['$window', 'DomainTransport'];
                 return Signin;
             }());
             Login.Signin = Signin;
@@ -142,10 +148,12 @@ var Gaia;
             Login.MessageViewModel = MessageViewModel;
             Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
             var VerifyRegistration = (function () {
-                function VerifyRegistration($state, $stateParams, transport) {
+                function VerifyRegistration($state, $stateParams, $location, transport) {
                     var _this = this;
                     this.$state = $state;
                     this.$stateParams = $stateParams;
+                    this.$location = $location;
+                    this.transport = transport;
                     this.hasVerificationError = false;
                     transport.put('/api/profiles/verification', {
                         User: $stateParams['user'],
@@ -154,14 +162,28 @@ var Gaia;
                         headers: { Accept: 'application/json' }
                     })
                         .success(function (s) {
-                        $state.go('signin');
+                        _this.messageHeader = 'Congratulations!';
+                        _this.message = 'Your Account has been Verified. You may now follow the link below to login.';
+                        _this.hasVerificationError = false;
+                        _this.linkText = 'Signin';
                     })
                         .error(function (e) {
+                        _this.messageHeader = 'Oops!';
                         _this.message = e.Message;
                         _this.hasVerificationError = true;
+                        _this.linkText = 'Home';
                     });
                 }
-                VerifyRegistration.$inject = ['$state', '$stateParams', 'DomainTransport'];
+                VerifyRegistration.prototype.action = function () {
+                    if (this.hasVerificationError)
+                        this.$location.url('/home');
+                    else
+                        this.$state.go('signin');
+                };
+                VerifyRegistration.prototype.hasMessage = function () {
+                    return this.message != null || this.messageHeader != null;
+                };
+                VerifyRegistration.$inject = ['$state', '$stateParams', '$location', 'DomainTransport'];
                 return VerifyRegistration;
             }());
             Login.VerifyRegistration = VerifyRegistration;
