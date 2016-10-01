@@ -2,8 +2,19 @@
 module Gaia.App.Login {
 
     
-    export const module = angular.module("gaiaLogin", ['ngRoute', 'ui.router', 'ngSanitize']);
+    export const module = angular.module("gaiaLogin", ['ui.router', 'ngSanitize']);
     Gaia.Utils.moduleConfig.addModule(module);
+
+    ///Gaia services
+    module.service('#gaia.profileService', Gaia.Services.ProfileService);
+
+    ///Pollux Services
+    module.service('#pollux.authentication', Pollux.Services.Authentication);
+
+    ///Util Services
+    module.service('#gaia.utils.domainTransport', Gaia.Utils.Services.DomainTransport);
+    module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
+
 
     //configure states
     module.config(($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) => {

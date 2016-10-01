@@ -5,37 +5,40 @@ using static Axis.Luna.Extensions.ObjectExtensions;
 
 namespace Gaia.Core.Domain
 {
-    public abstract class GaiaEntity<Key> : NotifierBase, IEquatable<GaiaEntity<Key>>
+    public abstract class GaiaEntity<Key> : NotifierBase, IEquatable<GaiaEntity<Key>>, IBaseHash
     {
-        public virtual Key EntityId
+        public Key EntityId
         {
             get { return get<Key>(); }
             set { set(ref value); }
         }
 
-        public virtual DateTime CreatedOn
+        public DateTime CreatedOn
         {
             get { return get<DateTime>(); }
             set { set(ref value); }
         }
 
-        public virtual DateTime? ModifiedOn
+        public DateTime? ModifiedOn
         {
             get { return get<DateTime?>(); }
             set { set(ref value); }
         }
 
-        public virtual string CreatedBy
+        public string CreatedBy
         {
             get { return get<string>(); }
             set { set(ref value); }
         }
 
-        public virtual string ModifiedBy
+        public string ModifiedBy
         {
             get { return get<string>(); }
             set { set(ref value); }
         }
+
+        private int _bh = 0;
+        public int BaseHash() => _bh;
 
         protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -44,7 +47,12 @@ namespace Gaia.Core.Domain
                 e.PropertyName != nameof(CreatedOn)) this.ModifiedOn = DateTime.Now;
         }
 
-        public virtual bool Equals(GaiaEntity<Key> other) => other?.EntityId.Equals(EntityId) ?? false;
+        public virtual bool Equals(GaiaEntity<Key> other)
+        {
+            if (other == null) return false;
+            else if (default(Key).Equals(other.EntityId)) return other.BaseHash() == BaseHash();
+            else return other.EntityId.Equals(EntityId);
+        }
 
         public override bool Equals(object obj) => Equals(obj.As<GaiaEntity<Key>>());
         public override int GetHashCode() => Eval(() => EntityId.GetHashCode());
@@ -53,6 +61,7 @@ namespace Gaia.Core.Domain
         public GaiaEntity()
         {
             CreatedOn = DateTime.Now;
+            this._bh = base.GetHashCode();
         }
     }
 }

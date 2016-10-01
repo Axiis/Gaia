@@ -37,6 +37,20 @@ module Gaia.Utils.Services {
             return this.http.patch(url, data, config);
         }
     }
-    Gaia.Utils.moduleConfig.withService('DomainTransport', DomainTransport);
+
+
+    export class DomModelService {
+
+        public model: any = {};
+
+        constructor() {
+            angular.element('#cbt-model')
+                .attr('simpleProperties')
+                .project((v: string) => Gaia.Utils.ParseStringPairs(v))
+                .forEach(v => {
+                    this.model[v.Key] = v.Value;
+                });
+        }
+    }
 
 }

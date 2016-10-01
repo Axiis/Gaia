@@ -34,8 +34,20 @@ var Gaia;
                 return DomainTransport;
             }());
             Services.DomainTransport = DomainTransport;
-            Gaia.Utils.moduleConfig.withService('DomainTransport', DomainTransport);
+            var DomModelService = (function () {
+                function DomModelService() {
+                    var _this = this;
+                    this.model = {};
+                    angular.element('#cbt-model')
+                        .attr('simpleProperties')
+                        .project(function (v) { return Gaia.Utils.ParseStringPairs(v); })
+                        .forEach(function (v) {
+                        _this.model[v.Key] = v.Value;
+                    });
+                }
+                return DomModelService;
+            }());
+            Services.DomModelService = DomModelService;
         })(Services = Utils.Services || (Utils.Services = {}));
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=utility-services.js.map

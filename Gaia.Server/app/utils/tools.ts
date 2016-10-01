@@ -110,4 +110,47 @@ module Gaia.Utils {
     //constant for fetching authorization from local browser keystore
     export const OAuthTokenKey = 'Gaia.Security.OAuth.AuthorizationToken#KEY';
 
+
+    ///key value pair
+    export class StringPair {
+        Key: string;
+        Value: string;
+
+        toString(encoding: Encoding): string {
+
+            //if(encoding == ...) //encode
+
+            //else //default encoding
+            return this.Key + ':' + this.Value + ';';
+        }
+    }
+
+    export enum Encoding {
+        InlineCss
+    }
+
+    export function ParseStringPairs(value: string, encoding?: Encoding): Array<StringPair> {
+        encoding = encoding || Encoding.InlineCss;
+        if (encoding == Encoding.InlineCss) return value.split(';')
+            .map(v => {
+                var parts = v.split(':');
+                var sp = new StringPair();
+                sp.Key = DecodeDelimiters(parts[0]).trim();
+                if (parts.length > 1) sp.Value = DecodeDelimiters(parts[1]).trim();
+                return sp;
+            })
+            .filter(pair => pair.Key != null && pair.Key != '');
+
+        //unknown encoding
+        else return [];
+    }
+
+    function EncodeDelimiters(value: string): string {
+        return value.replace(':', '##col').replace(';', '##scol');
+    }
+
+    function DecodeDelimiters(value: string): string {
+        return value.replace('##col', ':').replace('##scol', ';');
+    }
+
 }

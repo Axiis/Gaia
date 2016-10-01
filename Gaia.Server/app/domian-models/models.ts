@@ -73,6 +73,7 @@ module Gaia.Domain {
         Secret
     }
 
+
     export class GaiaEntity<Key>{
         EntityId: Key;
         CreatedBy: string;
@@ -97,21 +98,42 @@ module Gaia.Domain {
             else if (value instanceof Date) this._modifiedOn = value;
             else throw 'invalid date value';
         }
+
+        constructor(data?: Object) {
+            if(data) data.copyTo(this);
+        }
     }
 
     export class FeatureURI extends GaiaEntity<number>{
         URI: string;
         Name: string;
+
+        constructor(data?: Object) {
+            super(data);
+
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ProductCategory extends GaiaEntity<number>{
         Title: string;
         Description: string;
+
+        constructor(data?: Object) {
+            super(data);
+
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ServiceCategory extends GaiaEntity<number>{
         Title: string;
         Description: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class Advert extends GaiaEntity<number>{
@@ -142,9 +164,9 @@ module Gaia.Domain {
                 .toArray();
         }
 
-        constructor() {
-            super();
-            this.Status = AdvertStatus.Draft;
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
         }
     }
 
@@ -154,6 +176,11 @@ module Gaia.Domain {
         Owner: User;
         AdvertId: number;
         Advert: Advert;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class Comment extends GaiaEntity<number>{
@@ -162,6 +189,11 @@ module Gaia.Domain {
         OwnerId: string;
         Owner: User;
         Text: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ContextVerification extends GaiaEntity<number>{
@@ -180,6 +212,11 @@ module Gaia.Domain {
             else if (value instanceof Date) this._expiresOn = value;
             else throw 'invalid date value';
         }
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class FarmInfo extends GaiaEntity<number>{
@@ -191,12 +228,22 @@ module Gaia.Domain {
         GpsAreaPonumbers: string;
         VideoLinks: string;
         PhotoLinks: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class FeatureAccessDescriptor extends GaiaEntity<number>{
         AccessDescriptor: string;
         AccessProfileCode: string;
         Permission: AccessPermission;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class FeatureAccessProfile extends GaiaEntity<number>{
@@ -206,10 +253,10 @@ module Gaia.Domain {
         Status: FeatureAccessProfileStatus;
         AccessDescriptors: Array<FeatureAccessDescriptor> = [];
 
-
-        constructor() {
-            super();
-            this.AccessCode = Gaia.Utils.NewGuid();
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+            this.AccessCode = this.AccessCode || Gaia.Utils.NewGuid();
         }
     }
 
@@ -241,6 +288,10 @@ module Gaia.Domain {
             else if (value instanceof Date) this._modifiedOn = value;
             else throw 'invalid date value';
         }
+
+        constructor(data?: Object) {
+            if(data) data.copyTo(this);
+        }
     }
 
     export class PinnedFeedEntry extends FeedEntry {
@@ -255,6 +306,11 @@ module Gaia.Domain {
             else if (value instanceof Date) this._pinnedOn = value;
             else throw 'invalid date value';
         }
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ForumThread extends GaiaEntity<number>{
@@ -264,18 +320,33 @@ module Gaia.Domain {
         Content: string;
         TopicId: number;
         Status: ForumThreadStatus;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ForumThreadWatch extends GaiaEntity<number>{
         ThreadId: number;
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ForumTopic extends GaiaEntity<number>{
         Title: string;
         Description: string;
         Status: ForumTopicStatus;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class Notification extends GaiaEntity<number>{
@@ -286,6 +357,11 @@ module Gaia.Domain {
         ContextType: string;
         ContextId: number; //<-- this should be number
         Status: NotificationStatus;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class PinnedFeed extends GaiaEntity<number>{
@@ -293,6 +369,11 @@ module Gaia.Domain {
         ContextId: number;
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class Post extends GaiaEntity<number>{
@@ -304,6 +385,11 @@ module Gaia.Domain {
         Owner: User;
         ParentPostId: number;
         TargetDemographic: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class Rating extends GaiaEntity<number>{
@@ -312,6 +398,11 @@ module Gaia.Domain {
         Score: number;
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ServiceInfo extends GaiaEntity<number>{
@@ -322,6 +413,11 @@ module Gaia.Domain {
         VideoLinks: string;
         PhotoLinks: string;
         Category: ServiceCategory;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class SystemSetting extends GaiaEntity<number>{
@@ -329,6 +425,11 @@ module Gaia.Domain {
         Data: string;
         Name: string;
         Type: CommonDataType;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class UserAccessProfile extends GaiaEntity<number> {
@@ -349,6 +450,11 @@ module Gaia.Domain {
             else if (value instanceof Date) this._expiresOn = value;
             else throw 'invalid date value';
         }
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class UserReaction extends GaiaEntity<number>{
@@ -357,6 +463,11 @@ module Gaia.Domain {
         ContextId: number;
         ContextType: string;
         Reaction: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class PolluxEntity<Key>{
@@ -382,6 +493,10 @@ module Gaia.Domain {
             else if (value instanceof Date) this._modifiedOn = value;
             else throw 'invalid date value';
         }
+
+        constructor(data?: Object) {
+            if(data) data.copyTo(this);
+        }
     }
 
     export class AddressData extends PolluxEntity<number> {
@@ -393,6 +508,11 @@ module Gaia.Domain {
 
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class BioData extends PolluxEntity<number>{
@@ -418,6 +538,11 @@ module Gaia.Domain {
 
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class ContactData extends PolluxEntity<number>{
@@ -432,12 +557,20 @@ module Gaia.Domain {
 
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class CorporateData extends PolluxEntity<number>{
 
         CorporateName: string;
         CorporateId: string;
+
+        OwnerId: string;
+        Owner: User;
 
 
         private _incorporationDate: Date;
@@ -450,8 +583,10 @@ module Gaia.Domain {
             else throw 'invalid date value';
         }
 
-        OwnerId: string;
-        Owner: User;
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class User extends PolluxEntity<string>{
@@ -459,6 +594,11 @@ module Gaia.Domain {
         UserId: string;
         Stataus: number;
         Guid: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class UserData extends PolluxEntity<number>{
@@ -469,6 +609,11 @@ module Gaia.Domain {
 
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 
     export class CredentialMetadata {
@@ -487,5 +632,10 @@ module Gaia.Domain {
 
         OwnerId: string;
         Owner: User;
+
+        constructor(data?: Object) {
+            super(data);
+            if(data) data.copyTo(this);
+        }
     }
 }

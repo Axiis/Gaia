@@ -4,8 +4,15 @@ var Gaia;
     (function (App) {
         var Login;
         (function (Login) {
-            Login.module = angular.module("gaiaLogin", ['ngRoute', 'ui.router', 'ngSanitize']);
+            Login.module = angular.module("gaiaLogin", ['ui.router', 'ngSanitize']);
             Gaia.Utils.moduleConfig.addModule(Login.module);
+            ///Gaia services
+            Login.module.service('#gaia.profileService', Gaia.Services.ProfileService);
+            ///Pollux Services
+            Login.module.service('#pollux.authentication', Pollux.Services.Authentication);
+            ///Util Services
+            Login.module.service('#gaia.utils.domainTransport', Gaia.Utils.Services.DomainTransport);
+            Login.module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
             //configure states
             Login.module.config(function ($stateProvider, $urlRouterProvider) {
                 $urlRouterProvider.otherwise('/signin');
@@ -50,4 +57,3 @@ var Gaia;
         })(Login = App.Login || (App.Login = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=login-app.js.map

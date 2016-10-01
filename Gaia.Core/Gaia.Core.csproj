@@ -64,6 +64,7 @@
     <Compile Include="Domain\Advert.cs" />
     <Compile Include="Domain\AdvertHit.cs" />
     <Compile Include="Domain\ForumThreadWatch.cs" />
+    <Compile Include="Domain\IBaseHash.cs" />
     <Compile Include="Domain\Post.cs" />
     <Compile Include="Domain\Comment.cs" />
     <Compile Include="Domain\FarmInfo.cs" />

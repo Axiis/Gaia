@@ -321,6 +321,8 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="fonts\cyrillic-ext.css" />
     <Content Include="Global.asax" />
     <Content Include="Index.html" />
@@ -332,6 +334,8 @@
     <Content Include="Content\fonts\jura\Jura-Light.ttf" />
     <Content Include="Content\fonts\jura\Jura-Medium.ttf" />
     <Content Include="Content\fonts\jura\Jura-Regular.ttf" />
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
     <TypeScriptCompile Include="app\dashboard-app.ts" />
     <TypeScriptCompile Include="app\login-app.ts" />
@@ -357,8 +361,11 @@
     <Content Include="scripts\jquery.validate.unobtrusive.js" />
     <Content Include="scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\toastr.js" />
+    <Content Include="scripts\toastr.min.js" />
     <Content Include="Views\recovery-request.cshtml" />
     <Content Include="Views\verify-registration.cshtml" />
+    <Content Include="Views\dashboard-shell.cshtml" />
     <None Include="Views\recover-password.cshtml" />
     <Content Include="Views\home.html" />
     <Content Include="Views\index.cshtml" />

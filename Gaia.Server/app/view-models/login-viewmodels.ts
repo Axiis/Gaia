@@ -36,7 +36,7 @@ module Gaia.ViewModels.Login {
         }
 
 
-        static $inject = ['$window', 'DomainTransport'];
+        static $inject = ['$window', '#gaia.utils.domainTransport'];
         constructor(private $window: angular.IWindowService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
@@ -124,7 +124,7 @@ module Gaia.ViewModels.Login {
         }
 
 
-        static $inject = ['$state', 'DomainTransport'];
+        static $inject = ['$state', '#gaia.utils.domainTransport'];
         constructor(private $state: angular.ui.IStateService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
@@ -184,7 +184,7 @@ module Gaia.ViewModels.Login {
             return this.message != null || this.messageHeader != null;
         }
 
-        static $inject = ['$state', '$stateParams', '$location', 'DomainTransport'];
+        static $inject = ['$state', '$stateParams', '$location', '#gaia.utils.domainTransport'];
         constructor(private $state: angular.ui.IStateService, private $stateParams: angular.ui.IStateParamsService,
             private $location: angular.ILocationService, private transport: Gaia.Utils.Services.DomainTransport) {
             transport.put('/api/profiles/verification', {

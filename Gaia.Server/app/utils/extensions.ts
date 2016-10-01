@@ -1,10 +1,19 @@
 ﻿
-interface Func<I, O> {
-    (_in1: any): O;
-}
+interface Func<O> { (): O; }
+interface Func1<I, O> { (in1: I): O; }
+interface Func2<I, I2, O> { (in1: I, in2: I2): O; }
+interface Func3<I, I2, I3, O> { (in1: I, in2: I2, in3: I3): O; }
+interface Func4<I, I2, I3, I4, O> { (in1: I, in2: I2, in3: I3, in4: I4): O; }
+interface Func5<I, I2, I3, I4, I5, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5): O; }
+interface Func6<I, I2, I3, I4, I5, I6, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6): O; }
+interface Func7<I, I2, I3, I4, I5, I6, I7, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7): O; }
+interface Func8<I, I2, I3, I4, I5, I6, I7, I8, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7, in8: I8): O; }
+interface Func9<I, I2, I3, I4, I5, I6, I7, I8, I9, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7, in8: I8, in9: I9): O; }
+
 
 interface Object {
-    project<I, O>(f: Func<I, O>): O
+    project<I, O>(f: Func1<I, O>): O;
+    copyTo(target: any): any;
 }
 
 interface String {
@@ -22,9 +31,27 @@ module Gaia.Extensions {
     ///object extension
 
     Object.defineProperty(Object.prototype, 'project', {
-        value: function <I, O>(f: Func<I, O>): O{
+        value: function <I, O>(f: Func1<I, O>): O {
             if (typeof f === 'function') return f(this);
-            else return null; 
+            else return null;
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+    Object.defineProperty(Object.prototype, 'copyTo', {
+        value: function (target: any): any {
+            //'use strict';
+            // We must check against these specific cases.
+            if (target === undefined || target === null) 
+                throw new TypeError('Cannot convert undefined or null to object');
+
+            for (var nextKey in this) {
+                if (this.hasOwnProperty(nextKey))
+                    target[nextKey] = this[nextKey];
+            }
+            return target;
         },
         writable: false,
         configurable: false,

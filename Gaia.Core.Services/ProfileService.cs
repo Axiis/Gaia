@@ -84,8 +84,8 @@ namespace Gaia.Core.Services
                     {
                         settings.FirstOrDefault(s => s.Name.Contains($"{cred.Metadata.Name}Expiration")).DoIf(s => s != null, s =>
                         {
-                            TimeSpan temp;
-                            if (TimeSpan.TryParse(s.Data, out temp)) cred.ExpiresIn = temp;
+                            long temp;
+                            if (long.TryParse(s.Data, out temp)) cred.ExpiresIn = temp;
                             else cred.ExpiresIn = null; //<-- never expires
                         });
                         CredentialAuth.AssignCredential(userId, cred)

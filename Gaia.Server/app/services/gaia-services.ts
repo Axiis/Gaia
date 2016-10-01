@@ -46,6 +46,5 @@ module Gaia.Services {
             return null;
         }
     }
-    Gaia.Utils.moduleConfig.withService('profileService', ProfileService); //<-- adds this service to all modules
 }
 

@@ -11,17 +11,17 @@ namespace Gaia.Core.System
     /// </summary>
     public static class SystemSettings
     {
-        public static readonly KeyValuePair<string, TimeSpan> DefaultContextVerificationExpiration 
-            = "System.ContextVerification.DefaultExpiration".ValuePair(TimeSpan.FromDays(1));
+        public static readonly KeyValuePair<string, long> DefaultContextVerificationExpiration 
+            = "System.ContextVerification.DefaultExpiration".ValuePair(TimeSpan.FromDays(1).Ticks);
 
-        public static readonly KeyValuePair<string, TimeSpan> DefaultUserRegistrationVerificationExpiration 
-            = "System.Profiles.UserRegistration.DefaultExpiration".ValuePair(TimeSpan.FromDays(2));
+        public static readonly KeyValuePair<string, long> DefaultUserRegistrationVerificationExpiration 
+            = "System.Profiles.UserRegistration.DefaultExpiration".ValuePair(TimeSpan.FromDays(2).Ticks);
 
-        public static readonly KeyValuePair<string, TimeSpan> DefaultUserActivationVerificationExpiration
-            = "System.Profiles.UserActivation.DefaultExpiration".ValuePair(TimeSpan.FromDays(2));
+        public static readonly KeyValuePair<string, long> DefaultUserActivationVerificationExpiration
+            = "System.Profiles.UserActivation.DefaultExpiration".ValuePair(TimeSpan.FromDays(2).Ticks);
 
-        public static readonly KeyValuePair<string, TimeSpan?> DefaultPasswordExpiration
-            = "System.Profiles.Credentials.PasswordExpiration".ValuePair<string,TimeSpan?>(null);
+        public static readonly KeyValuePair<string, long?> DefaultPasswordExpiration
+            = "System.Profiles.Credentials.PasswordExpiration".ValuePair<string,long?>(null);
         
 
         public static IEnumerable<SystemSetting> SettingsList()
