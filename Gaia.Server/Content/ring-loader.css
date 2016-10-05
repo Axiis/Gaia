@@ -1,0 +1,23 @@
+﻿
+@keyframes uil-ring-anim {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.ring-loader {
+    display: inline-block;
+    background: none;
+    position: relative;
+}
+.ring-loader > div {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 2px 0 0 #333;
+    animation: uil-ring-anim 1s linear infinite;
+}

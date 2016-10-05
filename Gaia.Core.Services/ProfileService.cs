@@ -201,7 +201,7 @@ namespace Gaia.Core.Services
             {
                 var setting = DataContext.Store<SystemSetting>().Query
                                          .First(_st => _st.Name == System.SystemSettings.DefaultUserRegistrationVerificationExpiration.Key);
-                return ContextVerifier.CreateVerificationObject(targetUser, UserRegistrationContext, DateTime.Now + TimeSpan.Parse(setting.Data));
+                return ContextVerifier.CreateVerificationObject(targetUser, UserRegistrationContext, DateTime.Now + TimeSpan.FromTicks(long.Parse(setting.Data)));
             });
 
         public Operation VerifyUserRegistration(string userId, string token)

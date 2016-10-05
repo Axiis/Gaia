@@ -29,7 +29,16 @@
             </div>
             <div class="row form-actions">
                 <div class="col-xs-6 col-xs-offset-6">
-                    <button type="button" ng-click="vm.signup()" class="btn btn-default pull-right"><i class="icon-arrow-right5"></i> Sign up</button>
+                    <button type="button" ng-click="vm.signup()" class="btn btn-default pull-right">
+                        <i class="icon-arrow-right5" ng-hide="vm.isBusy"></i>
+                        <div id="ring-loader" ng-show="vm.isBusy"></div>
+                        &nbsp;Sign up
+                    </button>
+                    <script type="text/javascript">
+                        $(function () {
+                            ringLoader($('#ring-loader'), '16px', 'black');
+                        });
+                    </script>
                 </div>
             </div>
         </div>

@@ -2,9 +2,36 @@
 <html>
 <head>
     <title></title>
-	<meta charset="utf-8" />
+	<meta charset="utf-8" />    
+    
+    <!-- for dev purposes only-->
+    <meta http-equiv="refresh" content="0;URL=/view-server/login/shell" />
+
+    <script type="text/javascript" src="scripts/jquery-1.10.1.js"></script>
+    <script type="text/javascript" src="scripts/loaders.js"></script>
 </head>
 <body>
 
+    <link rel="stylesheet" href="Content/ring-loader.css" />
+    <link rel="stylesheet" href="Content/cube-loader.css" />
+
+    <div class="ring-loader" style="height:16px !important; width: 16px !important;">
+        <div></div>
+    </div>
+    <div class="cube-loader" style="height:16px; width:16px; background: black;">
+        <div></div><div></div><div></div><div></div>
+    </div>
+
+    <div style="margin-bottom:30px;"></div>
+
+    <div id="ringLoader"></div>
+    <div id="blockLoader"></div>
+
+    <script type="text/javascript">
+        $(function () {
+            ringLoader($('#ringLoader'), '20px', 'red');
+            cubeLoader($('#blockLoader'), '20px', 'red');
+        });
+    </script>
 </body>
 </html>

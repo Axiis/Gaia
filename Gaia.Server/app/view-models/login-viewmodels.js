@@ -9,13 +9,19 @@ var Gaia;
                     this.$window = $window;
                     this.transport = transport;
                     this.signinErrorMessage = null;
+                    this.isBusy = false;
                 }
                 Signin.prototype.hasNoErrors = function () {
                     return this.signinErrorMessage == null;
                 };
                 Signin.prototype.signin = function () {
                     var _this = this;
-                    this.transport.post('/Tokens', { grant_type: 'password', username: this.email, password: this.password }, {
+                    if (this.isBusy)
+                        return;
+                    //else
+                    this.isBusy = true;
+                    this.transport
+                        .post('/auth/login', { username: this.email, password: this.password, __RequestVerificationToken: angular.element('#antiForgery > input').val() }, {
                         headers: {
                             Accept: 'application/json',
                             'Content-Type': 'application/x-www-form-urlencoded'
@@ -27,11 +33,12 @@ var Gaia;
                             return str.join("&");
                         }
                     })
-                        .success(function (s) {
-                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s));
-                        _this.$window.location.href = 'secured/dashboard-shell';
-                    })
-                        .error(function (e) {
+                        .then(function (s) {
+                        _this.isBusy = false;
+                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s.data.Result));
+                        _this.$window.location.href = '/view-server/secured/dashboard/shell';
+                    }, function (e) {
+                        _this.isBusy = false;
                         _this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
                     });
                 };
@@ -39,7 +46,6 @@ var Gaia;
                 return Signin;
             }());
             Login.Signin = Signin;
-            Gaia.Utils.moduleConfig.withController('SigninViewModel', Signin);
             var Signup = (function () {
                 function Signup($state, transport) {
                     this.$state = $state;
@@ -47,6 +53,7 @@ var Gaia;
                     this.errorMessage = null;
                     this.successMessage = null;
                     this.messageHeader = null;
+                    this.isBusy = false;
                 }
                 Signup.prototype.setMessage = function (header, message, isError) {
                     this.successMessage = this.errorMessage = null;
@@ -78,6 +85,8 @@ var Gaia;
                 };
                 Signup.prototype.signup = function () {
                     var _this = this;
+                    if (this.isBusy)
+                        return;
                     if (this.email == null) {
                         this.setMessage('Oops!', "Something's wrong with your emal-address", true);
                         return;
@@ -86,6 +95,7 @@ var Gaia;
                         this.setMessage('Oops!', 'Your Passwords do not match.', true);
                         return;
                     }
+                    this.isBusy = true;
                     this.transport.post('/api/profiles', {
                         'TargetUser': this.email,
                         'Credentials': [{
@@ -100,15 +110,15 @@ var Gaia;
                             Accept: 'application/json'
                         }
                     })
-                        .success(function (s) {
-                        //this.setMessage('Splendid!', '', false);
+                        .then(function (s) {
+                        _this.isBusy = false;
                         _this.$state.go('message', {
                             back: 'signin',
                             message: '<h2>Splendid!</h2><span>An email has been sent to <strong class="text-primary">' + _this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
                         });
-                    })
-                        .error(function (e) {
-                        _this.setMessage('Oops!', e.Message, true);
+                    }, function (e) {
+                        _this.isBusy = false;
+                        _this.setMessage('Oops!', e.data.Message, true);
                         _this.password = _this.verifyPassword = null;
                     });
                 };
@@ -116,21 +126,18 @@ var Gaia;
                 return Signup;
             }());
             Login.Signup = Signup;
-            Gaia.Utils.moduleConfig.withController('SignupViewModel', Signup);
             var RecoveryRequest = (function () {
                 function RecoveryRequest() {
                 }
                 return RecoveryRequest;
             }());
             Login.RecoveryRequest = RecoveryRequest;
-            Gaia.Utils.moduleConfig.withController('RecoveryRequestViewModel', RecoveryRequest);
             var RecoverPassword = (function () {
                 function RecoverPassword() {
                 }
                 return RecoverPassword;
             }());
             Login.RecoverPassword = RecoverPassword;
-            Gaia.Utils.moduleConfig.withController('RecoverPasswordViewModel', RecoverPassword);
             var MessageViewModel = (function () {
                 function MessageViewModel($state, $stateParams) {
                     this.$state = $state;
@@ -146,7 +153,6 @@ var Gaia;
                 return MessageViewModel;
             }());
             Login.MessageViewModel = MessageViewModel;
-            Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
             var VerifyRegistration = (function () {
                 function VerifyRegistration($state, $stateParams, $location, transport) {
                     var _this = this;
@@ -187,7 +193,6 @@ var Gaia;
                 return VerifyRegistration;
             }());
             Login.VerifyRegistration = VerifyRegistration;
-            Gaia.Utils.moduleConfig.withController('VerifyRegistrationViewModel', VerifyRegistration);
         })(Login = ViewModels.Login || (ViewModels.Login = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));

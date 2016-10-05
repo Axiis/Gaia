@@ -7,6 +7,7 @@ module Gaia.ViewModels.Login {
         password: string;
         email: string;
         signinErrorMessage: string = null;
+        isBusy: boolean = false;
 
 
         hasNoErrors(): boolean {
@@ -14,25 +15,32 @@ module Gaia.ViewModels.Login {
         }
 
         signin() {
-            this.transport.post('/Tokens', { grant_type: 'password', username: this.email, password: this.password }, {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                transformRequest: function (obj) {
-                    var str = [];
-                    for (var p in obj)
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    return str.join("&");
-                }
-            })
-            .success(s => {//success
-                localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s));
-                this.$window.location.href = 'secured/dashboard-shell';
-            })
-            .error(e => {//error
-                this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
-            });
+
+            if (this.isBusy) return;
+            //else
+            this.isBusy = true;
+
+            this.transport
+                .post<Utils.Operation<string>>('/auth/login', { username: this.email, password: this.password, __RequestVerificationToken: angular.element('#antiForgery > input').val() }, {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    transformRequest: function (obj) {
+                        var str = [];
+                        for (var p in obj)
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        return str.join("&");
+                    }
+                })
+                .then(s => {//success
+                    this.isBusy = false;
+                    localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s.data.Result));
+                    this.$window.location.href = '/view-server/secured/dashboard/shell';
+                }, e => {//error
+                    this.isBusy = false;
+                    this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
+                });
         }
 
 
@@ -40,8 +48,6 @@ module Gaia.ViewModels.Login {
         constructor(private $window: angular.IWindowService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
-    Gaia.Utils.moduleConfig.withController('SigninViewModel', Signin);
-
 
 
     export class Signup {
@@ -53,6 +59,8 @@ module Gaia.ViewModels.Login {
         errorMessage: string = null;
         successMessage: string = null;
         messageHeader: string = null;
+
+        isBusy: boolean = false;
 
         setMessage(header: string, message: string, isError: boolean) {
             this.successMessage = this.errorMessage = null;
@@ -87,6 +95,8 @@ module Gaia.ViewModels.Login {
 
         signup() {
 
+            if (this.isBusy) return;
+
             if (this.email == null) {
                 this.setMessage('Oops!', "Something's wrong with your emal-address", true);
                 return;
@@ -96,6 +106,7 @@ module Gaia.ViewModels.Login {
                 return;
             }
 
+            this.isBusy = true;
             this.transport.post('/api/profiles', {
                 'TargetUser': this.email,
                 'Credentials': [{
@@ -110,15 +121,15 @@ module Gaia.ViewModels.Login {
                     Accept: 'application/json'
                 }
             })
-            .success(s => {//success
-                //this.setMessage('Splendid!', '', false);
+            .then(s => {//success
+                this.isBusy = false;
                 this.$state.go('message', {
                     back: 'signin',
                     message: '<h2>Splendid!</h2><span>An email has been sent to <strong class="text-primary">' + this.email + '</strong>.<br/>Follow the link in the email to complete your registration.<br/>Cheers'
                 });
-            })
-            .error(e => {//error
-                this.setMessage('Oops!', e.Message, true);
+            }, e => {//error
+                this.isBusy = false;
+                this.setMessage('Oops!', e.data.Message, true);
                 this.password = this.verifyPassword = null;
             });
         }
@@ -128,8 +139,6 @@ module Gaia.ViewModels.Login {
         constructor(private $state: angular.ui.IStateService, private transport: Gaia.Utils.Services.DomainTransport) {
         }
     }
-    Gaia.Utils.moduleConfig.withController('SignupViewModel', Signup);
-
 
 
     export class RecoveryRequest {
@@ -137,8 +146,6 @@ module Gaia.ViewModels.Login {
         constructor() {
         }
     }
-    Gaia.Utils.moduleConfig.withController('RecoveryRequestViewModel', RecoveryRequest);
-
 
 
     export class RecoverPassword {
@@ -146,8 +153,6 @@ module Gaia.ViewModels.Login {
         constructor() {
         }
     }
-    Gaia.Utils.moduleConfig.withController('RecoverPasswordViewModel', RecoverPassword);
-
 
 
     export class MessageViewModel {
@@ -164,8 +169,6 @@ module Gaia.ViewModels.Login {
             return this.$stateParams['message'];
         }
     }
-    Gaia.Utils.moduleConfig.withController('MessageViewModel', MessageViewModel);
-
 
 
     export class VerifyRegistration {
@@ -207,6 +210,5 @@ module Gaia.ViewModels.Login {
                 });
         }
     }
-    Gaia.Utils.moduleConfig.withController('VerifyRegistrationViewModel', VerifyRegistration);
 
 }

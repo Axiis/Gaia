@@ -12,12 +12,12 @@
         <div class="well">
             <div class="form-group has-feedback">
                 <label>Email</label>
-                <input type="email" ng-model="vm.email" class="form-control" placeholder="Email address" required>
+                <input id="email" type="email" ng-model="vm.email" class="form-control" placeholder="Email address" required>
                 <i class="icon-users form-control-feedback"></i>
             </div>
             <div class="form-group has-feedback">
                 <label>Password</label>
-                <input type="password" ng-model="vm.password" class="form-control" placeholder="Password" required>
+                <input id="password" type="password" ng-model="vm.password" class="form-control" placeholder="Password" required>
                 <i class="icon-lock form-control-feedback"></i>
             </div>
             <div class="row form-actions">
@@ -30,7 +30,16 @@
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <button type="button" ng-click="vm.signin()" class="btn btn-success pull-right"><i class="icon-menu2"></i> Sign in</button>
+                    <button type="button" ng-click="vm.signin()" class="btn btn-success pull-right">
+                        <i class="icon-menu2" ng-hide="vm.isBusy"></i> 
+                        <div id="ring-loader" ng-show="vm.isBusy"></div>
+                        &nbsp;Sign in
+                    </button>
+                    <script type="text/javascript">
+                        $(function () {
+                            ringLoader($('#ring-loader'), '16px', 'white');
+                        });
+                    </script>
                 </div>
             </div>
         </div>

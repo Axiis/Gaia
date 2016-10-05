@@ -13,6 +13,13 @@ var Gaia;
             ///Util Services
             Login.module.service('#gaia.utils.domainTransport', Gaia.Utils.Services.DomainTransport);
             Login.module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
+            ///ViewModels
+            Login.module.controller('SigninViewModel', Gaia.ViewModels.Login.Signin);
+            Login.module.controller('SignupViewModel', Gaia.ViewModels.Login.Signup);
+            Login.module.controller('RecoveryRequestViewModel', Gaia.ViewModels.Login.RecoveryRequest);
+            Login.module.controller('RecoverPasswordViewModel', Gaia.ViewModels.Login.RecoverPassword);
+            Login.module.controller('MessageViewModel', Gaia.ViewModels.Login.MessageViewModel);
+            Login.module.controller('VerifyRegistrationViewModel', Gaia.ViewModels.Login.VerifyRegistration);
             //configure states
             Login.module.config(function ($stateProvider, $urlRouterProvider) {
                 $urlRouterProvider.otherwise('/signin');

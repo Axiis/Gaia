@@ -2,6 +2,7 @@
 using Axis.Luna.Extensions;
 using Gaia.Core;
 using Gaia.Core.Services;
+using Gaia.Server.Utils;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,17 +19,14 @@ namespace Gaia.Server.Controllers.MVC
     {
         public static readonly Regex FilePart = new Regex(@"^[^\#\?]+(?=([\?\#]|$))");
 
-        private IUserContextService _userContext = null;
+        private IUserLocator _userLocator = new MVCUserLocator();
 
-        public ViewServerController(IUserContextService userContext)
+        public ViewServerController()
         {
-            ThrowNullArguments(() => userContext);
-            this._userContext = userContext;
         }
 
 
-        [HttpGet]
-        [Route("view-server/{*viewPath}")]
+        [HttpGet, Route("view-server/{*viewPath}")]
         public ActionResult GetView(string viewPath) 
             => Render($"~/views/{viewPath.ThrowIfNull()}");
 
@@ -40,9 +38,10 @@ namespace Gaia.Server.Controllers.MVC
             => Operation.Try(() =>
             {
                 //if the viewpath is within the "secured" folder, make sure there is a logged in user
-                if (viewPath.ToLower().StartsWith("~/views/secured") && 
-                    (_userContext.CurrentUser?.UserId ?? DomainConstants.GuestAccount) == DomainConstants.GuestAccount)
-                    return new HttpStatusCodeResult(HttpStatusCode.Unauthorized, "Unauthorized Resource access detected");
+                if (viewPath.ToLower().StartsWith("~/views/secured") &&
+                    (_userLocator.CurrentUser() ?? DomainConstants.GuestAccount) == DomainConstants.GuestAccount)
+                    return //new HttpStatusCodeResult(HttpStatusCode.Unauthorized, "Unauthorized Resource access detected");
+                           Redirect("/view-server/login/shell");
 
                 else return FilePart.Match(viewPath)
                     .PipeIf(_match => _match.Success, _match =>

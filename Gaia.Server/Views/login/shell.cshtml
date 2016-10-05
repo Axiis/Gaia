@@ -17,8 +17,12 @@
     <link href="~/themes/londinium/css/styles.css" rel="stylesheet" type="text/css">
     <link href="~/themes/londinium/css/icons.css" rel="stylesheet" type="text/css">
     <link href="~/fonts/cyrillic-ext.css" rel="stylesheet" type="text/css">
+
     <link href="~/Content/toastr.min.css" rel="stylesheet" type="text/css">
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="~/Content/ring-loader.css" />
+    <link rel="stylesheet" href="~/Content/cube-loader.css" />
 
 
     <script type="text/javascript" src="~/scripts/toastr.min.js"></script>
@@ -50,6 +54,8 @@
     *@
 
     <script type="text/javascript" src="/themes/londinium/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="~/scripts/loaders.js"></script>
 
     <script type="text/javascript" src="~/scripts/angular.min.js"></script>
     <script type="text/javascript" src="~/scripts/angular-sanitize.min.js"></script>
@@ -84,16 +90,20 @@
     </div>
     <!-- /footer -->
 
+    <div class="hidden" id="antiForgery">
+        @Html.AntiForgeryToken()
+    </div>
+
 
 
     <script type="text/javascript" src="~/app/utils/extensions.js"></script>
     <script type="text/javascript" src="~/app/utils/tools.js"></script>
-    <script type="text/javascript" src="~/app/login-app.js"></script>
     <script type="text/javascript" src="~/app/domian-models/models.js"></script>
     <script type="text/javascript" src="~/app/services/utility-services.js"></script>
     <script type="text/javascript" src="~/app/services/gaia-services.js"></script>
     <script type="text/javascript" src="~/app/services/pollux-services.js"></script>
     <script type="text/javascript" src="~/app/view-models/login-viewmodels.js"></script>
+    <script type="text/javascript" src="~/app/login-app.js"></script>
 
 </body>
 </html>
