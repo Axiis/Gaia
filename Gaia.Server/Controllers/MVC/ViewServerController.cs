@@ -66,6 +66,19 @@ namespace Gaia.Server.Controllers.MVC
                 .Result;
 
         private ActionResult Razor(string viewPath)
-            => View($"{viewPath}{(viewPath.ToLower().EndsWith(".cshtml") ? "" : ".cshtml")}");
+            => View($"{viewPath}{(viewPath.ToLower().EndsWith(".cshtml") ? "" : ".cshtml")}", new Models.ShellModel
+            {
+                UserId = _userLocator.CurrentUser()
+            });
+    }
+
+    namespace Models
+    {
+
+        public class ShellModel
+        {
+            public string UserId { get; set; }
+        }
+
     }
 }

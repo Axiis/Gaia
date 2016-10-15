@@ -41,7 +41,22 @@ namespace Gaia.Core.Services
 
         [Feature("system/User/Profile/@remove-data")]
         Operation RemoveData(string[] names);
-        
+
+
+
+        [Feature("system/Profiles/UserData/@get")]
+        Operation<IEnumerable<UserData>> GetUserData();
+
+        [Feature("system/Profiles/BioData/@get")]
+        Operation<BioData> GetBioData();
+
+        [Feature("system/Profiles/ContactData/@get")]
+        Operation<IEnumerable<ContactData>> GetContactData();
+
+        [Feature("system/Profiles/Corporate/@get")]
+        Operation<IEnumerable<CorporateData>> GetCorporateData();
+
+
 
         [Feature("system/Profiles/@archive-user")]
         Operation<User> ArchiveUser(string targetUser);

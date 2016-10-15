@@ -4,7 +4,7 @@ using static Axis.Luna.Extensions.ObjectExtensions;
 
 namespace Gaia.Core.Domain
 {
-    public class SystemSetting: GaiaEntity<long>, IDataAttribute
+    public class SystemSetting: GaiaEntity<long>, IDataItem
     {
         public virtual string Data
         {

@@ -49,6 +49,9 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Axis.Apollo.Json">
+      <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Apollo\Axis.Apollo.Json\bin\Debug\Axis.Apollo.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Axis.Jupiter">
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Jupiter\Axis.Jupiter\bin\Debug\Axis.Jupiter.dll</HintPath>
     </Reference>
@@ -349,11 +352,16 @@
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="scripts\angular-local-storage.js" />
+    <Content Include="scripts\angular-local-storage.min.js" />
+    <Content Include="scripts\angular-local-storage.min.js.map" />
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
     <TypeScriptCompile Include="app\dashboard-app.ts" />
     <TypeScriptCompile Include="app\login-app.ts" />
+    <TypeScriptCompile Include="app\models\axis-luna.ts" />
     <TypeScriptCompile Include="app\services\pollux-services.ts" />
     <TypeScriptCompile Include="app\services\utility-services.ts" />
+    <TypeScriptCompile Include="app\utils\constants.ts" />
     <TypeScriptCompile Include="app\utils\extensions.ts" />
     <Content Include="scripts\angular-ui-router.js" />
     <Content Include="scripts\angular-ui-router.min.js" />
@@ -375,6 +383,10 @@
     <Content Include="scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="scripts\loaders.js" />
     <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\moment-with-locales.js" />
+    <Content Include="scripts\moment-with-locales.min.js" />
+    <Content Include="scripts\moment.js" />
+    <Content Include="scripts\moment.min.js" />
     <Content Include="scripts\toastr.js" />
     <Content Include="scripts\toastr.min.js" />
     <Content Include="Themes\Londinium\css\bootstrap.min.css" />
@@ -530,6 +542,7 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -1390,12 +1403,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app\domian-models\models.ts" />
+    <TypeScriptCompile Include="app\models\domain.ts" />
     <TypeScriptCompile Include="app\services\gaia-services.ts" />
+    <TypeScriptCompile Include="app\utils\map.ts" />
+    <TypeScriptCompile Include="app\utils\timespan.ts" />
     <TypeScriptCompile Include="app\utils\tools.ts" />
     <TypeScriptCompile Include="app\view-models\dashboard-viewmodels.ts" />
     <TypeScriptCompile Include="app\view-models\login-viewmodels.ts" />
     <TypeScriptCompile Include="app\view-models\shared-viewmodels.ts" />
+    <TypeScriptCompile Include="scripts\typings\angular-local-storage\angular-local-storage.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angular-ui-router\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="scripts\typings\angularjs\angular-component-router.d.ts" />

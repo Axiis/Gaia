@@ -1,4 +1,5 @@
 ﻿
+interface Func0<> { () }
 interface Func<O> { (): O; }
 interface Func1<I, O> { (in1: I): O; }
 interface Func2<I, I2, O> { (in1: I, in2: I2): O; }
@@ -10,41 +11,39 @@ interface Func7<I, I2, I3, I4, I5, I6, I7, O> { (in1: I, in2: I2, in3: I3, in4: 
 interface Func8<I, I2, I3, I4, I5, I6, I7, I8, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7, in8: I8): O; }
 interface Func9<I, I2, I3, I4, I5, I6, I7, I8, I9, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7, in8: I8, in9: I9): O; }
 
-
 interface Object {
-    project<I, O>(f: Func1<I, O>): O;
     copyTo(target: any): any;
+    project<I, O>(f: Func1<I, O>): O;
+    properties(): Array<string>;
+    propertyMaps(): Array<Gaia.Utils.Map<string, any>>;
 }
 
 interface String {
     trimLeft(str: string): string;
     trimRight(str: string): string;
     trimChars(str: string): string;
+
+    startsWith(str: string): boolean;
+    endsWith(str: string): boolean;
 }
 
-interface Array<T>{
+
+interface Array<T> {
     paginate<Data>(sequence: Array<Data>, pageIndex: number, pageSize: number): Gaia.Utils.SequencePage<Data>;
+    first<Data>(predicate?: Func1<Data, boolean>): Data;
+    firstOrDefault<Data>(predicate?: Func1<Data, boolean>): Data;
+    group<K>(keySelector: Func1<T, K>): Array<Gaia.Utils.Map<K, Array<T>>>;
 }
 
 module Gaia.Extensions {
 
     ///object extension
 
-    Object.defineProperty(Object.prototype, 'project', {
-        value: function <I, O>(f: Func1<I, O>): O {
-            if (typeof f === 'function') return f(this);
-            else return null;
-        },
-        writable: false,
-        configurable: false,
-        enumerable: false
-    });
-
     Object.defineProperty(Object.prototype, 'copyTo', {
         value: function (target: any): any {
             //'use strict';
             // We must check against these specific cases.
-            if (target === undefined || target === null) 
+            if (target === undefined || target === null)
                 throw new TypeError('Cannot convert undefined or null to object');
 
             for (var nextKey in this) {
@@ -57,6 +56,42 @@ module Gaia.Extensions {
         configurable: false,
         enumerable: false
     });
+
+    Object.defineProperty(Object.prototype, 'project', {
+        value: function <I, O>(f: Func1<I, O>): O {
+            if (typeof f === 'function') return f(this);
+            else return null;
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+    Object.defineProperty(Object.prototype, 'properties', {
+        value: function (): Array<string> {
+            return Object.getOwnPropertyNames(this);
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+    Object.defineProperty(Object.prototype, 'propertyMaps', {
+        value: function (): Array<Gaia.Utils.Map<string, any>> {
+            return (this as Object)
+                .properties()
+                .map(_p => {
+                    return {
+                        Key: _p,
+                        Value: this[_p]
+                    } as Gaia.Utils.Map<string, any>;
+                });
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
 
     ///string extension
 
@@ -71,7 +106,6 @@ module Gaia.Extensions {
         configurable: false,
         enumerable: false
     });
-
     Object.defineProperty(String.prototype, 'trimRight', {
         value: function (str: string): string {
             var _this = this as string;
@@ -83,11 +117,29 @@ module Gaia.Extensions {
         configurable: false,
         enumerable: false
     });
-
     Object.defineProperty(String.prototype, 'trimChars', {
         value: function (str: string): string {
             var _this = this as string;
             return _this.trimLeft(str).trimRight(str);
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+
+    Object.defineProperty(String.prototype, 'startsWith', {
+        value: function (str: string): boolean {
+            return (this as string).indexOf(str) == 0;
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+    Object.defineProperty(String.prototype, 'endsWith', {
+        value: function (str: string): boolean {
+            var originalString = this as string;
+            return originalString.lastIndexOf(str) == originalString.length - str.length;
         },
         writable: false,
         configurable: false,
@@ -99,7 +151,7 @@ module Gaia.Extensions {
 
     ///array extensions
 
-    Array.prototype.paginate = function <Data>(sequence: Array<Data>, pageIndex: number, pageSize: number): Gaia.Utils.SequencePage<Data> {
+    Array.prototype.paginate = function<Data>(sequence: Array<Data>, pageIndex: number, pageSize: number): Gaia.Utils.SequencePage<Data> {
 
         if (pageIndex < 0 || pageSize < 1) throw 'invalid pagination arguments';
 
@@ -109,6 +161,39 @@ module Gaia.Extensions {
             pageIndex,
             pageSize,
             sequence.length);
+    }
+
+    Array.prototype.first = function <Data>(predicate?: Func1<Data, boolean>): Data {
+        var arr = this as Array<Data>;
+        if (predicate) arr = arr.filter(predicate);
+        return arr[0];
+    }
+
+    Array.prototype.firstOrDefault = function <Data>(predicate?: Func1<Data, boolean>): Data {
+        try {
+            return (this as Array<Data>).first<Data>(predicate);
+        }
+        catch (e) {
+            return null;
+        }
+    }
+
+    Array.prototype.group = function <K, V>(keySelector: Func1<V, K>): Array<Gaia.Utils.Map<K, Array<V>>> {
+
+        var arr = this as Array<V>;
+        var map = {};
+        arr.forEach(_v => {
+            var key = keySelector(_v);
+            var cache: Array<V> = map[key.toString()] || (map[key.toString()] = []);
+            cache.push(_v);
+        });
+
+        return map.propertyMaps().map(_map => {
+            return {
+                Key: (_map.Key as any) as K,
+                Value: _map.Value as Array<V>
+            } as Gaia.Utils.Map<K, Array<V>>;
+        });
     }
 
 }

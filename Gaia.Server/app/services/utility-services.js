@@ -8,28 +8,67 @@ var Gaia;
                 function DomainTransport($http) {
                     this.$http = $http;
                     this.http = null;
+                    this.$http.defaults.headers.common.Authorization = 'Bearer ' + window.localStorage[Gaia.Utils.OAuthTokenKey];
                     this.http = $http;
                 }
+                DomainTransport.prototype.tokenExpired = function (callbackParam) {
+                    throw 'not implemented';
+                };
                 DomainTransport.prototype.get = function (url, config) {
-                    return this.http.get(url, config);
+                    var _this = this;
+                    return this.http.get(url, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 DomainTransport.prototype.delete = function (url, config) {
-                    return this.http.delete(url, config);
+                    var _this = this;
+                    return this.http.delete(url, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 DomainTransport.prototype.head = function (url, config) {
-                    return this.http.head(url, config);
+                    var _this = this;
+                    return this.http.head(url, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 DomainTransport.prototype.jsonp = function (url, config) {
-                    return this.http.jsonp(url, config);
+                    var _this = this;
+                    return this.http.jsonp(url, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 DomainTransport.prototype.post = function (url, data, config) {
-                    return this.http.post(url, data, config);
+                    var _this = this;
+                    return this.http.post(url, data, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 DomainTransport.prototype.put = function (url, data, config) {
-                    return this.http.put(url, data, config);
+                    var _this = this;
+                    return this.http.put(url, data, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 DomainTransport.prototype.patch = function (url, data, config) {
-                    return this.http.patch(url, data, config);
+                    var _this = this;
+                    return this.http.patch(url, data, config)
+                        .error(function (r) {
+                        if (_this.tokenExpired(r))
+                            window.location.href = '/view-server/login/shell';
+                    });
                 };
                 return DomainTransport;
             }());
@@ -37,13 +76,22 @@ var Gaia;
             var DomModelService = (function () {
                 function DomModelService() {
                     var _this = this;
-                    this.model = {};
-                    angular.element('#cbt-model')
-                        .attr('simpleProperties')
+                    this.simpleModel = {};
+                    this.complexModel = null;
+                    var $element = angular.element('#local-model');
+                    //simple model
+                    $element.attr('simple-models')
                         .project(function (v) { return Gaia.Utils.ParseStringPairs(v); })
                         .forEach(function (v) {
-                        _this.model[v.Key] = v.Value;
+                        _this.simpleModel[v.Key] = v.Value;
                     });
+                    //complex model
+                    try {
+                        this.complexModel = JSON.parse($element.html());
+                    }
+                    catch (e) {
+                        this.complexModel = {};
+                    }
                 }
                 return DomModelService;
             }());

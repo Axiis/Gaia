@@ -541,7 +541,7 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
-            if(data) data.copyTo(this);
+            if (data) data.copyTo(this);
         }
     }
 

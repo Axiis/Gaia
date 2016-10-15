@@ -92,6 +92,14 @@ namespace Gaia.Core.Services
                             .ThrowIf(op => !op.Succeeded, op => new Exception("failed to assign credential"));
                     });
 
+                    ///create necessary "default" information for the user
+                    //1. default profile image
+                    DataContext.Store<UserData>()
+                        .Add(UserDataConstants.DefaultProfileImage.CloneForUser(userId))
+                        .Context
+                        .CommitChanges();
+
+
                     //apply the necessary access profile
                     AccessManager.ApplyAccessProfile(userId,
                                                      DefaultClientAccessProfile,
@@ -124,7 +132,7 @@ namespace Gaia.Core.Services
                         userstore.Add(__user).Context
                             .CommitChanges()
                             .ThrowIf(r => r <= 0, r => new Exception("failed to register user"));
-                    });                    
+                    });
 
                     //assign credentials
                     secretCredentials.Where(scred => scred.Metadata.Access == Access.Secret).ForAll((cnt, cred)
@@ -162,7 +170,7 @@ namespace Gaia.Core.Services
 
                 else _biostore.Modify(data, true);
             });
-        
+
         public Operation ModifyContactData(ContactData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
@@ -231,7 +239,7 @@ namespace Gaia.Core.Services
                 var user = UserContext.CurrentUser;
                 var userdatastore = DataContext.Store<UserData>();
                 List<UserData> existingData = new List<UserData>();
-                
+
                 //retrieve from storage, all data-objects with the same name, belonging to the current user
                 data.Batch(200).ForAll((cnt, batch) =>
                 {
@@ -309,6 +317,19 @@ namespace Gaia.Core.Services
 
         public Operation<IEnumerable<User>> Discover()
             => FeatureAccess.Guard(UserContext, () => new User[0].AsEnumerable());
+
+
+        public Operation<IEnumerable<UserData>> GetUserData()
+            => FeatureAccess.Guard(UserContext, () => DataContext.Store<UserData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+
+        public Operation<BioData> GetBioData()
+            => FeatureAccess.Guard(UserContext, () => DataContext.Store<BioData>().Query.FirstOrDefault(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId));
+
+        public Operation<IEnumerable<ContactData>> GetContactData()
+            => FeatureAccess.Guard(UserContext, () => DataContext.Store<ContactData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+
+        public Operation<IEnumerable<CorporateData>> GetCorporateData()
+            => FeatureAccess.Guard(UserContext, () => DataContext.Store<CorporateData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
 
 
         internal class DataNameComparer : IEqualityComparer<UserData>

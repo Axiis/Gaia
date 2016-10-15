@@ -35,7 +35,7 @@
                             <div class="block">
                                 <div class="thumbnail">
                                     <div class="thumb">
-                                        <img alt="" src="http://placehold.it/300">
+                                        <img alt="" src="{{vm.profileImageUrl()}}">
                                         <div class="thumb-options">
                                             <span>
                                                 <a href="#" class="btn btn-icon btn-success"><i class="icon-pencil"></i></a>
@@ -45,8 +45,8 @@
                                     </div>
 
                                     <div class="caption text-center">
-                                        <h6>Madison Gartner <small>Front end developer</small></h6>
-                                        <div class="icons-group">
+                                        <h6>{{vm.names()}}</h6>
+                                        <div class="icons-group hidden">
                                             <a href="#" title="" class="tip" data-original-title="Google Drive"><i class="icon-google-drive"></i></a>
                                             <a href="#" title="" class="tip" data-original-title="Twitter"><i class="icon-twitter"></i></a>
                                             <a href="#" title="" class="tip" data-original-title="Github"><i class="icon-github3"></i></a>
@@ -166,9 +166,18 @@
 
                                     <div class="block-inner fade in" ng-hide="vm.isEditingBioData">
                                         <div class="callout callout-info fade in">
-                                            <h5>John Smith {{vm.names()}}</h5>
+                                            <h5>{{vm.names()}}</h5>
                                             <p style="font-size:14px;">
-                                                Template typography - styled/unstyled headings, lists, description lists, code/pre, blockquotes, text styles etc.
+                                                <i class="icon-calendar3"></i>&nbsp;&nbsp;Date of birth - <span class="text-primary">{{vm.dobInfo()}}</span>
+                                            </p>
+                                            <p style="font-size:14px;">
+                                                <i class="fa fa-venus-mars"></i>&nbsp;&nbsp;Gender - <span class="text-primary">{{vm.bioData.Gender}}</span>
+                                            </p>
+                                            <p style="font-size:14px;">
+                                                <i class="fa fa-globe"></i>&nbsp;&nbsp;Nationality - <span class="text-primary">{{vm.bioData.Nationality}}</span>
+                                            </p>
+                                            <p style="font-size:14px;">
+                                                <i class="icon-location"></i>&nbsp;&nbsp;State of Origin - <span class="text-primary">{{vm.bioData.StateOfOrigin}}</span>
                                             </p>
                                         </div>
                                     </div>

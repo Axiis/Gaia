@@ -42,6 +42,18 @@ var Gaia;
             ProfileService.prototype.verifyUserActivation = function () {
                 return null;
             };
+            ProfileService.prototype.getUserData = function () {
+                return null;
+            };
+            ProfileService.prototype.getBioData = function () {
+                return null;
+            };
+            ProfileService.prototype.getContactData = function () {
+                return null;
+            };
+            ProfileService.prototype.getCorporateData = function () {
+                return null;
+            };
             ProfileService.$inject = ["$http"];
             return ProfileService;
         }());

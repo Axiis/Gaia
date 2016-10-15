@@ -107,6 +107,7 @@
     <Compile Include="System\IContextAware.cs" />
     <Compile Include="System\IMailPushService.cs" />
     <Compile Include="System\SystemSettings.cs" />
+    <Compile Include="UserDataConstants.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\FeatureAccess.cs" />
     <Compile Include="Utils\FeatureAttribute.cs" />

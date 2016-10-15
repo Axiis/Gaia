@@ -45,6 +45,23 @@ module Gaia.Services {
         public verifyUserActivation(): ng.IHttpPromise<any> {
             return null;
         }
+
+
+        public getUserData(): ng.IHttpPromise<Axis.Luna.IOperation<Array<Domain.UserData>>> {
+            return null;
+        }
+
+        public getBioData(): ng.IHttpPromise<Axis.Luna.IOperation<Domain.BioData>> {
+            return null;
+        }
+
+        public getContactData(): ng.IHttpPromise<Axis.Luna.IOperation<Array<Domain.ContactData>>> {
+            return null;
+        }
+
+        public getCorporateData(): ng.IHttpPromise<Axis.Luna.IOperation<Array<Domain.CorporateData>>> {
+            return null;
+        }
     }
 }
 

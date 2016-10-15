@@ -248,6 +248,10 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/@create-activation-verification",
                         "system/User/Profile/@verify-activation-verification",
                         "system/User/Profile/@verify-activation-verification",
+                        "system/Profiles/UserData/@get",
+                        "system/Profiles/BioData/@get",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/Corporate/@get",
                     
                         "system/User/AccessProfile/*",
                         "system/AccessProfiles/*",
@@ -305,6 +309,10 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/BioData/@modify",
                         "system/Profiles/ContactData/@modify",
                         "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/UserData/@get",
+                        "system/Profiles/BioData/@get",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/Corporate/@get",
 
                         "system/User/ActivityFeed/*",
 
@@ -363,6 +371,10 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/BioData/@modify",
                         "system/Profiles/ContactData/@modify",
                         "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/UserData/@get",
+                        "system/Profiles/BioData/@get",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/Corporate/@get",
 
                         "system/User/ActivityFeed/*",
 
@@ -430,6 +442,10 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/BioData/@modify",
                         "system/Profiles/ContactData/@modify",
                         "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/UserData/@get",
+                        "system/Profiles/BioData/@get",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/Corporate/@get",
 
                         "system/User/ActivityFeed/*",
 
