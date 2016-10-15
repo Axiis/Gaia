@@ -17,7 +17,7 @@ var Gaia;
                     this.contact = null;
                     profileService.getBioData().success(function (oprc) { return _this.biodata = oprc.Result; });
                     profileService.getContactData().success(function (oprc) { return _this.contact = oprc.Result.firstOrDefault(); });
-                    this.user = new Gaia.Domain.User({
+                    this.user = new Axis.Pollux.Domain.User({
                         UserId: domModel.simpleModel.UserId,
                         EntityId: domModel.simpleModel.UserId,
                         Stataus: 1
@@ -30,6 +30,7 @@ var Gaia;
                     return null;
                 };
                 DashboardViewModel.prototype.dobInfo = function () {
+                    return null;
                 };
                 DashboardViewModel.prototype.persistBioData = function () {
                     return null;

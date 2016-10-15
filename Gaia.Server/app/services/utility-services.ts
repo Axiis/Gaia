@@ -14,14 +14,22 @@ module Gaia.Utils.Services {
             throw 'not implemented';
         }
         
-        get<T>(url: string, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {             
+        get<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {    
+            if (data) {
+                config = config || {};
+                config.data = data;
+            }         
             return this.http.get<T>(url, config)
                 .error(r => {
                     if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
-        delete<T>(url: string, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+        delete<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+            if (data) {
+                config = config || {};
+                config.data = data;
+            }         
             return this.http.delete(url, config)
                 .error(r => {
                     if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
@@ -35,7 +43,11 @@ module Gaia.Utils.Services {
                 });
         }
         
-        jsonp<T>(url: string, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+        jsonp<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+            if (data) {
+                config = config || {};
+                config.data = data;
+            }         
             return this.http.jsonp(url, config)
                 .error(r => {
                     if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
@@ -75,7 +87,7 @@ module Gaia.Utils.Services {
 
             //simple model
             $element.attr('simple-models')
-                .project((v: string) => Gaia.Utils.ParseStringPairs(v))
+                .project((v: string) => Gaia.Utils.StringPair.ParseStringPairs(v))
                 .forEach(v => {
                     this.simpleModel[v.Key] = v.Value;
                 });

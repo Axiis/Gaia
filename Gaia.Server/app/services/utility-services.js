@@ -14,16 +14,24 @@ var Gaia;
                 DomainTransport.prototype.tokenExpired = function (callbackParam) {
                     throw 'not implemented';
                 };
-                DomainTransport.prototype.get = function (url, config) {
+                DomainTransport.prototype.get = function (url, data, config) {
                     var _this = this;
+                    if (data) {
+                        config = config || {};
+                        config.data = data;
+                    }
                     return this.http.get(url, config)
                         .error(function (r) {
                         if (_this.tokenExpired(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
-                DomainTransport.prototype.delete = function (url, config) {
+                DomainTransport.prototype.delete = function (url, data, config) {
                     var _this = this;
+                    if (data) {
+                        config = config || {};
+                        config.data = data;
+                    }
                     return this.http.delete(url, config)
                         .error(function (r) {
                         if (_this.tokenExpired(r))
@@ -38,8 +46,12 @@ var Gaia;
                             window.location.href = '/view-server/login/shell';
                     });
                 };
-                DomainTransport.prototype.jsonp = function (url, config) {
+                DomainTransport.prototype.jsonp = function (url, data, config) {
                     var _this = this;
+                    if (data) {
+                        config = config || {};
+                        config.data = data;
+                    }
                     return this.http.jsonp(url, config)
                         .error(function (r) {
                         if (_this.tokenExpired(r))
@@ -81,7 +93,7 @@ var Gaia;
                     var $element = angular.element('#local-model');
                     //simple model
                     $element.attr('simple-models')
-                        .project(function (v) { return Gaia.Utils.ParseStringPairs(v); })
+                        .project(function (v) { return Gaia.Utils.StringPair.ParseStringPairs(v); })
                         .forEach(function (v) {
                         _this.simpleModel[v.Key] = v.Value;
                     });

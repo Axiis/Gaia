@@ -358,7 +358,9 @@
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
     <TypeScriptCompile Include="app\dashboard-app.ts" />
     <TypeScriptCompile Include="app\login-app.ts" />
-    <TypeScriptCompile Include="app\models\axis-luna.ts" />
+    <TypeScriptCompile Include="app\models\axis-apollo-domain.ts" />
+    <TypeScriptCompile Include="app\models\axis-luna-domain.ts" />
+    <TypeScriptCompile Include="app\models\axis-pollux-domain.ts" />
     <TypeScriptCompile Include="app\services\pollux-services.ts" />
     <TypeScriptCompile Include="app\services\utility-services.ts" />
     <TypeScriptCompile Include="app\utils\constants.ts" />
@@ -1403,7 +1405,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app\models\domain.ts" />
+    <TypeScriptCompile Include="app\models\gaia-domain.ts" />
     <TypeScriptCompile Include="app\services\gaia-services.ts" />
     <TypeScriptCompile Include="app\utils\map.ts" />
     <TypeScriptCompile Include="app\utils\timespan.ts" />

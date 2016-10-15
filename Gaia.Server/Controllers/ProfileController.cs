@@ -52,22 +52,6 @@ namespace Gaia.Server.Controllers
                   .Result;
 
         [HttpPut]
-        [Route("api/profiles/data")]
-        public IHttpActionResult AddData([FromBody]UserDataInfo data)
-            => _profileService.AddData(data.DataList.ToArray())
-                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                  .Result;
-
-        [HttpDelete]
-        [Route("api/profiles/data")]
-        public IHttpActionResult RemoveData([FromBody]UserDataInfo dataNames)
-            => _profileService.RemoveData(dataNames.DataList.Select(_d => _d.Name).ToArray())
-                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                  .Result;
-
-        [HttpPut]
         [Route("api/profiles/archives")]
         public IHttpActionResult ArchiveUser([FromBody]UserValueInfo userValue)
             => _profileService.ArchiveUser(userValue.User)
@@ -98,6 +82,86 @@ namespace Gaia.Server.Controllers
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                   .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
+
+        #region user-data
+        [HttpPut]
+        [Route("api/profiles/data")]
+        public IHttpActionResult AddData([FromBody]UserDataInfo data)
+            => _profileService.AddData(data.DataList.ToArray())
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                  .Result;
+
+        [HttpDelete]
+        [Route("api/profiles/data")] //<-- http://abcd.xyz/api/profiles/data/?dataNames=abcd,efgh,ijkl,etc
+        public IHttpActionResult RemoveData([FromUri]string dataNames)
+            => _profileService.RemoveData(dataNames.Split(','))
+                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                  .Result;
+
+        [HttpGet]
+        [Route("api/profiles/data")]
+        public IHttpActionResult GetUserData()
+            => _profileService.GetUserData()
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+        #endregion
+
+        #region bio-data
+        [HttpGet]
+        [Route("api/profiles/bio-data")]
+        public IHttpActionResult GetBioData()
+            => _profileService.GetBioData()
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+
+        [HttpPut]
+        [Route("api/profiles/bio-data")]
+        public IHttpActionResult ModifyBioData([FromBody]BioData data)
+            => _profileService.ModifyBioData(data)
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+        #endregion
+
+        #region contact-data
+        [HttpGet]
+        [Route("api/profiles/contact-data")]
+        public IHttpActionResult GetContactData()
+            => _profileService.GetContactData()
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+
+        [HttpPut]
+        [Route("api/profiles/contact-data")]
+        public IHttpActionResult ModifyContactData([FromBody]ContactData data)
+            => _profileService.ModifyContactData(data)
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+        #endregion
+
+        #region corporate-data
+        [HttpGet]
+        [Route("api/profiles/corporate-data")]
+        public IHttpActionResult GetCorporateData()
+            => _profileService.GetCorporateData()
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+
+        [HttpPut]
+        [Route("api/profiles/corporate-data")]
+        public IHttpActionResult ModifyCorporate([FromBody]CorporateData data)
+            => _profileService.ModifyCorporateData(data)
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+        #endregion
     }
 
 

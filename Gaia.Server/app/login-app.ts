@@ -2,7 +2,6 @@
 module Gaia.App.Login {
     
     export const module = angular.module("gaiaLogin", ['ui.router', 'ngSanitize']);
-    Gaia.Utils.moduleConfig.addModule(module);
 
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);

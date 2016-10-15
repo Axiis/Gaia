@@ -9,9 +9,9 @@ module Gaia.ViewModels.Dashboard {
         isEditingBioData: boolean = false;
         isEditingContactData: boolean = false;
 
-        user: Gaia.Domain.User = null;
-        biodata: Gaia.Domain.BioData = null;
-        contact: Gaia.Domain.ContactData = null;
+        user: Axis.Pollux.Domain.User = null;
+        biodata: Axis.Pollux.Domain.BioData = null;
+        contact: Axis.Pollux.Domain.ContactData = null;
 
         names(): string {
             return null;
@@ -22,6 +22,7 @@ module Gaia.ViewModels.Dashboard {
         }
 
         dobInfo(): string {
+            return null;
         }
 
 
@@ -39,7 +40,7 @@ module Gaia.ViewModels.Dashboard {
 
             profileService.getBioData().success(oprc => this.biodata = oprc.Result);
             profileService.getContactData().success(oprc => this.contact = oprc.Result.firstOrDefault<Domain.ContactData>());
-            this.user = new Gaia.Domain.User({
+            this.user = new Axis.Pollux.Domain.User({
                 UserId: domModel.simpleModel.UserId,
                 EntityId: domModel.simpleModel.UserId,
                 Stataus: 1

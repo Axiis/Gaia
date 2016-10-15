@@ -21,7 +21,7 @@ module Gaia.ViewModels.Login {
             this.isBusy = true;
 
             this.transport
-                .post<Utils.Operation<string>>('/auth/login', { username: this.email, password: this.password, __RequestVerificationToken: angular.element('#antiForgery > input').val() }, {
+                .post<Axis.Luna.IOperation<string>>('/auth/login', { username: this.email, password: this.password, __RequestVerificationToken: angular.element('#antiForgery > input').val() }, {
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded'

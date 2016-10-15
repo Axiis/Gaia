@@ -5,7 +5,6 @@ var Gaia;
         var Login;
         (function (Login) {
             Login.module = angular.module("gaiaLogin", ['ui.router', 'ngSanitize']);
-            Gaia.Utils.moduleConfig.addModule(Login.module);
             ///Gaia services
             Login.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             ///Pollux Services

@@ -1,26 +1,23 @@
 ﻿using Microsoft.Owin;
-using Microsoft.Owin.Cors;
 using Owin;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
-using Microsoft.Owin.Security.Infrastructure;
 using Gaia.Server.DI;
 using static Axis.Luna.Extensions.ObjectExtensions;
 using System.Web.Http.Dependencies;
-using Axis.Luna;
 using Gaia.Server.OAuth;
 using Microsoft.Owin.BuilderProperties;
 using System.Threading;
-using System.Linq;
 using System;
-using Gaia.Core.Domain;
 using SimpleInjector.Integration.WebApi;
-using SimpleInjector;
-using SimpleInjector.Extensions.LifetimeScoping;
-using System.Web;
 using Microsoft.Owin.StaticFiles;
-using Microsoft.Owin.FileSystems;
 using Gaia.Server.Utils;
+using System.Net.Http.Formatting;
+using Axis.Luna.Extensions;
+
+using static Axis.Luna.Extensions.EnumerableExtensions;
+using Newtonsoft.Json;
+using System.Linq;
 
 [assembly: OwinStartup(typeof(Gaia.Server.WebapiStartup))]
 
@@ -64,6 +61,25 @@ namespace Gaia.Server
         {
             new HttpConfiguration().Pipe(config =>
             {
+                //change the json formatter
+                config.Formatters.Clear();
+                config.Formatters.Add(new JsonMediaTypeFormatter
+                {
+                    SerializerSettings = new JsonSerializerSettings
+                    {
+                        Converters = Enumerate<JsonConverter>()
+                            .Append(new Axis.Apollo.Json.CustomTimeSpanConverter())
+                            .Append(new Axis.Apollo.Json.MomentJsDateConverter())
+                            .ToList(),
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        NullValueHandling = NullValueHandling.Ignore,
+                        ObjectCreationHandling = ObjectCreationHandling.Auto,
+                        FloatFormatHandling = FloatFormatHandling.DefaultValue,
+                        PreserveReferencesHandling = PreserveReferencesHandling.All,
+                        StringEscapeHandling = StringEscapeHandling.Default
+                    }
+                });
+
                 //conigure dependency injection
                 config.DependencyResolver = app.Properties[OWINMapKeys.ResolutionContext].As<IDependencyResolver>();
 
