@@ -32,7 +32,7 @@ module Gaia.Services {
             return this.transport.put<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>>('/api/profiles/archives', {
                 User: userId
             }, config).then(oprc => {
-                oprc.data.Result = new Axis.Pollux.Domain.User(oprc.data.Result);
+                oprc.data.Result = oprc.data.Result? new Axis.Pollux.Domain.User(oprc.data.Result): null;
                 return oprc.data;
             });                
         }
@@ -41,7 +41,7 @@ module Gaia.Services {
             return this.transport.put<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>>('/api/profiles/activation', {
                 User: userId
             }, config).then(oprc => {
-                oprc.data.Result = new Axis.Pollux.Domain.User(oprc.data.Result);
+                oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.User(oprc.data.Result) : null;
                 return oprc.data;
             });
         }
@@ -50,14 +50,14 @@ module Gaia.Services {
                 User: userId,
                 Value: token
             }, config).then(oprc => {
-                oprc.data.Result = new Axis.Pollux.Domain.User(oprc.data.Result);
+                oprc.data.Result = oprc.data.Result ?  new Axis.Pollux.Domain.User(oprc.data.Result) : null;
                 return oprc.data;
             });
         }
 
         public getUserData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Array<Axis.Pollux.Domain.UserData>>> {
             return this.transport.get<Axis.Luna.Domain.Operation<Array<Axis.Pollux.Domain.UserData>>>('/api/profiles/data', null, config).then(oprc => {
-                oprc.data.Result = oprc.data.Result.map(_ud => new Axis.Pollux.Domain.UserData(_ud));
+                oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_ud => new Axis.Pollux.Domain.UserData(_ud)) : [];
                 return oprc.data;
             });
         }
@@ -74,7 +74,7 @@ module Gaia.Services {
 
         public getBioData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.BioData>> {
             return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.BioData>>('/api/profiles/bio-data', null, config).then(oprc => {
-                oprc.data.Result = new Axis.Pollux.Domain.BioData(oprc.data.Result);
+                oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.BioData(oprc.data.Result): null;
                 return oprc.data;
             });
         }
@@ -85,7 +85,7 @@ module Gaia.Services {
 
         public getContactData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Array<Axis.Pollux.Domain.ContactData>>> {
             return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.ContactData[]>>('/api/profiles/contact-data', null, config).then(oprc => {
-                oprc.data.Result = oprc.data.Result.map(_cd => new Axis.Pollux.Domain.ContactData(_cd));
+                oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Axis.Pollux.Domain.ContactData(_cd)) : null;
                 return oprc.data;
             });
         }
@@ -95,7 +95,7 @@ module Gaia.Services {
 
         public getCorporateData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.CorporateData[]>> {
             return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.CorporateData[]>>('/api/profiles/corporate-data', null, config).then(oprc => {
-                oprc.data.Result = oprc.data.Result.map(_cd => new Axis.Pollux.Domain.CorporateData(_cd));
+                oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Axis.Pollux.Domain.CorporateData(_cd)): null;
                 return oprc.data;
             });
         }

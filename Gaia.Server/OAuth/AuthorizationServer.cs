@@ -39,7 +39,15 @@ namespace Gaia.Server.OAuth
                     Metadata = CredentialMetadata.Password,
                     Value = Encoding.Unicode.GetBytes(context.Password)
                 })
-                .Then(opr => context.Validated(new ClaimsIdentity(context.Options.AuthenticationType).UsingValue(id => id.AddClaim(new Claim("user-name", context.UserName)))))
+                .Then(opr =>
+                {
+                    var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+
+                    identity.AddClaim(new Claim("user-name", context.UserName));
+                    identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
+
+                    context.Validated(new Microsoft.Owin.Security.AuthenticationTicket(identity, null));
+                })
                 .Error(() => context.UsingValue(cxt => cxt.SetError("invalid_grant","invalid user credential"))
                                     .UsingValue(cxt => cxt.Rejected()));
             });

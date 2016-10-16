@@ -90,6 +90,7 @@ module Axis.Apollo.Domain {
                 this.second = m.second();
                 this.millisecond = m.millisecond();
             }
+            else throw 'invalid moment object';
         }
 
         constructor(initArg?: number | Object) {

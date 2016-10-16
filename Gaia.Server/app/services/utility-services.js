@@ -8,7 +8,8 @@ var Gaia;
                 function DomainTransport($http) {
                     this.$http = $http;
                     this.http = null;
-                    this.$http.defaults.headers.common.Authorization = 'Bearer ' + window.localStorage[Gaia.Utils.OAuthTokenKey];
+                    var oauthtoken = window.localStorage.getItem(Gaia.Utils.OAuthTokenKey);
+                    this.$http.defaults.headers.common.Authorization = 'Bearer ' + (oauthtoken ? JSON.parse(oauthtoken).access_token : '');
                     this.http = $http;
                 }
                 DomainTransport.prototype.tokenExpired = function (callbackParam) {
@@ -90,7 +91,7 @@ var Gaia;
                     var _this = this;
                     this.simpleModel = {};
                     this.complexModel = null;
-                    var $element = angular.element('#local-model');
+                    var $element = angular.element('#local-models');
                     //simple model
                     $element.attr('simple-models')
                         .project(function (v) { return Gaia.Utils.StringPair.ParseStringPairs(v); })

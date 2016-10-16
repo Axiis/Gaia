@@ -21,7 +21,7 @@ module Gaia.ViewModels.Login {
             this.isBusy = true;
 
             this.transport
-                .post<Axis.Luna.IOperation<string>>('/auth/login', { username: this.email, password: this.password, __RequestVerificationToken: angular.element('#antiForgery > input').val() }, {
+                .post<Axis.Luna.Domain.Operation<string>>('/auth/login', { username: this.email, password: this.password, __RequestVerificationToken: angular.element('#antiForgery > input').val() }, {
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -35,7 +35,7 @@ module Gaia.ViewModels.Login {
                 })
                 .then(s => {//success
                     this.isBusy = false;
-                    localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s.data.Result));
+                    localStorage.setItem(Gaia.Utils.OAuthTokenKey, s.data.Result);
                     this.$window.location.href = '/view-server/secured/dashboard/shell';
                 }, e => {//error
                     this.isBusy = false;

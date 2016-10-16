@@ -51,9 +51,9 @@ namespace Gaia.Server.Controllers.MVC
             })
             .Result;
 
-        [HttpPut, Route("auth/logout/{userName}")]
-        public ActionResult Logout(string userName)
-            => Operation.Try(() => _userLocator.Signout(userName))
+        [HttpPut, Route("auth/logout")]
+        public ActionResult Logout()
+            => Operation.Try(() => _userLocator.Signout(User.Identity.Name))
             .Then(opr => new ContentResult
             {
                 Content = JsonConvert.SerializeObject(opr),

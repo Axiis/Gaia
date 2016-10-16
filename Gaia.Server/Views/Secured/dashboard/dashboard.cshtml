@@ -32,25 +32,23 @@
 
                         <!-- Profile links -->
                         <div class="block">
-                            <div class="block">
-                                <div class="thumbnail">
-                                    <div class="thumb">
-                                        <img alt="" src="{{vm.profileImageUrl()}}">
-                                        <div class="thumb-options">
-                                            <span>
-                                                <a href="#" class="btn btn-icon btn-success"><i class="icon-pencil"></i></a>
-                                                <a href="#" class="btn btn-icon btn-success"><i class="icon-remove"></i></a>
-                                            </span>
-                                        </div>
+                            <div class="thumbnail">
+                                <div class="thumb">
+                                    <img alt="" src="{{vm.profileImageUrl()}}" style="width:200px; height:200px;">
+                                    <div class="thumb-options">
+                                        <span>
+                                            <a href="#" class="btn btn-icon btn-success"><i class="icon-pencil"></i></a>
+                                            <a href="#" class="btn btn-icon btn-success"><i class="icon-remove"></i></a>
+                                        </span>
                                     </div>
+                                </div>
 
-                                    <div class="caption text-center">
-                                        <h6>{{vm.names()}}</h6>
-                                        <div class="icons-group hidden">
-                                            <a href="#" title="" class="tip" data-original-title="Google Drive"><i class="icon-google-drive"></i></a>
-                                            <a href="#" title="" class="tip" data-original-title="Twitter"><i class="icon-twitter"></i></a>
-                                            <a href="#" title="" class="tip" data-original-title="Github"><i class="icon-github3"></i></a>
-                                        </div>
+                                <div class="caption text-center">
+                                    <h6>{{vm.nameDisplay()}}</h6>
+                                    <div class="icons-group hidden">
+                                        <a href="#" title="" class="tip" data-original-title="Google Drive"><i class="icon-google-drive"></i></a>
+                                        <a href="#" title="" class="tip" data-original-title="Twitter"><i class="icon-twitter"></i></a>
+                                        <a href="#" title="" class="tip" data-original-title="Github"><i class="icon-github3"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -166,18 +164,18 @@
 
                                     <div class="block-inner fade in" ng-hide="vm.isEditingBioData">
                                         <div class="callout callout-info fade in">
-                                            <h5>{{vm.names()}}</h5>
+                                            <h5>{{vm.nameDisplay()}}</h5>
                                             <p style="font-size:14px;">
-                                                <i class="icon-calendar3"></i>&nbsp;&nbsp;Date of birth - <span class="text-primary">{{vm.dobInfo()}}</span>
+                                                <i class="icon-calendar3"></i>&nbsp;&nbsp;Date of birth - <span class="text-primary">{{vm.dobDisplay()}}</span>
                                             </p>
                                             <p style="font-size:14px;">
-                                                <i class="fa fa-venus-mars"></i>&nbsp;&nbsp;Gender - <span class="text-primary">{{vm.bioData.Gender}}</span>
+                                                <i class="fa fa-venus-mars"></i>&nbsp;&nbsp;Gender - <span class="text-primary">{{vm.genderDisplay()}}</span>
                                             </p>
                                             <p style="font-size:14px;">
-                                                <i class="fa fa-globe"></i>&nbsp;&nbsp;Nationality - <span class="text-primary">{{vm.bioData.Nationality}}</span>
+                                                <i class="fa fa-globe"></i>&nbsp;&nbsp;Nationality - <span class="text-primary">{{vm.nationalityDisplay()}}</span>
                                             </p>
                                             <p style="font-size:14px;">
-                                                <i class="icon-location"></i>&nbsp;&nbsp;State of Origin - <span class="text-primary">{{vm.bioData.StateOfOrigin}}</span>
+                                                <i class="icon-location"></i>&nbsp;&nbsp;State of Origin - <span class="text-primary">{{vm.stateOfOriginDisplay()}}</span>
                                             </p>
                                         </div>
                                     </div>

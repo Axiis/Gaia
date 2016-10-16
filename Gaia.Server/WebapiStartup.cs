@@ -30,8 +30,8 @@ namespace Gaia.Server
         {
             ConfigureDI(app); //<-- must come first!!!
 
-            ConfigureWebApi(app);
             ConfigureOAuth(app);
+            ConfigureWebApi(app);
             //ConfigureFileServer(app);
         }
 
@@ -68,8 +68,8 @@ namespace Gaia.Server
                     SerializerSettings = new JsonSerializerSettings
                     {
                         Converters = Enumerate<JsonConverter>()
-                            .Append(new Axis.Apollo.Json.CustomTimeSpanConverter())
-                            .Append(new Axis.Apollo.Json.MomentJsDateConverter())
+                            .Append(new Axis.Apollo.Json.TimeSpanConverter())
+                            .Append(new Axis.Apollo.Json.DateTimeConverter())
                             .ToList(),
                         MissingMemberHandling = MissingMemberHandling.Ignore,
                         NullValueHandling = NullValueHandling.Ignore,
@@ -86,6 +86,10 @@ namespace Gaia.Server
                 //enable attribute routes
                 config.MapHttpAttributeRoutes();
 
+                config.SuppressDefaultHostAuthentication();
+                config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
+                //config.Filters.Add(new OAuthAuthenticationFilter(OAuthDefaults.AuthenticationType));
+
                 //apply the configuration
                 app.UseWebApi(config);
             });
@@ -95,26 +99,29 @@ namespace Gaia.Server
         {
             app.Properties[OWINMapKeys.ResolutionContext].As<WebApiResolutionContext>().ManagedScope().Using(resolver =>
             {
-                app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
+                var oauthAuthorizeOptions = new OAuthAuthorizationServerOptions
                 {
-                    AuthorizeEndpointPath = new PathString(OAuthPaths.CredentialAuthorizationPath),
+                    //AuthorizeEndpointPath = new PathString(OAuthPaths.CredentialAuthorizationPath),
                     TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
-                    ApplicationCanDisplayErrors = true,
+                    ApplicationCanDisplayErrors = true, 
                     AccessTokenExpireTimeSpan = DefaultSettings.TokenExpiryInterval,
+                    AuthenticationType = OAuthDefaults.AuthenticationType,
+                    AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
+                    //AuthorizationCodeProvider = ...,
 
 #if DEBUG
-                        AllowInsecureHttp = true,
+                    AllowInsecureHttp = true,
 #endif
 
                     // Authorization server provider which controls the lifecycle of Authorization Server
                     Provider = resolver.Resolve<IOAuthAuthorizationServerProvider>()
-                });
+                };
+
+                //app.UseOAuthBearerTokens(oauthAuthorizeOptions);
+                app.UseOAuthAuthorizationServer(oauthAuthorizeOptions);
+                app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
 
                 //app.UseCors(CorsOptions.AllowAll); //<-- will configure this appropriately when it is needed
-
-                app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions
-                {
-                });
             });
         }
 

@@ -6,7 +6,8 @@ module Gaia.Utils.Services {
         http: angular.IHttpService = null;
 
         constructor(private $http: angular.IHttpService) {
-            this.$http.defaults.headers.common.Authorization = 'Bearer ' + window.localStorage[Gaia.Utils.OAuthTokenKey];
+            var oauthtoken = window.localStorage.getItem(Gaia.Utils.OAuthTokenKey);
+            this.$http.defaults.headers.common.Authorization = 'Bearer ' + (oauthtoken ? JSON.parse(oauthtoken).access_token : '');
             this.http = $http;
         }
 
@@ -83,7 +84,7 @@ module Gaia.Utils.Services {
         public complexModel: any = null;
 
         constructor() {
-            var $element = angular.element('#local-model');
+            var $element = angular.element('#local-models');
 
             //simple model
             $element.attr('simple-models')

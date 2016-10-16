@@ -35,7 +35,7 @@ var Gaia;
                     })
                         .then(function (s) {
                         _this.isBusy = false;
-                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, JSON.stringify(s.data.Result));
+                        localStorage.setItem(Gaia.Utils.OAuthTokenKey, s.data.Result);
                         _this.$window.location.href = '/view-server/secured/dashboard/shell';
                     }, function (e) {
                         _this.isBusy = false;

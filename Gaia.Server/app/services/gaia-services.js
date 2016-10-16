@@ -28,7 +28,7 @@ var Gaia;
                 return this.transport.put('/api/profiles/archives', {
                     User: userId
                 }, config).then(function (oprc) {
-                    oprc.data.Result = new Axis.Pollux.Domain.User(oprc.data.Result);
+                    oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.User(oprc.data.Result) : null;
                     return oprc.data;
                 });
             };
@@ -36,7 +36,7 @@ var Gaia;
                 return this.transport.put('/api/profiles/activation', {
                     User: userId
                 }, config).then(function (oprc) {
-                    oprc.data.Result = new Axis.Pollux.Domain.User(oprc.data.Result);
+                    oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.User(oprc.data.Result) : null;
                     return oprc.data;
                 });
             };
@@ -45,13 +45,13 @@ var Gaia;
                     User: userId,
                     Value: token
                 }, config).then(function (oprc) {
-                    oprc.data.Result = new Axis.Pollux.Domain.User(oprc.data.Result);
+                    oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.User(oprc.data.Result) : null;
                     return oprc.data;
                 });
             };
             ProfileService.prototype.getUserData = function (config) {
                 return this.transport.get('/api/profiles/data', null, config).then(function (oprc) {
-                    oprc.data.Result = oprc.data.Result.map(function (_ud) { return new Axis.Pollux.Domain.UserData(_ud); });
+                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_ud) { return new Axis.Pollux.Domain.UserData(_ud); }) : [];
                     return oprc.data;
                 });
             };
@@ -66,7 +66,7 @@ var Gaia;
             };
             ProfileService.prototype.getBioData = function (config) {
                 return this.transport.get('/api/profiles/bio-data', null, config).then(function (oprc) {
-                    oprc.data.Result = new Axis.Pollux.Domain.BioData(oprc.data.Result);
+                    oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.BioData(oprc.data.Result) : null;
                     return oprc.data;
                 });
             };
@@ -75,7 +75,7 @@ var Gaia;
             };
             ProfileService.prototype.getContactData = function (config) {
                 return this.transport.get('/api/profiles/contact-data', null, config).then(function (oprc) {
-                    oprc.data.Result = oprc.data.Result.map(function (_cd) { return new Axis.Pollux.Domain.ContactData(_cd); });
+                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Axis.Pollux.Domain.ContactData(_cd); }) : null;
                     return oprc.data;
                 });
             };
@@ -84,7 +84,7 @@ var Gaia;
             };
             ProfileService.prototype.getCorporateData = function (config) {
                 return this.transport.get('/api/profiles/corporate-data', null, config).then(function (oprc) {
-                    oprc.data.Result = oprc.data.Result.map(function (_cd) { return new Axis.Pollux.Domain.CorporateData(_cd); });
+                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Axis.Pollux.Domain.CorporateData(_cd); }) : null;
                     return oprc.data;
                 });
             };
