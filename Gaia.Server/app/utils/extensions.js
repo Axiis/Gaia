@@ -38,6 +38,28 @@ var Gaia;
             configurable: false,
             enumerable: false
         });
+        Object.defineProperty(Object.prototype, 'keys', {
+            value: function () {
+                return Object.keys(this);
+            },
+            writable: false,
+            configurable: false,
+            enumerable: false
+        });
+        Object.defineProperty(Object.prototype, 'keyValuePairs', {
+            value: function () {
+                var _this = this;
+                return Object.keys(this).map(function (_k) {
+                    return {
+                        Key: _k,
+                        Value: _this[_k]
+                    };
+                });
+            },
+            writable: false,
+            configurable: false,
+            enumerable: false
+        });
         Object.defineProperty(Object.prototype, 'propertyMaps', {
             value: function () {
                 var _this = this;
@@ -119,7 +141,7 @@ var Gaia;
             var arr = this;
             if (predicate)
                 arr = arr.filter(predicate);
-            return arr[0];
+            return arr[0]; //intentionally throw an exception if the array is empty
         };
         Array.prototype.firstOrDefault = function (predicate) {
             try {

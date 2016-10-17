@@ -15,24 +15,26 @@ var Axis;
             var BinaryData = (function () {
                 function BinaryData(dataUrl) {
                     this.Name = null;
-                    this.Address = null;
                     this.Mime = null;
-                    this.Data = null; //B64 encoded string
+                    this.Data = null; //B64 encoded string, or url/file-uri/etc
+                    this.IsDataEmbeded = false;
                     if (dataUrl) {
                         var parts = dataUrl.trimLeft("data:").split(';');
                         this.Mime = parts[0];
                         this.Data = parts[1].trimLeft("base64,");
+                        this.IsDataEmbeded = true;
+                        this.Name = 'data' + Gaia.Utils.MimeCodes.toExtension(this.Mime);
                     }
                 }
                 BinaryData.prototype.Extension = function () {
                     try {
-                        return this.Name.substr(this.Name.lastIndexOf('.') + 1);
+                        return this.Name.substr(this.Name.lastIndexOf('.'));
                     }
                     catch (e) {
                         return null;
                     }
                 };
-                BinaryData.prototype.DataUrl = function () {
+                BinaryData.prototype.EmbededDataUrl = function () {
                     return "data:" + (this.Mime || 'application/octet-stream') + ";base64," + this.Data;
                 };
                 return BinaryData;

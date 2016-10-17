@@ -16,8 +16,14 @@ var Gaia;
                     this.biodata = null;
                     this.contact = null;
                     this.profileImage = null;
-                    profileService.getBioData().then(function (oprc) { return _this.biodata = oprc.Result; });
-                    profileService.getContactData().then(function (oprc) { return _this.contact = oprc.Result.firstOrDefault(); });
+                    profileService.getBioData().then(function (oprc) { return _this.biodata = oprc.Result || new Axis.Pollux.Domain.BioData(); });
+                    profileService.getContactData().then(function (oprc) { return _this.contact = oprc.Result.firstOrDefault() || new Axis.Pollux.Domain.ContactData(); });
+                    profileService.getUserData().then(function (oprc) {
+                        return _this.profileImage = oprc.Result
+                            .filter(function (_ud) { return _ud.Name == 'ProfileImage'; })
+                            .map(function (_ud) { return JSON.parse(_ud.Data); })
+                            .firstOrDefault();
+                    });
                     this.user = new Axis.Pollux.Domain.User({
                         UserId: domModel.simpleModel.UserId,
                         EntityId: domModel.simpleModel.UserId,
@@ -38,10 +44,10 @@ var Gaia;
                         return '-N/A-';
                 };
                 DashboardViewModel.prototype.profileImageUrl = function () {
-                    if (this.profileImage && this.profileImage.Data)
-                        return this.profileImage.DataUrl();
-                    else if (this.profileImage && this.profileImage.Address)
-                        this.profileImage.Address;
+                    if (this.profileImage && this.profileImage.IsDataEmbeded)
+                        return this.profileImage.EmbededDataUrl();
+                    else if (this.profileImage)
+                        this.profileImage.Data;
                     else
                         return '';
                 };
@@ -73,6 +79,33 @@ var Gaia;
                     else
                         return '-N/A-';
                 };
+                DashboardViewModel.prototype.isFirstNameSet = function () {
+                    if (this.biodata && this.biodata.FirstName)
+                        return true;
+                    else
+                        return false;
+                };
+                DashboardViewModel.prototype.isLastNameSet = function () {
+                    if (this.biodata && this.biodata.LastName)
+                        return true;
+                    else
+                        return false;
+                };
+                Object.defineProperty(DashboardViewModel.prototype, "dobBinding", {
+                    get: function () {
+                        if (this.biodata && this.biodata.Dob)
+                            return this.biodata.Dob.toMoment().toDate();
+                        else
+                            return null;
+                    },
+                    set: function (value) {
+                        if (this.biodata) {
+                            this.biodata.Dob = new Axis.Apollo.Domain.JsonDateTime().fromMoment(moment.utc(value));
+                        }
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 DashboardViewModel.prototype.persistBioData = function () {
                     return null;
                 };

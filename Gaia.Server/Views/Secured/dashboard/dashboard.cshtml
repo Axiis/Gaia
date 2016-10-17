@@ -34,7 +34,7 @@
                         <div class="block">
                             <div class="thumbnail">
                                 <div class="thumb">
-                                    <img alt="" src="{{vm.profileImageUrl()}}" style="width:200px; height:200px;">
+                                    <img alt="" ng-src="{{vm.profileImageUrl()}}" style="width:200px; height:200px;" id="profile-image"/>
                                     <div class="thumb-options">
                                         <span>
                                             <a href="#" class="btn btn-icon btn-success"><i class="icon-pencil"></i></a>
@@ -44,7 +44,7 @@
                                 </div>
 
                                 <div class="caption text-center">
-                                    <h6>{{vm.nameDisplay()}}</h6>
+                                    <strong>{{vm.nameDisplay()}}</strong>
                                     <div class="icons-group hidden">
                                         <a href="#" title="" class="tip" data-original-title="Google Drive"><i class="icon-google-drive"></i></a>
                                         <a href="#" title="" class="tip" data-original-title="Twitter"><i class="icon-twitter"></i></a>
@@ -85,26 +85,29 @@
                                     <div class="block-inner fade in" ng-show="vm.isEditingBioData">
                                         <div class="form-group">
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <label>First name</label>
-                                                    <input type="text" value="Eugene" class="form-control">
+                                                    <input type="text" ng-model="vm.biodata.FirstName" placeholder="First name" class="form-control">
+                                                    <label ng-hide="vm.isFirstNameSet()" class="error">This field is required.</label>
+
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
+                                                    <label>Middle name</label>
+                                                    <input type="text" ng-model="vm.biodata.MiddleName" placeholder="First name" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
                                                     <label>Last name</label>
-                                                    <input type="text" value="Kopyov" class="form-control">
+                                                    <input type="text" ng-model="vm.biodata.LastName" placeholder="First name" class="form-control">
+                                                    <label ng-hide="vm.isLastNameSet()" class="error">This field is required.</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    <label>Address line 1</label>
-                                                    <input type="text" value="Ring street 12" class="form-control">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label>Address line 2</label>
-                                                    <input type="text" value="building D, flat #67" class="form-control">
+                                                <div class="col-md-4">
+                                                    <label>Date of Birth</label>
+                                                    <input class="form-control" type="date" name="date" ng-model="vm.dobBinding"/>
                                                 </div>
                                             </div>
                                         </div>

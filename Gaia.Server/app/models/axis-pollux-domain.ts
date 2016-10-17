@@ -135,8 +135,7 @@ module Axis.Pollux.Domain {
 
     export class UserData extends PolluxEntity<number>{
 
-        StringData: string;
-        BinaryData: string;
+        Data: string;
         Name: string;
 
         OwnerId: string;

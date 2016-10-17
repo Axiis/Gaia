@@ -15,6 +15,8 @@ interface Object {
     copyTo(target: any): any;
     project<I, O>(f: Func1<I, O>): O;
     properties(): Array<string>;
+    keys(): Array<string>;
+    keyValuePairs(): Array<Gaia.Utils.Map<string, any>>;
     propertyMaps(): Array<Gaia.Utils.Map<string, any>>;
 }
 
@@ -29,9 +31,9 @@ interface String {
 
 
 interface Array<T> {
-    paginate<Data>(sequence: Array<Data>, pageIndex: number, pageSize: number): Gaia.Utils.SequencePage<Data>;
-    first<Data>(predicate?: Func1<Data, boolean>): Data;
-    firstOrDefault<Data>(predicate?: Func1<Data, boolean>): Data;
+    paginate(sequence: Array<T>, pageIndex: number, pageSize: number): Gaia.Utils.SequencePage<T>;
+    first(predicate?: Func1<T, boolean>): T;
+    firstOrDefault(predicate?: Func1<T, boolean>): T;
     group<K>(keySelector: Func1<T, K>): Array<Gaia.Utils.Map<K, Array<T>>>;
 }
 
@@ -70,6 +72,29 @@ module Gaia.Extensions {
     Object.defineProperty(Object.prototype, 'properties', {
         value: function (): Array<string> {
             return Object.getOwnPropertyNames(this);
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+    Object.defineProperty(Object.prototype, 'keys', {
+        value: function (): Array<string> {
+            return Object.keys(this);
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+    Object.defineProperty(Object.prototype, 'keyValuePairs', {
+        value: function (): Array<Utils.Map<string, any>> {
+            return Object.keys(this).map(_k => {
+                return {
+                    Key: _k,
+                    Value: this[_k]
+                } as Utils.Map<string, any>
+            });
         },
         writable: false,
         configurable: false,
@@ -166,12 +191,12 @@ module Gaia.Extensions {
     Array.prototype.first = function <Data>(predicate?: Func1<Data, boolean>): Data {
         var arr = this as Array<Data>;
         if (predicate) arr = arr.filter(predicate);
-        return arr[0];
+        return arr[0]; //intentionally throw an exception if the array is empty
     }
 
     Array.prototype.firstOrDefault = function <Data>(predicate?: Func1<Data, boolean>): Data {
         try {
-            return (this as Array<Data>).first<Data>(predicate);
+            return (this as Array<Data>).first(predicate);
         }
         catch (e) {
             return null;

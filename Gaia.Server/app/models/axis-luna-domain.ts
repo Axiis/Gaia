@@ -16,19 +16,19 @@ module Axis.Luna.Domain {
     export class BinaryData {
 
         Name: string = null;
-        Address: string = null;
         Mime: string = null;
-        Data: string = null; //B64 encoded string
+        Data: string = null; //B64 encoded string, or url/file-uri/etc
+        IsDataEmbeded: boolean = false;
 
         Extension(): string {
             try {
-                return this.Name.substr(this.Name.lastIndexOf('.') + 1);
+                return this.Name.substr(this.Name.lastIndexOf('.'));
             } catch (e) {
                 return null;
             }
         }
 
-        DataUrl(): string {
+        EmbededDataUrl(): string {
             return "data:" + (this.Mime || 'application/octet-stream') + ";base64," + this.Data;
         }
 
@@ -38,6 +38,8 @@ module Axis.Luna.Domain {
                 var parts = dataUrl.trimLeft("data:").split(';');
                 this.Mime = parts[0];
                 this.Data = parts[1].trimLeft("base64,");
+                this.IsDataEmbeded = true;
+                this.Name = 'data' + Gaia.Utils.MimeCodes.toExtension(this.Mime);
             }
         }
     }

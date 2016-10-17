@@ -65,7 +65,7 @@ var Axis;
                     }
                 }
                 JsonDateTime.prototype.toMoment = function () {
-                    return moment({
+                    return moment.utc({
                         year: this.year,
                         month: this.month - 1,
                         day: this.day,
@@ -78,11 +78,12 @@ var Axis;
                     if (m.isValid()) {
                         this.year = m.year();
                         this.month = m.month();
-                        this.day = m.day();
+                        this.day = m.date();
                         this.hour = m.hour();
                         this.minute = m.minute();
                         this.second = m.second();
                         this.millisecond = m.millisecond();
+                        return this;
                     }
                     else
                         throw 'invalid moment object';
