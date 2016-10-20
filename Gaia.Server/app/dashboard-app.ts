@@ -15,6 +15,7 @@ module Gaia.App.Dashboard {
     ///Util Services
     module.service('#gaia.utils.domainTransport', Gaia.Utils.Services.DomainTransport);
     module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
+    module.service('#gaia.utils.notify', Gaia.Utils.Services.NotifyService);
 
     ///ViewModels
     module.controller('NavbarViewModel', Gaia.ViewModels.Shared.NavbarViewModel);

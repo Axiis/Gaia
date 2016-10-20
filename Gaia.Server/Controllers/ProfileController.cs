@@ -95,7 +95,7 @@ namespace Gaia.Server.Controllers
         [HttpDelete]
         [Route("api/profiles/data")] //<-- http://abcd.xyz/api/profiles/data/?dataNames=abcd,efgh,ijkl,etc
         public IHttpActionResult RemoveData([FromUri]string dataNames)
-            => _profileService.RemoveData(dataNames.Split(','))
+            => _profileService.RemoveData(dataNames?.Split(',') ?? new string[0])
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                   .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
@@ -143,6 +143,14 @@ namespace Gaia.Server.Controllers
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
+
+        [HttpDelete]
+        [Route("api/profiles/contact-data")] //<-- http://abcd.xyz/api/profiles/contact-data/?ids=1,5,3,2,76,etc
+        public IHttpActionResult RemoveContactData([FromUri]string ids)
+            => _profileService.RemoveContactData(ids?.Split(',').Select(_id => long.Parse(_id)).ToArray() ?? new long[0])
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
         #endregion
 
         #region corporate-data
@@ -158,6 +166,14 @@ namespace Gaia.Server.Controllers
         [Route("api/profiles/corporate-data")]
         public IHttpActionResult ModifyCorporate([FromBody]CorporateData data)
             => _profileService.ModifyCorporateData(data)
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+
+        [HttpDelete]
+        [Route("api/profiles/corporate-data")] //<-- http://abcd.xyz/api/profiles/contact-data/?ids=1,5,3,2,76,etc
+        public IHttpActionResult RemoveCorporateData([FromUri]string ids)
+            => _profileService.RemoveCorporateData(ids?.Split(',').Select(_id => long.Parse(_id)).ToArray() ?? new long[0])
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;

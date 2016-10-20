@@ -233,7 +233,7 @@ namespace Gaia.Core.Services
 
 
         #region Biodata
-        public Operation ModifyBioData(BioData data)
+        public Operation<long> ModifyBioData(BioData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var _user = UserContext.CurrentUser;
@@ -241,12 +241,14 @@ namespace Gaia.Core.Services
 
                 //validate the biodata
 
-                //persist the biodata
-                var _biostore = DataContext.Store<BioData>();
-                if (!_biostore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _biostore.Add(data).Context.CommitChanges();
+                //persist the contact data
+                var _biodatastore = DataContext.Store<BioData>();
+                if (!_biodatastore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
+                    _biodatastore.Add(data).Context.CommitChanges();
 
-                else _biostore.Modify(data, true);
+                else _biodatastore.Modify(data, true);
+
+                return data.EntityId;
             });
 
         public Operation<BioData> GetBioData()
@@ -255,7 +257,7 @@ namespace Gaia.Core.Services
 
 
         #region Contact data
-        public Operation ModifyContactData(ContactData data)
+        public Operation<long> ModifyContactData(ContactData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var _user = UserContext.CurrentUser;
@@ -269,6 +271,8 @@ namespace Gaia.Core.Services
                     _contactStore.Add(data).Context.CommitChanges();
 
                 else _contactStore.Modify(data, true);
+
+                return data.EntityId;
             });
 
         public Operation<IEnumerable<ContactData>> GetContactData()
@@ -294,7 +298,7 @@ namespace Gaia.Core.Services
 
 
         #region Corporate data
-        public Operation ModifyCorporateData(CorporateData data)
+        public Operation<long> ModifyCorporateData(CorporateData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var _user = UserContext.CurrentUser;
@@ -308,6 +312,8 @@ namespace Gaia.Core.Services
                     _corporateStore.Add(data).Context.CommitChanges();
 
                 else _corporateStore.Modify(data, true);
+
+                return data.EntityId;
             });
 
         public Operation<IEnumerable<CorporateData>> GetCorporateData()
@@ -333,7 +339,7 @@ namespace Gaia.Core.Services
 
 
         #region User data
-        public Operation AddData(UserData[] data)
+        public Operation<IEnumerable<long>> AddData(UserData[] data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var user = UserContext.CurrentUser;
@@ -353,6 +359,8 @@ namespace Gaia.Core.Services
                 data.Except(existingData, new DataNameComparer())
                     .UsingEach((_data) => _data.OwnerId = user.UserId)
                     .Do(_data => userdatastore.Add(_data).Context.CommitChanges());
+
+                return data.Select(_d => _d.EntityId);
             });
 
         public Operation RemoveData(string[] names)

@@ -5,10 +5,11 @@ var Gaia;
         var Dashboard;
         (function (Dashboard) {
             var DashboardViewModel = (function () {
-                function DashboardViewModel(profileService, domModel) {
+                function DashboardViewModel(profileService, domModel, notifyService) {
                     this.profileService = profileService;
                     this.domModel = domModel;
-                    ///Profile
+                    this.notifyService = notifyService;
+                    ///<<Profile>
                     this.isEditingBioData = false;
                     this.isEditingContactData = false;
                     this.isProfileImageChanged = false;
@@ -20,19 +21,19 @@ var Gaia;
                     this.user = null;
                     this.biodata = null;
                     this.contact = null;
-                    ///Profile Image Stuff
+                    ///<Profile Image Stuff>
                     this._originalImage = null;
                     this._profileImage = null;
-                    ///end-profile image stuff
-                    ///Biodata stuff
+                    ///</profile image stuff>
+                    ///<Biodata stuff>
                     this.isPersistingBiodata = false;
-                    /// end-biodata-stuff
-                    ///contact stuff
+                    /// <Biodata-stuff>
+                    ///<contact stuff>
                     this.isPersistingContactdata = false;
-                    /// end-contact-stuff
-                    /// end-Profile
-                    ///Accounts
-                    //<businesses>
+                    /// </contact-stuff>
+                    ///</Profile>
+                    ///<Accounts>
+                    ///<businesses>
                     this.businessList = [];
                     this.isListingBusinesses = true;
                     this.isEditingBusiness = false;
@@ -273,6 +274,11 @@ var Gaia;
                         this.isDetailingBusiness = true;
                     }
                 };
+                DashboardViewModel.prototype.addBusiness = function () {
+                    var newobj = new Axis.Pollux.Domain.CorporateData();
+                    newobj.$nascent = true;
+                    this.businessList = [newobj].concat(this.businessList);
+                };
                 DashboardViewModel.prototype.editBusiness = function (b) {
                     if (b) {
                         this.currentBusinessData = b;
@@ -281,15 +287,44 @@ var Gaia;
                     }
                 };
                 DashboardViewModel.prototype.removeBusiness = function (b) {
-                    if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
+                    var _this = this;
+                    if (b && b.$nascent) {
+                        this.businessList.remove(b);
+                    }
+                    else if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
+                        this.profileService.removeCorporateData([b.EntityId])
+                            .then(function (oprc) {
+                            _this.businessList.remove(b);
+                            _this.notifyService.success('Business data removed successfully', 'Alert');
+                        }, function (e) {
+                            _this.notifyService.success('Something went wrong while removing your business data...', 'Oops!');
+                        });
                     }
                 };
                 DashboardViewModel.prototype.persistBusiness = function (b) {
+                    var _this = this;
+                    if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
+                        this.profileService.modifyCorporateData(b)
+                            .then(function (oprc) {
+                            delete b.$nascent;
+                            _this.notifyService.success('Business data was saved successfully', 'Alert');
+                        }, function (e) {
+                            _this.notifyService.success('Something went wrong while saving your business data...', 'Oops!');
+                        });
+                    }
                 };
                 DashboardViewModel.prototype.refreshBusinesss = function () {
+                    var _this = this;
+                    this.profileService.getCorporateData()
+                        .then(function (oprc) {
+                        _this.currentBusinessData = null;
+                        _this.businessList = oprc.Result || [];
+                    }, function (e) {
+                    });
                 };
                 //</businesses>
-                DashboardViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel'];
+                ///</Accounts>
+                DashboardViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
                 return DashboardViewModel;
             }());
             Dashboard.DashboardViewModel = DashboardViewModel;
@@ -302,4 +337,3 @@ var Gaia;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-viewmodels.js.map

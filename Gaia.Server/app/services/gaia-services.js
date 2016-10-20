@@ -58,7 +58,12 @@ var Gaia;
             ProfileService.prototype.addData = function (data, config) {
                 return this.transport.put('/api/profiles/data', {
                     DataList: data
-                }, config).then(function (oprc) { return oprc.data; });
+                }, config).then(function (oprc) {
+                    data.forEach(function (value, index) {
+                        if (value.EntityId <= 0)
+                            value.EntityId = oprc.data.Result[index];
+                    });
+                });
             };
             ProfileService.prototype.removeData = function (dataNames, config) {
                 return this.transport.delete('/api/profiles/data/?dataNames=' + dataNames.join(','), null, config)
@@ -71,7 +76,10 @@ var Gaia;
                 });
             };
             ProfileService.prototype.modifyBioData = function (biodata, config) {
-                return this.transport.put('/api/profiles/bio-data', biodata, config).then(function (oprc) { return oprc.data; });
+                return this.transport.put('/api/profiles/bio-data', biodata, config).then(function (oprc) {
+                    if (biodata.EntityId <= 0)
+                        biodata.EntityId = oprc.data.Result;
+                });
             };
             ProfileService.prototype.getContactData = function (config) {
                 return this.transport.get('/api/profiles/contact-data', null, config).then(function (oprc) {
@@ -80,7 +88,13 @@ var Gaia;
                 });
             };
             ProfileService.prototype.modifyContactData = function (contactData, config) {
-                return this.transport.put('/api/profiles/contact-data', contactData, config).then(function (oprc) { return oprc.data; });
+                return this.transport.put('/api/profiles/contact-data', contactData, config).then(function (oprc) {
+                    if (contactData.EntityId <= 0)
+                        contactData.EntityId = oprc.data.Result;
+                });
+            };
+            ProfileService.prototype.removeContactData = function (ids, config) {
+                return this.transport.delete('/api/profiles/contact-data/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
             ProfileService.prototype.getCorporateData = function (config) {
                 return this.transport.get('/api/profiles/corporate-data', null, config).then(function (oprc) {
@@ -89,7 +103,13 @@ var Gaia;
                 });
             };
             ProfileService.prototype.modifyCorporateData = function (corporateData, config) {
-                return this.transport.put('/api/profiles/corporate-data', corporateData, config).then(function (oprc) { return oprc.data; });
+                return this.transport.put('/api/profiles/corporate-data', corporateData, config).then(function (oprc) {
+                    if (corporateData.EntityId <= 0)
+                        corporateData.EntityId = oprc.data.Result;
+                });
+            };
+            ProfileService.prototype.removeCorporateData = function (ids, config) {
+                return this.transport.delete('/api/profiles/corporate-data/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
             ProfileService.$inject = ["#gaia.utils.domainTransport"];
             return ProfileService;
@@ -97,4 +117,3 @@ var Gaia;
         Services.ProfileService = ProfileService;
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=gaia-services.js.map

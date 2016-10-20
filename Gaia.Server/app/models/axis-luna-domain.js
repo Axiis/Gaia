@@ -47,4 +47,3 @@ var Axis;
         })(Domain = Luna.Domain || (Luna.Domain = {}));
     })(Luna = Axis.Luna || (Axis.Luna = {}));
 })(Axis || (Axis = {}));
-//# sourceMappingURL=axis-luna-domain.js.map

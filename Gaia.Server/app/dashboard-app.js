@@ -14,6 +14,7 @@ var Gaia;
             ///Util Services
             Dashboard.module.service('#gaia.utils.domainTransport', Gaia.Utils.Services.DomainTransport);
             Dashboard.module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
+            Dashboard.module.service('#gaia.utils.notify', Gaia.Utils.Services.NotifyService);
             ///ViewModels
             Dashboard.module.controller('NavbarViewModel', Gaia.ViewModels.Shared.NavbarViewModel);
             Dashboard.module.controller('DashboardViewModel', Gaia.ViewModels.Dashboard.DashboardViewModel);
@@ -38,4 +39,3 @@ var Gaia;
         })(Dashboard = App.Dashboard || (App.Dashboard = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-app.js.map

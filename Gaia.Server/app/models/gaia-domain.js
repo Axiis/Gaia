@@ -371,4 +371,3 @@ var Gaia;
         Domain.UserReaction = UserReaction;
     })(Domain = Gaia.Domain || (Gaia.Domain = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=gaia-domain.js.map

@@ -104,7 +104,7 @@ module Axis.Pollux.Domain {
 
         CorporateName: string;
         CorporateId: string;
-        Status: number;
+        Status: number = Gaia.Utils.BusinessStatus_Draft;
         Description: string;
 
         OwnerId: string;

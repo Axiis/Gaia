@@ -146,6 +146,18 @@ var Gaia;
             var start = pageSize * pageIndex;
             return new Gaia.Utils.SequencePage(sequence.slice(start, (start + pageSize)), pageIndex, pageSize, sequence.length);
         };
+        Array.prototype.remove = function (value) {
+            var arr = this;
+            var index = arr.indexOf(value);
+            if (index >= 0)
+                return arr.splice(index, 1);
+            else
+                return arr;
+        };
+        Array.prototype.removeAt = function (index) {
+            var arr = this;
+            return arr.splice(index, 1);
+        };
         Array.prototype.first = function (predicate) {
             var arr = this;
             if (predicate)
@@ -177,4 +189,3 @@ var Gaia;
         };
     })(Extensions = Gaia.Extensions || (Gaia.Extensions = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=extensions.js.map

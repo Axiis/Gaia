@@ -62,9 +62,13 @@ module Gaia.Services {
             });
         }
         public addData(data: Array<Axis.Pollux.Domain.UserData>, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<void>('/api/profiles/data', {
+            return this.transport.put<Axis.Luna.Domain.Operation<number[]>>('/api/profiles/data', {
                 DataList: data
-            }, config).then(oprc => oprc.data);
+            }, config).then(oprc => {
+                data.forEach((value, index) => {
+                    if (value.EntityId <= 0) value.EntityId = oprc.data.Result[index];
+                });
+            });
         }
         public removeData(dataNames: Array<string>, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
             return this.transport.delete<void>('/api/profiles/data/?dataNames=' + dataNames.join(','), null, config)
@@ -79,7 +83,9 @@ module Gaia.Services {
             });
         }
         public modifyBioData(biodata: Axis.Pollux.Domain.BioData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<void>('/api/profiles/bio-data', biodata, config).then(oprc => oprc.data);
+            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/bio-data', biodata, config).then(oprc => {
+                if (biodata.EntityId <= 0) biodata.EntityId = oprc.data.Result;
+            });
         }
 
 
@@ -90,8 +96,14 @@ module Gaia.Services {
             });
         }
         public modifyContactData(contactData: Axis.Pollux.Domain.ContactData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<void>('/api/profiles/contact-data', contactData, config).then(oprc => oprc.data);
+            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/contact-data', contactData, config).then(oprc => {
+                if (contactData.EntityId <= 0) contactData.EntityId = oprc.data.Result;
+            });
         }
+        public removeContactData(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.delete<void>('/api/profiles/contact-data/?ids=' + ids.join(','), null, config).then(oprc => oprc.data);
+        }
+
 
         public getCorporateData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.CorporateData[]>> {
             return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.CorporateData[]>>('/api/profiles/corporate-data', null, config).then(oprc => {
@@ -100,7 +112,12 @@ module Gaia.Services {
             });
         }
         public modifyCorporateData(corporateData: Axis.Pollux.Domain.CorporateData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<void>('/api/profiles/corporate-data', corporateData, config).then(oprc => oprc.data);
+            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => {
+                if (corporateData.EntityId <= 0) corporateData.EntityId = oprc.data.Result;
+            });
+        }
+        public removeCorporateData(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.delete<void>('/api/profiles/corporate-data/?ids=' + ids.join(','), null, config).then(oprc => oprc.data);
         }
     }
 }

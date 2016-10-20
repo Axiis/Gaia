@@ -27,14 +27,14 @@ namespace Gaia.Core.Services
 
 
         [Feature("system/Profiles/BioData/@modify")]
-        Operation ModifyBioData(BioData data);
+        Operation<long> ModifyBioData(BioData data);
 
         [Feature("system/Profiles/BioData/@get")]
         Operation<BioData> GetBioData();
 
 
         [Feature("system/Profiles/ContactData/@modify")]
-        Operation ModifyContactData(ContactData data);
+        Operation<long> ModifyContactData(ContactData data);
 
         [Feature("system/Profiles/ContactData/@remove")]
         Operation RemoveContactData(long[] ids);
@@ -44,7 +44,7 @@ namespace Gaia.Core.Services
 
 
         [Feature("system/Profiles/Corporate/@modify")]
-        Operation ModifyCorporateData(CorporateData data);
+        Operation<long> ModifyCorporateData(CorporateData data);
 
         [Feature("system/Profiles/CorporateData/@remove")]
         Operation RemoveCorporateData(long[] ids);
@@ -54,7 +54,7 @@ namespace Gaia.Core.Services
 
 
         [Feature("system/Profiles/UserData/@add")]
-        Operation AddData(UserData[] data);
+        Operation<IEnumerable<long>> AddData(UserData[] data);
 
         [Feature("system/Profiles/UserData/@remove")]
         Operation RemoveData(string[] names);

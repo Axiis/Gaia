@@ -72,6 +72,7 @@ var Axis;
                 __extends(CorporateData, _super);
                 function CorporateData(data) {
                     _super.call(this, data);
+                    this.Status = Gaia.Utils.BusinessStatus_Draft;
                     if (data) {
                         data.copyTo(this);
                         this.IncorporationDate = data['IncorporationData'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
@@ -127,4 +128,3 @@ var Axis;
         })(Domain = Pollux.Domain || (Pollux.Domain = {}));
     })(Pollux = Axis.Pollux || (Axis.Pollux = {}));
 })(Axis || (Axis = {}));
-//# sourceMappingURL=axis-pollux-domain.js.map

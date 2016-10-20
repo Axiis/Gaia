@@ -35,6 +35,8 @@ interface Array<T> {
     first(predicate?: Func1<T, boolean>): T;
     firstOrDefault(predicate?: Func1<T, boolean>): T;
     group<K>(keySelector: Func1<T, K>): Array<Gaia.Utils.Map<K, Array<T>>>;
+    remove(value: T): T[];
+    removeAt(index: number): T[];
 }
 
 module Gaia.Extensions {
@@ -194,6 +196,17 @@ module Gaia.Extensions {
             pageIndex,
             pageSize,
             sequence.length);
+    }
+
+    Array.prototype.remove = function <Data>(value: Data): Data[] {
+        var arr = this as Array<Data>;
+        var index = arr.indexOf(value);
+        if (index >= 0) return arr.splice(index, 1);
+        else return arr;
+    }
+    Array.prototype.removeAt = function <Data>(index: number): Data[] {
+        var arr = this as Array<Data>;
+        return arr.splice(index, 1);
     }
 
     Array.prototype.first = function <Data>(predicate?: Func1<Data, boolean>): Data {

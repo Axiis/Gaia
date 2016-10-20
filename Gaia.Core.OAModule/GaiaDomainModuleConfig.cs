@@ -184,10 +184,10 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/@verify-activation-verification",
                         "system/Profiles/@create-registration-verification",
                         "system/Profiles/@verify-registration-verification",
-                        "system/User/AccessProfile/@apply",
-                        "system/User/ContextVerification/@create-default",
-                        "system/User/ContextVerification/@create",
-                        "system/User/ContextVerification/@verify"
+                        "system/AccessProfiles/@apply",
+                        "system/ContextVerifications/@create-default",
+                        "system/ContextVerifications/@create",
+                        "system/ContextVerifications/@verify"
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -469,10 +469,14 @@ namespace Gaia.Core.OAModule
                         "system/Adverts/@hit",
                         "system/Adverts/@next",
 
+
+
                         "system/Comments/*",
                         "system/Forums/Threads/*",
 
                         "system/ContextVerifications/*",
+
+                        "system/AccessProfiles/@apply",
 
                         "system/Notifications/*"
                     }
