@@ -15,7 +15,7 @@ namespace Gaia.Core.Services
         /// <param name="count">Number of feeds to load</param>
         /// <param name="from">date from which to load - a null value loads from the most recent</param>
         /// <returns></returns>
-        [Feature("system/User/ActivityFeed/@load-past")]
+        [Feature("system/ActivityFeeds/@load-past")]
         Operation<IEnumerable<FeedEntry>> LoadPastFeeds(int count, DateTime? from);
 
         /// <summary>
@@ -24,17 +24,17 @@ namespace Gaia.Core.Services
         /// <param name="count">Number of feeds to load</param>
         /// <param name="from">date from which to load</param>
         /// <returns></returns>
-        [Feature("system/User/ActivityFeed/@load-recent")]
+        [Feature("system/ActivityFeeds/@load-recent")]
         Operation<IEnumerable<FeedEntry>> LoadRecentFeeds(int count, DateTime from);
 
 
-        [Feature("system/User/ActivityFeed/@pin")]
+        [Feature("system/ActivityFeeds/@pin")]
         Operation<PinnedFeedEntry> PinEntry(long postId, string postType);
 
-        [Feature("system/User/ActivityFeed/@unpin")]
+        [Feature("system/ActivityFeeds/@unpin")]
         Operation<PinnedFeedEntry> UnpinEntry(long pinId);
 
-        [Feature("system/User/ActivityFeed/@unpin-context")]
+        [Feature("system/ActivityFeeds/@unpin-context")]
         Operation<PinnedFeedEntry> UnpinEntry(long pinContextId, string pinContextType);
 
 
@@ -44,7 +44,7 @@ namespace Gaia.Core.Services
         /// <param name="count">Number of feeds to load</param>
         /// <param name="from">date from which to load - a null value loads from the most recent</param>
         /// <returns></returns>
-        [Feature("system/User/ActivityFeed/@load-pinned")]
+        [Feature("system/ActivityFeeds/@load-pinned")]
         Operation<IEnumerable<PinnedFeedEntry>> LoadPinnedFeeds(int count, DateTime? from);
     }
 }

@@ -12,7 +12,7 @@ interface Func8<I, I2, I3, I4, I5, I6, I7, I8, O> { (in1: I, in2: I2, in3: I3, i
 interface Func9<I, I2, I3, I4, I5, I6, I7, I8, I9, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7, in8: I8, in9: I9): O; }
 
 interface Object {
-    copyTo(target: any): any;
+    copyTo(target: any, properties?:string[]): any;
     project<I, O>(f: Func1<I, O>): O;
     properties(): Array<string>;
     keys(): Array<string>;
@@ -42,15 +42,23 @@ module Gaia.Extensions {
     ///object extension
 
     Object.defineProperty(Object.prototype, 'copyTo', {
-        value: function (target: any): any {
+        value: function (target: any, properties?: string[]): any {
             //'use strict';
             // We must check against these specific cases.
             if (target === undefined || target === null)
                 throw new TypeError('Cannot convert undefined or null to object');
 
-            for (var nextKey in this) {
-                if (this.hasOwnProperty(nextKey))
-                    target[nextKey] = this[nextKey];
+            if (properties) {
+                properties.forEach(nextKey => {
+                    if (this.hasOwnProperty(nextKey))
+                        target[nextKey] = this[nextKey];
+                });
+            }
+            else {
+                for (var nextKey in this) {
+                    if (this.hasOwnProperty(nextKey))
+                        target[nextKey] = this[nextKey];
+                }
             }
             return target;
         },

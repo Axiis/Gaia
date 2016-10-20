@@ -587,4 +587,9 @@ module Gaia.Utils {
         }
     };
 
+    export const BusinessStatus_Draft = 0;
+    export const BusinessStatus_Verifying = 1;
+    export const BusinessStatus_Rejected = 2;
+    export const BusinessStatus_Verified = 3;
+
 }

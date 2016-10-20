@@ -303,29 +303,34 @@ namespace Gaia.Core.OAModule
                 if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultServiceProviderAccessProfile))
                     new[]
                     {
-                        "system/User/Profile/@remove-data",
-                        "system/User/Profile/@add-data",
-                        "system/Profiles/@discover",
-                        "system/Profiles/BioData/@modify",
-                        "system/Profiles/ContactData/@modify",
-                        "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/UserData/@remove",
+                        "system/Profiles/UserData/@add",
                         "system/Profiles/UserData/@get",
-                        "system/Profiles/BioData/@get",
-                        "system/Profiles/ContactData/@get",
-                        "system/Profiles/Corporate/@get",
 
-                        "system/User/ActivityFeed/*",
+                        "system/Profiles/BioData/@modify",
+                        "system/Profiles/BioData/@get",
+
+                        "system/Profiles/ContactData/@modify",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/ContactData/@remove",
+
+                        "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/CorporateData/@get",
+                        "system/Profiles/CorporateData/@remove",
+
+                        "system/Profiles/@discover",
+
+                        "system/ActivityFeeds/*",
 
                         "system/Adverts/@hit",
                         "system/Adverts/@next",
 
                         "system/Comments/*",
-                        "system/User/Forum/Thread/*",
+                        "system/Forums/Threads/*",
 
-                        "system/User/ContextVerification/*",
+                        "system/ContextVerifications/*",
 
-                        "system/Notifications/*",
-                        "system/User/Notification/*",
+                        "system/Notifications/*"
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -365,29 +370,34 @@ namespace Gaia.Core.OAModule
                 if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultFarmerAccessProfile))
                     new[]
                     {
-                        "system/User/Profile/@remove-data",
-                        "system/User/Profile/@add-data",
-                        "system/Profiles/@discover",
-                        "system/Profiles/BioData/@modify",
-                        "system/Profiles/ContactData/@modify",
-                        "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/UserData/@remove",
+                        "system/Profiles/UserData/@add",
                         "system/Profiles/UserData/@get",
-                        "system/Profiles/BioData/@get",
-                        "system/Profiles/ContactData/@get",
-                        "system/Profiles/Corporate/@get",
 
-                        "system/User/ActivityFeed/*",
+                        "system/Profiles/BioData/@modify",
+                        "system/Profiles/BioData/@get",
+
+                        "system/Profiles/ContactData/@modify",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/ContactData/@remove",
+
+                        "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/CorporateData/@get",
+                        "system/Profiles/CorporateData/@remove",
+
+                        "system/Profiles/@discover",
+
+                        "system/ActivityFeeds/*",
 
                         "system/Adverts/@hit",
                         "system/Adverts/@next",
 
                         "system/Comments/*",
-                        "system/User/Forum/Thread/*",
+                        "system/Forums/Threads/*",
 
-                        "system/User/ContextVerification/*",
+                        "system/ContextVerifications/*",
 
-                        "system/Notifications/*",
-                        "system/User/Notification/*",
+                        "system/Notifications/*"
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -427,38 +437,44 @@ namespace Gaia.Core.OAModule
                 if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultClientAccessProfile))
                     new[]
                     {
-                        "system/User/Profile/@remove-data",
-                        "system/User/Profile/@add-data",
-                        "system/User/Profiles/Account/@add-farm",
-                        "system/User/Profiles/Account/@remove-farm",
-                        "system/User/Profiles/Account/@modify-farm",
-                        "system/User/Profiles/Account/@add-business",
-                        "system/User/Profiles/Account/@remove-business",
-                        "system/User/Profiles/Account/@modify-business",
-                        "system/User/Profiles/Account/@add-service",
-                        "system/User/Profiles/Account/@remove-service",
-                        "system/User/Profiles/Account/@modify-serice",
-                        //"system/Profiles/@discover",
-                        "system/Profiles/BioData/@modify",
-                        "system/Profiles/ContactData/@modify",
-                        "system/Profiles/CorporateData/@modify",
-                        "system/Profiles/UserData/@get",
-                        "system/Profiles/BioData/@get",
-                        "system/Profiles/ContactData/@get",
-                        "system/Profiles/Corporate/@get",
+                        "system/Profiles/Accounts/Farms/@add",
+                        "system/Profiles/Accounts/Farms/@remove",
+                        "system/Profiles/Accounts/Farms/@modify",
+                        "system/Profiles/Accounts/Farms/@get",
 
-                        "system/User/ActivityFeed/*",
+                        "system/Profiles/Account/Services/@add",
+                        "system/Profiles/Account/Services/@remove",
+                        "system/Profiles/Account/Services/@modify",
+                        "system/Profiles/Account/Services/@get",
+
+                        "system/Profiles/UserData/@remove",
+                        "system/Profiles/UserData/@add",
+                        "system/Profiles/UserData/@get",
+
+                        "system/Profiles/BioData/@modify",
+                        "system/Profiles/BioData/@get",
+
+                        "system/Profiles/ContactData/@modify",
+                        "system/Profiles/ContactData/@get",
+                        "system/Profiles/ContactData/@remove",
+
+                        "system/Profiles/CorporateData/@modify",
+                        "system/Profiles/CorporateData/@get",
+                        "system/Profiles/CorporateData/@remove",
+
+                        "system/Profiles/@discover",
+
+                        "system/ActivityFeeds/*",
 
                         "system/Adverts/@hit",
                         "system/Adverts/@next",
 
                         "system/Comments/*",
-                        "system/User/Forum/Thread/*",
+                        "system/Forums/Threads/*",
 
-                        "system/User/ContextVerification/*",
+                        "system/ContextVerifications/*",
 
-                        "system/Notifications/*",
-                        "system/User/Notification/*",
+                        "system/Notifications/*"
                     }
                     .ForAll((cnt, next) =>
                     {

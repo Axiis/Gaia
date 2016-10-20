@@ -155,54 +155,6 @@ namespace Gaia.Core.Services
                 }
             });
 
-        public Operation ModifyBioData(BioData data)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var _user = UserContext.CurrentUser;
-                data.OwnerId = _user.UserId;
-
-                //validate the biodata
-
-                //persist the biodata
-                var _biostore = DataContext.Store<BioData>();
-                if (!_biostore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _biostore.Add(data).Context.CommitChanges();
-
-                else _biostore.Modify(data, true);
-            });
-
-        public Operation ModifyContactData(ContactData data)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var _user = UserContext.CurrentUser;
-                data.OwnerId = _user.UserId;
-
-                //validate the contact data
-
-                //persist the contact data
-                var _contactStore = DataContext.Store<ContactData>();
-                if (!_contactStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _contactStore.Add(data).Context.CommitChanges();
-
-                else _contactStore.Modify(data, true);
-            });
-
-        public Operation ModifyCorporateData(CorporateData data)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var _user = UserContext.CurrentUser;
-                data.OwnerId = _user.UserId;
-
-                //validate the corporate data
-
-                //persist the corporate data
-                var _corporateStore = DataContext.Store<CorporateData>();
-                if (!_corporateStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _corporateStore.Add(data).Context.CommitChanges();
-
-                else _corporateStore.Modify(data, true);
-            });
-
 
         public Operation<ContextVerification> CreateRegistrationVerification(string targetUser)
             => FeatureAccess.Guard(UserContext, () =>
@@ -232,45 +184,6 @@ namespace Gaia.Core.Services
                     }));
             });
 
-
-        public Operation AddData(UserData[] data)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var user = UserContext.CurrentUser;
-                var userdatastore = DataContext.Store<UserData>();
-                List<UserData> existingData = new List<UserData>();
-
-                //retrieve from storage, all data-objects with the same name, belonging to the current user
-                data.Batch(200).ForAll((cnt, batch) =>
-                {
-                    var names = batch.Select(_ud => _ud.Name).ToArray();
-                    userdatastore.Query
-                                 .Where(_ud => _ud.OwnerId == user.EntityId && names.Contains(_ud.Name))
-                                 .Pipe(_uds => existingData.AddRange(_uds));
-                });
-
-                //persist the difference
-                data.Except(existingData, new DataNameComparer())
-                    .UsingEach((_data) => _data.OwnerId = user.UserId)
-                    .Do(_data => userdatastore.Add(_data).Context.CommitChanges());
-            });
-
-        public Operation RemoveData(string[] names)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                var user = UserContext.CurrentUser;
-                var userdatastore = DataContext.Store<UserData>();
-                names.Batch(200).ForAll((cnt, _batch) =>
-                {
-                    var nar = _batch.ToArray();
-                    userdatastore.Query
-                                 .Where(_ud => _ud.OwnerId == user.EntityId)
-                                 .Where(_ud => nar.Contains(_ud.Name))
-                                 .Pipe(_uds => userdatastore.Delete(_uds.AsEnumerable()));
-                });
-
-                userdatastore.Context.CommitChanges();
-            });
 
 
         public Operation<User> ArchiveUser(string userid)
@@ -319,17 +232,149 @@ namespace Gaia.Core.Services
             => FeatureAccess.Guard(UserContext, () => new User[0].AsEnumerable());
 
 
-        public Operation<IEnumerable<UserData>> GetUserData()
-            => FeatureAccess.Guard(UserContext, () => DataContext.Store<UserData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+        #region Biodata
+        public Operation ModifyBioData(BioData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the biodata
+
+                //persist the biodata
+                var _biostore = DataContext.Store<BioData>();
+                if (!_biostore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
+                    _biostore.Add(data).Context.CommitChanges();
+
+                else _biostore.Modify(data, true);
+            });
 
         public Operation<BioData> GetBioData()
             => FeatureAccess.Guard(UserContext, () => DataContext.Store<BioData>().Query.FirstOrDefault(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId));
+        #endregion
+
+
+        #region Contact data
+        public Operation ModifyContactData(ContactData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the contact data
+
+                //persist the contact data
+                var _contactStore = DataContext.Store<ContactData>();
+                if (!_contactStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
+                    _contactStore.Add(data).Context.CommitChanges();
+
+                else _contactStore.Modify(data, true);
+            });
 
         public Operation<IEnumerable<ContactData>> GetContactData()
             => FeatureAccess.Guard(UserContext, () => DataContext.Store<ContactData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
 
+        public Operation RemoveContactData(long[] ids)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var user = UserContext.CurrentUser;
+                var contactStore = DataContext.Store<ContactData>();
+                ids.Batch(200).ForAll((cnt, _batch) =>
+                {
+                    var nar = _batch.ToArray();
+                    contactStore.Query
+                                 .Where(_ => _.OwnerId == user.EntityId)
+                                 .Where(_ => nar.Contains(_.EntityId))
+                                 .Pipe(_ => contactStore.Delete(_.AsEnumerable()));
+                });
+
+                contactStore.Context.CommitChanges();
+            });
+        #endregion
+
+
+        #region Corporate data
+        public Operation ModifyCorporateData(CorporateData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the corporate data
+
+                //persist the corporate data
+                var _corporateStore = DataContext.Store<CorporateData>();
+                if (!_corporateStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
+                    _corporateStore.Add(data).Context.CommitChanges();
+
+                else _corporateStore.Modify(data, true);
+            });
+
         public Operation<IEnumerable<CorporateData>> GetCorporateData()
             => FeatureAccess.Guard(UserContext, () => DataContext.Store<CorporateData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+
+        public Operation RemoveCorporateData(long[] ids)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var user = UserContext.CurrentUser;
+                var corporateStore = DataContext.Store<CorporateData>();
+                ids.Batch(200).ForAll((cnt, _batch) =>
+                {
+                    var nar = _batch.ToArray();
+                    corporateStore.Query
+                                 .Where(_ => _.OwnerId == user.EntityId)
+                                 .Where(_ => nar.Contains(_.EntityId))
+                                 .Pipe(_ => corporateStore.Delete(_.AsEnumerable()));
+                });
+
+                corporateStore.Context.CommitChanges();
+            });
+        #endregion
+
+
+        #region User data
+        public Operation AddData(UserData[] data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var user = UserContext.CurrentUser;
+                var userdatastore = DataContext.Store<UserData>();
+                List<UserData> existingData = new List<UserData>();
+
+                //retrieve from storage, all data-objects with the same name, belonging to the current user
+                data.Batch(200).ForAll((cnt, batch) =>
+                {
+                    var names = batch.Select(_ud => _ud.Name).ToArray();
+                    userdatastore.Query
+                                 .Where(_ud => _ud.OwnerId == user.EntityId && names.Contains(_ud.Name))
+                                 .Pipe(_uds => existingData.AddRange(_uds));
+                });
+
+                //persist the difference
+                data.Except(existingData, new DataNameComparer())
+                    .UsingEach((_data) => _data.OwnerId = user.UserId)
+                    .Do(_data => userdatastore.Add(_data).Context.CommitChanges());
+            });
+
+        public Operation RemoveData(string[] names)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var user = UserContext.CurrentUser;
+                var userdatastore = DataContext.Store<UserData>();
+                names.Batch(200).ForAll((cnt, _batch) =>
+                {
+                    var nar = _batch.ToArray();
+                    userdatastore.Query
+                                 .Where(_ud => _ud.OwnerId == user.EntityId)
+                                 .Where(_ud => nar.Contains(_ud.Name))
+                                 .Pipe(_uds => userdatastore.Delete(_uds.AsEnumerable()));
+                });
+
+                userdatastore.Context.CommitChanges();
+            });
+
+        public Operation<IEnumerable<UserData>> GetUserData()
+            => FeatureAccess.Guard(UserContext, () => DataContext.Store<UserData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+        #endregion
 
 
         internal class DataNameComparer : IEqualityComparer<UserData>

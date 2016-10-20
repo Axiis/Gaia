@@ -8,26 +8,26 @@ namespace Gaia.Core.Services
 {
     public interface IAdvertService : IGaiaService, IUserContextAware
     {
-        [Feature("system/User/Advert/@create")]
+        [Feature("system/Adverts/@create")]
         Operation<Advert> CreateAdvert();
 
 
-        [Feature("system/User/Advert/@delete")]
+        [Feature("system/Adverts/@delete")]
         Operation<Advert> DeleteDraft(long advertId);
 
-        [Feature("system/User/Advert/@update")]
+        [Feature("system/Adverts/@update")]
         Operation<Advert> UpdateAdvert(Advert advert);
 
-        [Feature("system/User/Advert/@review")]
+        [Feature("system/Adverts/@review")]
         Operation<Advert> SubmitForReview(long advertId);
 
-        [Feature("system/User/Advert/@publish")]
+        [Feature("system/Adverts/@publish")]
         Operation<Advert> Publish(long advertId);
 
-        [Feature("system/User/Advert/@suspend")]
+        [Feature("system/Adverts/@suspend")]
         Operation<Advert> Suspend(long advertId);
 
-        [Feature("system/User/Advert/@archive")]
+        [Feature("system/Adverts/@archive")]
         Operation<Advert> Archive(long advertId);
 
         /// <summary>

@@ -359,8 +359,11 @@
     <Content Include="scripts\angular-local-storage.js" />
     <Content Include="scripts\angular-local-storage.min.js" />
     <Content Include="scripts\angular-local-storage.min.js.map" />
+    <Content Include="Content\2016-Earth-RegionalInfo.csv" />
+    <Content Include="Content\2016-IsoCountryCodes.csv" />
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
     <TypeScriptCompile Include="app\dashboard-app.ts" />
+    <TypeScriptCompile Include="app\directives\binaryData.ts" />
     <TypeScriptCompile Include="app\login-app.ts" />
     <TypeScriptCompile Include="app\models\axis-apollo-domain.ts" />
     <TypeScriptCompile Include="app\models\axis-luna-domain.ts" />
@@ -1434,7 +1437,6 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\directives\" />
     <Folder Include="app\modules\" />
     <Folder Include="App_Data\" />
   </ItemGroup>

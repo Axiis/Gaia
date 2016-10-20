@@ -24,8 +24,8 @@ module Axis.Pollux.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.CreatedOn = new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']);
-                this.ModifiedOn = new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']);
+                this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
+                this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
             }
         }
     }
@@ -71,7 +71,7 @@ module Axis.Pollux.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.Dob = new Axis.Apollo.Domain.JsonDateTime(data['Dob']);
+                this.Dob = data['Dob']?  new Axis.Apollo.Domain.JsonDateTime(data['Dob']): null;
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
         }
@@ -104,6 +104,8 @@ module Axis.Pollux.Domain {
 
         CorporateName: string;
         CorporateId: string;
+        Status: number;
+        Description: string;
 
         OwnerId: string;
         Owner: User;
@@ -115,7 +117,7 @@ module Axis.Pollux.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.IncorporationDate = new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']);
+                this.IncorporationDate = data['IncorporationData'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
         }

@@ -32,14 +32,18 @@ module Axis.Luna.Domain {
             return "data:" + (this.Mime || 'application/octet-stream') + ";base64," + this.Data;
         }
 
-        constructor(dataUrl?: string)
+        constructor(data?: string | Object)
         {
-            if (dataUrl) {
+            if (typeof data === 'string') {
+                var dataUrl = data;
                 var parts = dataUrl.trimLeft("data:").split(';');
                 this.Mime = parts[0];
                 this.Data = parts[1].trimLeft("base64,");
                 this.IsDataEmbeded = true;
                 this.Name = 'data' + Gaia.Utils.MimeCodes.toExtension(this.Mime);
+            }
+            else if (typeof data === 'object') {
+                data.copyTo(this);
             }
         }
     }

@@ -12,8 +12,11 @@ var Gaia;
                     this.$http.defaults.headers.common.Authorization = 'Bearer ' + (oauthtoken ? JSON.parse(oauthtoken).access_token : '');
                     this.http = $http;
                 }
-                DomainTransport.prototype.tokenExpired = function (callbackParam) {
-                    throw 'not implemented';
+                DomainTransport.prototype.accessDenied = function (callbackParam) {
+                    if (callbackParam.Message.startsWith('Access Denied'))
+                        return true;
+                    else
+                        return false;
                 };
                 DomainTransport.prototype.get = function (url, data, config) {
                     var _this = this;
@@ -23,7 +26,7 @@ var Gaia;
                     }
                     return this.http.get(url, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -35,7 +38,7 @@ var Gaia;
                     }
                     return this.http.delete(url, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -43,7 +46,7 @@ var Gaia;
                     var _this = this;
                     return this.http.head(url, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -55,7 +58,7 @@ var Gaia;
                     }
                     return this.http.jsonp(url, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -63,7 +66,7 @@ var Gaia;
                     var _this = this;
                     return this.http.post(url, data, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -71,7 +74,7 @@ var Gaia;
                     var _this = this;
                     return this.http.put(url, data, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -79,7 +82,7 @@ var Gaia;
                     var _this = this;
                     return this.http.patch(url, data, config)
                         .error(function (r) {
-                        if (_this.tokenExpired(r))
+                        if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
                 };
@@ -112,3 +115,4 @@ var Gaia;
         })(Services = Utils.Services || (Utils.Services = {}));
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=utility-services.js.map

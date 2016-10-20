@@ -17,16 +17,16 @@ namespace Gaia.Core.Services
         Operation<ForumTopic> FlagTopic(long topicId);
 
 
-        [Feature("system/User/Forum/Thread/@create")]
+        [Feature("system/Forums/Threads/@create")]
         Operation<ForumThread> CreateThread(string title, long topic);
 
-        [Feature("system/User/Forum/Thread/@modify")]
+        [Feature("system/Forums/Threads/@modify")]
         Operation<ForumThread> ModifyThread(ForumThread thread);
 
-        [Feature("system/User/Forum/Thread/@flag")]
+        [Feature("system/Forums/Threads/@flag")]
         Operation<ForumThread> FlagThread(long threadId);
 
-        [Feature("system/User/Forum/Thread/@watch")]
+        [Feature("system/Forums/Threads/@watch")]
         Operation<ForumThreadWatch> WatchThread(long threadId);
     }
 }

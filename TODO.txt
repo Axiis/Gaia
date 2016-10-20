@@ -47,3 +47,8 @@
 2.   Added new access descriptors for enabling a client (default/Farmer/Service-Provider) to manage Business, Farm, and Service accounts
 
 3.   Add access descriptors for the market place
+
+
+2016/10/20 ====================================================================================
+
+1.	 Modify the "copyTo" Typescript extension function to include the option of specifying the properties to be copied. [DONE]

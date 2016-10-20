@@ -72,18 +72,20 @@ module Axis.Apollo.Domain {
                 year: this.year,
                 month: this.month - 1, //<-- moment uses a zero-indexed scale for months when initializing it this way
                 day: this.day,
+                hour: this.hour,
                 minute: this.minute,
                 second: this.second,
                 millisecond: this.millisecond
-            });
+            }).local();
         }
 
 
         fromMoment(m: moment.Moment): JsonDateTime {
 
             if (m.isValid()) {
+                m = m.utc();
                 this.year = m.year();
-                this.month = m.month();
+                this.month = m.month() + 1;
                 this.day = m.date();
                 this.hour = m.hour();
                 this.minute = m.minute();

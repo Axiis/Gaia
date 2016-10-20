@@ -75,8 +75,8 @@ module Gaia.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.CreatedOn = new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']);
-                this.ModifiedOn = new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']);
+                this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
+                this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
             }
         }
     }
@@ -137,7 +137,7 @@ module Gaia.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.ExpiresOn = new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']);
+                this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -191,7 +191,7 @@ module Gaia.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.ExpiresOn = new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']);
+                this.ExpiresOn = data['ExpiresOn']? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                 this.User = data['User'] ? new Axis.Pollux.Domain.User(data['User']) : null;
             }
         }
@@ -263,8 +263,8 @@ module Gaia.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.CreatedOn = new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']);
-                this.ModifiedOn = new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']);
+                this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
+                this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
             }
         }
     }
@@ -279,7 +279,7 @@ module Gaia.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.PinnedOn = new Axis.Apollo.Domain.JsonDateTime(data['PinnedOn']);
+                this.PinnedOn = data['PinnedOn']? new Axis.Apollo.Domain.JsonDateTime(data['PinnedOn']) : null;
             }
         }
     }
@@ -447,7 +447,7 @@ module Gaia.Domain {
             if (data) {
                 data.copyTo(this);
 
-                this.ExpiresOn = new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']);
+                this.ExpiresOn = data['ExpiresOn']? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }

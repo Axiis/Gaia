@@ -5,6 +5,8 @@ var Gaia;
         var Dashboard;
         (function (Dashboard) {
             Dashboard.module = angular.module("gaiaDashboard", ['ui.router', 'ngSanitize']);
+            ///Gaia Directives
+            Dashboard.module.directive('binaryData', Gaia.Directives.BinaryData);
             ///Gaia services
             Dashboard.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             ///Pollux Services
@@ -36,3 +38,4 @@ var Gaia;
         })(Dashboard = App.Dashboard || (App.Dashboard = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=dashboard-app.js.map

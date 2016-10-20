@@ -7,16 +7,16 @@ namespace Gaia.Core.Services
 {
     public interface IPostService : IGaiaService, IUserContextAware
     {
-        [Feature("system/User/Post/@create")]
+        [Feature("system/Post/@create")]
         Operation<Post> CreatePost(string title);
 
-        [Feature("system/User/Post/@edit")]
+        [Feature("system/Post/@edit")]
         Operation<Post> EditPost(Post post);
 
-        [Feature("system/User/Post/@publish")]
+        [Feature("system/Post/@publish")]
         Operation<Post> Publish(long postId);
 
-        [Feature("system/User/Post/@archive")]
+        [Feature("system/Post/@archive")]
         Operation<Post> Archive(long postId);
     }
 }

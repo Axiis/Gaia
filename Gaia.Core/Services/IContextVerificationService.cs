@@ -8,13 +8,13 @@ namespace Gaia.Core.Services
 {
     public interface IContextVerificationService : IGaiaService, IUserContextAware
     {
-        [Feature("system/User/ContextVerification/@create-default")]
+        [Feature("system/ContextVerifications/@create-default")]
         Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext);
 
-        [Feature("system/User/ContextVerification/@create")]
+        [Feature("system/ContextVerifications/@create")]
         Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext, DateTime expiryDate);
 
-        [Feature("system/User/ContextVerification/@verify")]
+        [Feature("system/ContextVerifications/@verify")]
         Operation VerifyContext(string userId, string verificationContext, string token);
     }
 }

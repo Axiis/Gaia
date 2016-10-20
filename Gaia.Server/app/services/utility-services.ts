@@ -11,8 +11,9 @@ module Gaia.Utils.Services {
             this.http = $http;
         }
 
-        private tokenExpired(callbackParam: any): boolean {
-            throw 'not implemented';
+        private accessDenied(callbackParam: any): boolean {
+            if ((callbackParam.Message as string).startsWith('Access Denied')) return true;
+            else return false;
         }
         
         get<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {    
@@ -22,7 +23,7 @@ module Gaia.Utils.Services {
             }         
             return this.http.get<T>(url, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
@@ -33,14 +34,14 @@ module Gaia.Utils.Services {
             }         
             return this.http.delete(url, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
         head<T>(url: string, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             return this.http.head(url, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
@@ -51,28 +52,28 @@ module Gaia.Utils.Services {
             }         
             return this.http.jsonp(url, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
         post<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             return this.http.post(url, data, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
         put<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             return this.http.put(url, data, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
         
         patch<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             return this.http.patch(url, data, config)
                 .error(r => {
-                    if (this.tokenExpired(r)) window.location.href = '/view-server/login/shell';
+                    if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
         }
     }

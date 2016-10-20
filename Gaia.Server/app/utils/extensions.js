@@ -4,14 +4,23 @@ var Gaia;
     (function (Extensions) {
         ///object extension
         Object.defineProperty(Object.prototype, 'copyTo', {
-            value: function (target) {
+            value: function (target, properties) {
+                var _this = this;
                 //'use strict';
                 // We must check against these specific cases.
                 if (target === undefined || target === null)
                     throw new TypeError('Cannot convert undefined or null to object');
-                for (var nextKey in this) {
-                    if (this.hasOwnProperty(nextKey))
-                        target[nextKey] = this[nextKey];
+                if (properties) {
+                    properties.forEach(function (nextKey) {
+                        if (_this.hasOwnProperty(nextKey))
+                            target[nextKey] = _this[nextKey];
+                    });
+                }
+                else {
+                    for (var nextKey in this) {
+                        if (this.hasOwnProperty(nextKey))
+                            target[nextKey] = this[nextKey];
+                    }
                 }
                 return target;
             },
@@ -168,3 +177,4 @@ var Gaia;
         };
     })(Extensions = Gaia.Extensions || (Gaia.Extensions = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=extensions.js.map

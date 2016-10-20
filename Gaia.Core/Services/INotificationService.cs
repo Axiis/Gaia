@@ -11,16 +11,16 @@ namespace Gaia.Core.Services
         [Feature("system/Notifications/@notify")]
         Operation<Notification> Notify(string targetUser, string title, string message, string contextName, long contextId);
 
-        [Feature("system/User/Notification/@clear")]
+        [Feature("system/Notifications/@clear")]
         Operation ClearNotification(long notificationId);
 
-        [Feature("system/User/Notification/@clear-all")]
+        [Feature("system/Notifications/@clear-all")]
         Operation ClearAllNotifications();
 
-        [Feature("system/User/Notification/@get-target-notifications")]
+        [Feature("system/Notifications/@get-target-notifications")]
         Operation<IEnumerable<Notification>> NotificationsFor(string targetUser);
 
-        [Feature("system/User/Notification/@get-own-notifications")]
+        [Feature("system/Notifications/@get-own-notifications")]
         Operation<IEnumerable<Notification>> Notifications();
     }
 }

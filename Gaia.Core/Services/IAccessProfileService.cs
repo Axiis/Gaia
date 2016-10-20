@@ -19,16 +19,16 @@ namespace Gaia.Core.Services
         Operation ArchiveAccessProfile(long profileId);
         
 
-        [Feature("system/User/AccessProfile/@apply")]
+        [Feature("system/AccessProfiles/@apply")]
         Operation<UserAccessProfile> ApplyAccessProfile(string userId, string accessProfileCode, DateTime? expiryDate);
 
-        [Feature("system/User/AccessProfile/@revoke")]
+        [Feature("system/AccessProfiles/@revoke")]
         Operation<UserAccessProfile> RevokeAccessProfile(string userId, string accessProfileCode);
 
-        [Feature("system/User/AccessProfile/@migrate")]
+        [Feature("system/AccessProfiles/@migrate")]
         Operation<UserAccessProfile> MigrateAccessProfile(string userId, string oldAccessProfileCode, string newAccessProfileCode, DateTime? newExpiry);
 
-        [Feature("system/User/AccessProfiles/@get")]
+        [Feature("system/AccessProfiles/@get")]
         Operation<IEnumerable<UserAccessProfile>> ActiveUserAccessProfiles(string userId);
     }
 }

@@ -3,6 +3,9 @@ module Gaia.App.Dashboard {
 
     export const module = angular.module("gaiaDashboard", ['ui.router', 'ngSanitize']);
 
+    ///Gaia Directives
+    module.directive('binaryData', Gaia.Directives.BinaryData);
+
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);
 

@@ -69,15 +69,17 @@ var Axis;
                         year: this.year,
                         month: this.month - 1,
                         day: this.day,
+                        hour: this.hour,
                         minute: this.minute,
                         second: this.second,
                         millisecond: this.millisecond
-                    });
+                    }).local();
                 };
                 JsonDateTime.prototype.fromMoment = function (m) {
                     if (m.isValid()) {
+                        m = m.utc();
                         this.year = m.year();
-                        this.month = m.month();
+                        this.month = m.month() + 1;
                         this.day = m.date();
                         this.hour = m.hour();
                         this.minute = m.minute();
@@ -94,3 +96,4 @@ var Axis;
         })(Domain = Apollo.Domain || (Apollo.Domain = {}));
     })(Apollo = Axis.Apollo || (Axis.Apollo = {}));
 })(Axis || (Axis = {}));
+//# sourceMappingURL=axis-apollo-domain.js.map

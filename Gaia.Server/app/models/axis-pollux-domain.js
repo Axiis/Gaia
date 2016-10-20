@@ -24,8 +24,8 @@ var Axis;
                 function PolluxEntity(data) {
                     if (data) {
                         data.copyTo(this);
-                        this.CreatedOn = new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']);
-                        this.ModifiedOn = new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']);
+                        this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
+                        this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
                     }
                 }
                 return PolluxEntity;
@@ -49,7 +49,7 @@ var Axis;
                     _super.call(this, data);
                     if (data) {
                         data.copyTo(this);
-                        this.Dob = new Axis.Apollo.Domain.JsonDateTime(data['Dob']);
+                        this.Dob = data['Dob'] ? new Axis.Apollo.Domain.JsonDateTime(data['Dob']) : null;
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
                 }
@@ -74,7 +74,7 @@ var Axis;
                     _super.call(this, data);
                     if (data) {
                         data.copyTo(this);
-                        this.IncorporationDate = new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']);
+                        this.IncorporationDate = data['IncorporationData'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
                 }
@@ -127,3 +127,4 @@ var Axis;
         })(Domain = Pollux.Domain || (Pollux.Domain = {}));
     })(Pollux = Axis.Pollux || (Axis.Pollux = {}));
 })(Axis || (Axis = {}));
+//# sourceMappingURL=axis-pollux-domain.js.map

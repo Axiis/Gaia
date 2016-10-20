@@ -585,5 +585,10 @@ var Gaia;
                     .filter(function (_kvp) { return _kvp.Key.startsWith('.'); });
             }
         };
+        Utils.BusinessStatus_Draft = 0;
+        Utils.BusinessStatus_Verifying = 1;
+        Utils.BusinessStatus_Rejected = 2;
+        Utils.BusinessStatus_Verified = 3;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=constants.js.map

@@ -29,33 +29,38 @@ namespace Gaia.Core.Services
         [Feature("system/Profiles/BioData/@modify")]
         Operation ModifyBioData(BioData data);
 
+        [Feature("system/Profiles/BioData/@get")]
+        Operation<BioData> GetBioData();
+
+
         [Feature("system/Profiles/ContactData/@modify")]
         Operation ModifyContactData(ContactData data);
 
-        [Feature("system/Profiles/Corporate/@modify")]
-        Operation ModifyCorporateData(CorporateData data);
-
-
-        [Feature("system/User/Profile/@add-data")]
-        Operation AddData(UserData[] data);
-
-        [Feature("system/User/Profile/@remove-data")]
-        Operation RemoveData(string[] names);
-
-
-
-        [Feature("system/Profiles/UserData/@get")]
-        Operation<IEnumerable<UserData>> GetUserData();
-
-        [Feature("system/Profiles/BioData/@get")]
-        Operation<BioData> GetBioData();
+        [Feature("system/Profiles/ContactData/@remove")]
+        Operation RemoveContactData(long[] ids);
 
         [Feature("system/Profiles/ContactData/@get")]
         Operation<IEnumerable<ContactData>> GetContactData();
 
+
+        [Feature("system/Profiles/Corporate/@modify")]
+        Operation ModifyCorporateData(CorporateData data);
+
+        [Feature("system/Profiles/CorporateData/@remove")]
+        Operation RemoveCorporateData(long[] ids);
+
         [Feature("system/Profiles/Corporate/@get")]
         Operation<IEnumerable<CorporateData>> GetCorporateData();
 
+
+        [Feature("system/Profiles/UserData/@add")]
+        Operation AddData(UserData[] data);
+
+        [Feature("system/Profiles/UserData/@remove")]
+        Operation RemoveData(string[] names);
+
+        [Feature("system/Profiles/UserData/@get")]
+        Operation<IEnumerable<UserData>> GetUserData();
 
 
         [Feature("system/Profiles/@archive-user")]
@@ -64,7 +69,7 @@ namespace Gaia.Core.Services
         [Feature("system/Profiles/@create-activation-verification")]
         Operation<ContextVerification> CreateUserActivationVerification(string targetUser);
 
-        [Feature("system/User/Profile/@verify-activation-verification")]
+        [Feature("system/Profiles/@verify-activation-verification")]
         Operation<User> VerifyUserActivation(string targetUser, string contextToken);
         
 

@@ -13,17 +13,21 @@ var Axis;
             }());
             Domain.Operation = Operation;
             var BinaryData = (function () {
-                function BinaryData(dataUrl) {
+                function BinaryData(data) {
                     this.Name = null;
                     this.Mime = null;
                     this.Data = null; //B64 encoded string, or url/file-uri/etc
                     this.IsDataEmbeded = false;
-                    if (dataUrl) {
+                    if (typeof data === 'string') {
+                        var dataUrl = data;
                         var parts = dataUrl.trimLeft("data:").split(';');
                         this.Mime = parts[0];
                         this.Data = parts[1].trimLeft("base64,");
                         this.IsDataEmbeded = true;
                         this.Name = 'data' + Gaia.Utils.MimeCodes.toExtension(this.Mime);
+                    }
+                    else if (typeof data === 'object') {
+                        data.copyTo(this);
                     }
                 }
                 BinaryData.prototype.Extension = function () {
@@ -43,3 +47,4 @@ var Axis;
         })(Domain = Luna.Domain || (Luna.Domain = {}));
     })(Luna = Axis.Luna || (Axis.Luna = {}));
 })(Axis || (Axis = {}));
+//# sourceMappingURL=axis-luna-domain.js.map
