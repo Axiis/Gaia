@@ -36,7 +36,6 @@ var Axis;
                 function AddressData(data) {
                     _super.call(this, data);
                     if (data) {
-                        data.copyTo(this);
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
                 }
@@ -48,7 +47,6 @@ var Axis;
                 function BioData(data) {
                     _super.call(this, data);
                     if (data) {
-                        data.copyTo(this);
                         this.Dob = data['Dob'] ? new Axis.Apollo.Domain.JsonDateTime(data['Dob']) : null;
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
@@ -61,7 +59,6 @@ var Axis;
                 function ContactData(data) {
                     _super.call(this, data);
                     if (data) {
-                        data.copyTo(this);
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
                 }
@@ -74,8 +71,7 @@ var Axis;
                     _super.call(this, data);
                     this.Status = Gaia.Utils.BusinessStatus_Draft;
                     if (data) {
-                        data.copyTo(this);
-                        this.IncorporationDate = data['IncorporationData'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
+                        this.IncorporationDate = data['IncorporationDate'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
                 }
@@ -86,8 +82,8 @@ var Axis;
                 __extends(User, _super);
                 function User(data) {
                     _super.call(this, data);
-                    if (data)
-                        data.copyTo(this);
+                    if (data) {
+                    }
                 }
                 return User;
             }(PolluxEntity));
@@ -97,7 +93,6 @@ var Axis;
                 function UserData(data) {
                     _super.call(this, data);
                     if (data) {
-                        data.copyTo(this);
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                     }
                 }
@@ -117,7 +112,6 @@ var Axis;
                 function Credential(data) {
                     _super.call(this, data);
                     if (data) {
-                        data.copyTo(this);
                         this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                         this.Expires = data['Expires'] ? new Axis.Apollo.Domain.JsonTimeSpan(data['Expires']) : null;
                     }

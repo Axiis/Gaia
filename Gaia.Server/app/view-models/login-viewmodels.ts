@@ -39,7 +39,7 @@ module Gaia.ViewModels.Login {
                     this.$window.location.href = '/view-server/secured/dashboard/shell';
                 }, e => {//error
                     this.isBusy = false;
-                    this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
+                    this.signinErrorMessage = "There seems to be a problem: " + e.Message + "...";
                 });
         }
 

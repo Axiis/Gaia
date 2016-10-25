@@ -4,6 +4,14 @@ module Gaia.ViewModels.Dashboard {
 
     export class DashboardViewModel {
 
+        constructor() {
+        }
+    }
+
+
+    export class ProfileViewModel {
+
+        user: Axis.Pollux.Domain.User = null;
 
         ///<<Profile>
         isEditingBioData: boolean = false;
@@ -16,7 +24,6 @@ module Gaia.ViewModels.Dashboard {
         hasContactdataPersistenceError: boolean = false;
         hasProfileImagePersistenceError: boolean = false;
 
-        user: Axis.Pollux.Domain.User = null;
         biodata: Axis.Pollux.Domain.BioData = null;
         contact: Axis.Pollux.Domain.ContactData = null;
 
@@ -54,6 +61,7 @@ module Gaia.ViewModels.Dashboard {
                     }, e => {
                         this.isRemovingProfileImage = false;
                         this.hasProfileImagePersistenceError = true;
+                        this.notifyService.error('Something went wrong while removing your profile image...', 'Oops!');
                     });
             }
         }
@@ -63,16 +71,17 @@ module Gaia.ViewModels.Dashboard {
             this.isPersistingProfileImage = true;
             this.profileService.removeData(['ProfileImage'])
                 .then(oprc => this.profileService.addData([new Axis.Pollux.Domain.UserData({
-                    Data : JSON.stringify(this.profileImage),
+                    Data: JSON.stringify(this.profileImage),
                     Name: 'ProfileImage',
                     OwnerId: this.user.UserId
                 })]).then(oprcx => {
                     this.isPersistingProfileImage = false;
                     this._originalImage = this.profileImage;
                     this.isProfileImageChanged = false;
-                    }), e => {
+                }), e => {
                     this.isPersistingProfileImage = false;
                     this.hasProfileImagePersistenceError = true;
+                    this.notifyService.error('Something went wrong while saving your profile image...', 'Oops!');
                 });
         }
         refreshProfileImage() {
@@ -105,7 +114,7 @@ module Gaia.ViewModels.Dashboard {
         }
         dobDisplay(): string {
             if (this.biodata && this.biodata.Dob) {
-                return this.biodata.Dob.toMoment().format('YYYY-MM-DD');
+                return this.biodata.Dob.toMoment().format('Do MMM, YYYY');
             }
             else return '-N/A-';
         }
@@ -160,10 +169,11 @@ module Gaia.ViewModels.Dashboard {
                 }, e => {
                     this.hasBiodataPersistenceError = true;
                     this.isPersistingBiodata = false;
+                    this.notifyService.error('Something went wrong while saving your Bio data...', 'Oops!');
                 });
         }
         refreshBiodata() {
-                this.profileService.getBioData().then(oprc => {
+            this.profileService.getBioData().then(oprc => {
                 this.biodata = oprc.Result || new Axis.Pollux.Domain.BioData();
                 this._dobField = this.biodata.Dob ? this.biodata.Dob.toMoment().toDate() : null;
             });
@@ -204,6 +214,7 @@ module Gaia.ViewModels.Dashboard {
                 }, e => {
                     this.hasContactdataPersistenceError = true;
                     this.isPersistingContactdata = false;
+                    this.notifyService.error('Something went wrong while saving your Contact data...', 'Oops!');
                 });
         }
         refreshContactData() {
@@ -215,14 +226,88 @@ module Gaia.ViewModels.Dashboard {
 
         ///</Profile>
 
-        ///<Accounts>
+        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
+        constructor(private profileService: Gaia.Services.ProfileService, private domModel: Gaia.Utils.Services.DomModelService,
+            private notifyService: Gaia.Utils.Services.NotifyService) {
 
-        ///<businesses>
+            this.refreshBiodata();
+            this.refreshContactData();
+            this.refreshProfileImage();
+            this.user = new Axis.Pollux.Domain.User({
+                UserId: domModel.simpleModel.UserId,
+                EntityId: domModel.simpleModel.UserId,
+                Stataus: 1
+            });
+        }
+    }
+
+
+    export class BusinessAccountViewModel {
+
+        user: Axis.Pollux.Domain.User = null;
+        
         businessList: Axis.Pollux.Domain.CorporateData[] = [];
+        currentBusinessData: Axis.Pollux.Domain.CorporateData = null;
         isListingBusinesses: boolean = true;
         isEditingBusiness: boolean = false;
+        isPersistingBusiness: boolean = false;
         isDetailingBusiness: boolean = false;
-        currentBusinessData: Axis.Pollux.Domain.CorporateData = null;
+        hasBusinessPersistenceError: boolean = false;
+
+        private _incorporationDate: Date;
+        set businessIncorporationDateBinding(value: Date) {
+            if (this.currentBusinessData) {
+                this.currentBusinessData.IncorporationDate = new Axis.Apollo.Domain.JsonDateTime().fromMoment(moment.utc(value));
+                this._incorporationDate = value;
+            }
+        }
+        get businessIncorporationDateBinding(): Date {
+            return this._incorporationDate;
+        }
+
+        isDraft(business: Axis.Pollux.Domain.CorporateData): boolean {
+            if (business) return business.Status == Gaia.Utils.BusinessStatus_Draft;
+            else return false;
+        }
+        isRejected(business: Axis.Pollux.Domain.CorporateData): boolean {
+            if (business) return business.Status == Gaia.Utils.BusinessStatus_Rejected;
+            else return false;
+        }
+        isVerified(business: Axis.Pollux.Domain.CorporateData): boolean {
+            if (business) return business.Status == Gaia.Utils.BusinessStatus_Verified;
+            else return false;
+        }
+        isVerifying(business: Axis.Pollux.Domain.CorporateData): boolean {
+            if (business) return business.Status == Gaia.Utils.BusinessStatus_Verifying;
+            else return false;
+        }
+
+        isBusinessNameSet(): boolean {
+            if (this.currentBusinessData && this.currentBusinessData.CorporateName) {
+                return this.currentBusinessData.CorporateName.length > 0;
+            }
+            else return false;
+        }
+        isBusinessIdSet(): boolean {
+            if (this.currentBusinessData && this.currentBusinessData.CorporateId) {
+                return this.currentBusinessData.CorporateId.length > 0;
+            }
+            else return false;
+        }
+        isBusinessIncorporationDateSet(): boolean {
+            if (this.currentBusinessData && this.currentBusinessData.IncorporationDate) return true;
+            else return false;
+        }
+
+        backToListingBusinesses() {
+            if (this.currentBusinessData['$nascent']) {
+                this.businessList.remove(this.currentBusinessData);
+                this.currentBusinessData = null;
+            }
+
+            this.clearBusinessView();
+            this.isListingBusinesses = true;
+        }
 
         private clearBusinessView() {
             this.isListingBusinesses = false;
@@ -246,16 +331,22 @@ module Gaia.ViewModels.Dashboard {
                 this.isDetailingBusiness = true;
             }
         }
-        addBusiness() {
-            var newobj = new Axis.Pollux.Domain.CorporateData();
+        addBusiness(): Axis.Pollux.Domain.CorporateData {
+            var newobj = new Axis.Pollux.Domain.CorporateData({ OwnerId: this.user.EntityId });
             (newobj as any).$nascent = true;
             this.businessList = [newobj].concat(this.businessList);
+            return newobj;
+        }
+        addAndEditBusiness() {
+            this.editBusiness(this.addBusiness());
         }
         editBusiness(b: Axis.Pollux.Domain.CorporateData) {
             if (b) {
                 this.currentBusinessData = b;
                 this.clearBusinessView();
                 this.isEditingBusiness = true;
+
+                ($('#richtext-editor') as any).summernote('code', this.currentBusinessData.Description);
             }
         }
         removeBusiness(b: Axis.Pollux.Domain.CorporateData) {
@@ -268,20 +359,30 @@ module Gaia.ViewModels.Dashboard {
                         this.businessList.remove(b);
                         this.notifyService.success('Business data removed successfully', 'Alert');
                     }, e => {
-                        this.notifyService.success('Something went wrong while removing your business data...', 'Oops!');
+                        this.notifyService.error('Something went wrong while removing your business data...', 'Oops!');
                     });
             }
         }
-
+        persistCurrentBusinessData() {
+            if (this.currentBusinessData) {
+                this.currentBusinessData.Description = ($('#richtext-editor') as any).summernote('code');
+                this.persistBusiness(this.currentBusinessData);
+            }
+        }
         persistBusiness(b: Axis.Pollux.Domain.CorporateData) {
             if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
-                this.profileService.modifyCorporateData(b)
-                    .then(oprc => {
-                        delete (b as any).$nascent;
-                        this.notifyService.success('Business data was saved successfully', 'Alert');
-                    }, e => {
-                        this.notifyService.success('Something went wrong while saving your business data...', 'Oops!');
-                    });
+                if (!this.isPersistingBusiness) {
+                    this.isPersistingBusiness = true;
+                    this.profileService.modifyCorporateData(b)
+                        .then(oprc => {
+                            delete (b as any).$nascent;
+                            this.notifyService.success('Business data was saved successfully', 'Alert');
+                            this.isPersistingBusiness = false;
+                        }, e => {
+                            this.notifyService.error('Something went wrong while saving your business data...', 'Oops!');
+                            this.isPersistingBusiness = false;
+                        });
+                }
             }
         }
         refreshBusinesss() {
@@ -290,22 +391,22 @@ module Gaia.ViewModels.Dashboard {
                     this.currentBusinessData = null;
                     this.businessList = oprc.Result || [];
                 }, e => {
+                    this.notifyService.error('Something went wrong while retrieving your business data...', 'Oops!');
                 });
         }
 
-        //</businesses>
+        displayDate(date: Axis.Apollo.Domain.JsonDateTime): string {
+            if (date) return date.toMoment().format('Do MMM, YYYY');
+            else return '';
+        }
 
-        ///</Accounts>
 
-
-
-        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
+        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
         constructor(private profileService: Gaia.Services.ProfileService, private domModel: Gaia.Utils.Services.DomModelService,
-            private notifyService: Gaia.Utils.Services.NotifyService) {
+            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
 
-            this.refreshBiodata();
-            this.refreshContactData();
-            this.refreshProfileImage();
+            counter.businessVm = this;
+            this.refreshBusinesss();
             this.user = new Axis.Pollux.Domain.User({
                 UserId: domModel.simpleModel.UserId,
                 EntityId: domModel.simpleModel.UserId,
@@ -315,8 +416,120 @@ module Gaia.ViewModels.Dashboard {
     }
 
 
-    export class ProfileViewModel {
+    export class ServiceAccountViewModel {
 
+        user: Axis.Pollux.Domain.User = null;
+
+        serviceList: Gaia.Domain.ServiceAccount[] = [];
+        currentService: Gaia.Domain.ServiceAccount = null;
+
+        isEditingService: boolean = false;
+        isPersistingService: boolean = false;
+        hasServicePersistenceError: boolean = false;
+
+
+        persistService(service: Gaia.Domain.ServiceAccount) {
+            if (this.isPersistingService) return;
+
+            this.isPersistingService = true;
+            this.accountService.persistServiceAccount(service)
+                .then(oprc => {
+                    this.isEditingService = false;
+                    this.hasServicePersistenceError = false;
+                    this.isPersistingService = false;
+                }, e => {
+                    this.isPersistingService = false;
+                    this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
+                });
+        }
+        refreshServices() {
+            this.accountService.getServiceAccounts().then(oprc => {
+                this.serviceList = oprc.Result || [];
+            });
+        }
+
+
+        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+        constructor(private accountService: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
+            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
+
+            counter.serviceVm = this;
+
+            this.refreshServices();
+            this.user = new Axis.Pollux.Domain.User({
+                UserId: domModel.simpleModel.UserId,
+                EntityId: domModel.simpleModel.UserId,
+                Stataus: 1
+            });
+        }
+    }
+
+
+    export class FarmAccountViewModel {
+
+        user: Axis.Pollux.Domain.User = null;
+
+        farmList: Gaia.Domain.FarmAccount[] = [];
+        currentService: Gaia.Domain.FarmAccount = null;
+
+        isEditingFarm: boolean = false;
+        isPersistingFarm: boolean = false;
+        hasFarmPersistenceError: boolean = false;
+
+
+        persistFarm(farm: Gaia.Domain.FarmAccount) {
+            if (this.isPersistingFarm) return;
+
+            this.isPersistingFarm = true;
+            this.accountService.persistFarmAccount(farm)
+                .then(oprc => {
+                    this.isEditingFarm = false;
+                    this.hasFarmPersistenceError = false;
+                    this.isPersistingFarm = false;
+                }, e => {
+                    this.isPersistingFarm = false;
+                    this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
+                });
+        }
+        refreshServices() {
+            this.accountService.getFarmAccounts().then(oprc => {
+                this.farmList = oprc.Result || [];
+            });
+        }
+
+
+        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+        constructor(private accountService: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
+            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
+
+            counter.farmVm = this;
+
+            this.refreshServices();
+            this.user = new Axis.Pollux.Domain.User({
+                UserId: domModel.simpleModel.UserId,
+                EntityId: domModel.simpleModel.UserId,
+                Stataus: 1
+            });
+        }
+    }
+
+
+    export class AccountTabsViewModel {
+
+        static $inject = ['#gaia.dashboard.localServices.AccountCounter']
+        constructor(public counter: AccountCounter) {
+        }
+    }
+
+
+    ///local services
+    export class AccountCounter {
+
+        farmVm: FarmAccountViewModel = null;
+        serviceVm: ServiceAccountViewModel = null;
+        businessVm: BusinessAccountViewModel = null;
+
+        static $inject = [];
         constructor() {
         }
     }

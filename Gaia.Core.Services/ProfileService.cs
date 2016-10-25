@@ -233,22 +233,24 @@ namespace Gaia.Core.Services
 
 
         #region Biodata
-        public Operation<long> ModifyBioData(BioData data)
+
+        public Operation ModifyBioData(BioData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var _user = UserContext.CurrentUser;
-                data.OwnerId = _user.UserId;
+                var store = DataContext.Store<BioData>();
 
-                //validate the biodata
+                var persisted = store.Query
+                    .Where(_ud => _ud.OwnerId == _user.EntityId)
+                    .Where(_ud => _ud.EntityId == data.EntityId)
+                    .FirstOrDefault();
 
-                //persist the contact data
-                var _biodatastore = DataContext.Store<BioData>();
-                if (!_biodatastore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _biodatastore.Add(data).Context.CommitChanges();
-
-                else _biodatastore.Modify(data, true);
-
-                return data.EntityId;
+                if (persisted != null)
+                {
+                    data.CopyTo(persisted);
+                    store.Modify(persisted, true);
+                }
+                else store.Add(data).Context.CommitChanges();
             });
 
         public Operation<BioData> GetBioData()
@@ -257,22 +259,36 @@ namespace Gaia.Core.Services
 
 
         #region Contact data
-        public Operation<long> ModifyContactData(ContactData data)
+        public Operation<long> AddContactData(ContactData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var _user = UserContext.CurrentUser;
                 data.OwnerId = _user.UserId;
 
-                //validate the contact data
+                //validate the biodata
 
                 //persist the contact data
-                var _contactStore = DataContext.Store<ContactData>();
-                if (!_contactStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _contactStore.Add(data).Context.CommitChanges();
-
-                else _contactStore.Modify(data, true);
+                DataContext.Store<ContactData>()
+                    .Add(data).Context
+                    .CommitChanges();
 
                 return data.EntityId;
+            });
+
+        public Operation ModifyContactData(ContactData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                var store = DataContext.Store<ContactData>();
+
+                var persisted = store.Query
+                    .Where(_ud => _ud.OwnerId == _user.EntityId)
+                    .Where(_ud => _ud.EntityId == data.EntityId)
+                    .FirstOrDefault()
+                    .ThrowIfNull("data not found");
+
+                data.CopyTo(persisted);
+                store.Modify(persisted, true);
             });
 
         public Operation<IEnumerable<ContactData>> GetContactData()
@@ -298,22 +314,36 @@ namespace Gaia.Core.Services
 
 
         #region Corporate data
-        public Operation<long> ModifyCorporateData(CorporateData data)
+        public Operation<long> AddCorporateData(CorporateData data)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var _user = UserContext.CurrentUser;
                 data.OwnerId = _user.UserId;
 
-                //validate the corporate data
+                //validate the biodata
 
-                //persist the corporate data
-                var _corporateStore = DataContext.Store<CorporateData>();
-                if (!_corporateStore.Query.Any(_bd => _bd.OwnerId == _user.EntityId))
-                    _corporateStore.Add(data).Context.CommitChanges();
-
-                else _corporateStore.Modify(data, true);
+                //persist the contact data
+                DataContext.Store<CorporateData>()
+                    .Add(data).Context
+                    .CommitChanges();
 
                 return data.EntityId;
+            });
+
+        public Operation ModifyCorporateData(CorporateData data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                var store = DataContext.Store<CorporateData>();
+
+                var persisted = store.Query
+                    .Where(_cd => _cd.OwnerId == _user.EntityId)
+                    .Where(_cd => _cd.EntityId == data.EntityId)
+                    .FirstOrDefault()
+                    .ThrowIfNull("data not found");
+
+                data.CopyTo(persisted);
+                store.Modify(persisted, true);
             });
 
         public Operation<IEnumerable<CorporateData>> GetCorporateData()

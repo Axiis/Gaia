@@ -62,6 +62,63 @@ module Gaia.Domain {
         Object
     }
 
+    export enum FarmType {
+        Other,
+        Crop,
+        Livestock,
+        Mixed
+    }
+
+    export enum ServiceType {
+        Other
+    }
+
+
+    export class FarmAccount extends GaiaEntity<number> {
+
+        OwnerId: string = null;
+        Owner: Axis.Pollux.Domain.User = null;
+        Description: string = null;
+        FarmType: FarmType = null;
+        GeoData: string = null;
+
+        BusinessAccounts: Axis.Pollux.Domain.CorporateData[] = [];
+        //ContextData: ContextData[] = [];
+
+        GeoArea(): Gaia.Utils.GeoArea {
+            return Gaia.Utils.GeoArea.Parse(this.GeoData);
+        }
+
+        constructor(data?: Object) {
+            super(data);
+
+            if (data) {
+                this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+            }
+        }
+    }
+
+    export class ServiceAccount extends GaiaEntity<number>{
+
+        OwnerId: string = null;
+        Owner: Axis.Pollux.Domain.User = null;
+        Description: string = null;
+        ServiceType: ServiceType = null;
+
+        BusinessAccounts: Axis.Pollux.Domain.CorporateData[] = [];
+        //ContextData: ContextData[] = [];
+
+        constructor(data?: Object) {
+            super(data);
+
+            if (data) {
+                this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                this.BusinessAccounts = (data['BusinessAccounts'] as Array<any> || [])
+                    .map(v =>  new Axis.Pollux.Domain.CorporateData(v));
+            }
+        }
+    }
+
 
     export class GaiaEntity<Key>{
         EntityId: Key;
@@ -88,7 +145,8 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
 
-            if(data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -99,7 +157,8 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
 
-            if(data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -109,7 +168,8 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
-            if(data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -135,8 +195,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
@@ -153,8 +211,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -170,8 +226,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -189,8 +243,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.ExpiresOn = data['ExpiresOn']? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                 this.User = data['User'] ? new Axis.Pollux.Domain.User(data['User']) : null;
             }
@@ -210,8 +262,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -224,7 +274,8 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
-            if(data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -238,8 +289,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.AccessDescriptors =  (data['AccessDescriptors'] as Array<any> || []).map(v => {
                     return new FeatureAccessDescriptor(v);
                 });
@@ -261,8 +310,6 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             if (data) {
-                data.copyTo(this);
-
                 this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
                 this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
             }
@@ -277,8 +324,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.PinnedOn = data['PinnedOn']? new Axis.Apollo.Domain.JsonDateTime(data['PinnedOn']) : null;
             }
         }
@@ -295,8 +340,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -310,8 +353,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -324,7 +365,8 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
-            if(data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -340,8 +382,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.TargetUser = data['TargetUser'] ? new Axis.Pollux.Domain.User(data['TargetUser']) : null;
             }
         }
@@ -356,8 +396,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -376,8 +414,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -393,8 +429,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }
@@ -412,8 +446,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 this.Category = data['Category'] ? new Gaia.Domain.ServiceCategory(data['Category']) : null;
             }
@@ -428,7 +460,8 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
-            if(data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -445,8 +478,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.ExpiresOn = data['ExpiresOn']? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
@@ -463,8 +494,6 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
         }

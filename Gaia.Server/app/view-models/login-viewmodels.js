@@ -39,7 +39,7 @@ var Gaia;
                         _this.$window.location.href = '/view-server/secured/dashboard/shell';
                     }, function (e) {
                         _this.isBusy = false;
-                        _this.signinErrorMessage = "Seems there's a problem with your User-Name or Password...";
+                        _this.signinErrorMessage = "There seems to be a problem: " + e.Message + "...";
                     });
                 };
                 Signin.$inject = ['$window', '#gaia.utils.domainTransport'];

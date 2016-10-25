@@ -66,7 +66,7 @@ namespace Gaia.Core.Utils
             });
         }
 
-        public string FullnLiteral() => $"[lat: {Latitude}, lon: {Longitude}, alt: {Altitude}, arc: {Arc}]";
+        public string FullLiteral() => $"[lat: {Latitude}, lon: {Longitude}, alt: {Altitude}, arc: {Arc}]";
         public string CommonLiteral() => $"[lat: {Latitude}, lon:{Longitude}]";
 
         public GeoLocation Clone() => new GeoLocation

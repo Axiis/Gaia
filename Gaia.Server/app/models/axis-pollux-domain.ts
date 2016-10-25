@@ -43,8 +43,6 @@ module Axis.Pollux.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
         }
@@ -69,8 +67,6 @@ module Axis.Pollux.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Dob = data['Dob']?  new Axis.Apollo.Domain.JsonDateTime(data['Dob']): null;
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
@@ -93,8 +89,6 @@ module Axis.Pollux.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
         }
@@ -115,9 +109,7 @@ module Axis.Pollux.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
-                this.IncorporationDate = data['IncorporationData'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
+                this.IncorporationDate = data['IncorporationDate'] ? new Axis.Apollo.Domain.JsonDateTime(data['IncorporationDate']) : null;
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
         }
@@ -131,7 +123,8 @@ module Axis.Pollux.Domain {
 
         constructor(data?: Object) {
             super(data);
-            if (data) data.copyTo(this);
+            if (data) {
+            }
         }
     }
 
@@ -146,8 +139,6 @@ module Axis.Pollux.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
             }
         }
@@ -174,8 +165,6 @@ module Axis.Pollux.Domain {
         constructor(data?: Object) {
             super(data);
             if (data) {
-                data.copyTo(this);
-
                 this.Owner = data['Owner'] ? new User(data['Owner']) : null;
                 this.Expires = data['Expires'] ? new Axis.Apollo.Domain.JsonTimeSpan(data['Expires']) : null;
             }

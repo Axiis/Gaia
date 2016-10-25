@@ -30,9 +30,9 @@ namespace Gaia.Core.Domain.Accounts
             set { set(ref value); }
         }
 
-        public ServiceCategory Category
+        public ServiceType ServiceType
         {
-            get { return get<ServiceCategory>(); }
+            get { return get<ServiceType>(); }
             set { set(ref value); }
         }
 
@@ -43,7 +43,7 @@ namespace Gaia.Core.Domain.Accounts
         public virtual ICollection<CorporateData> BusinessAccounts { get; set; }
     }
 
-    public enum ServiceCategory
+    public enum ServiceType
     {
         Other
     }

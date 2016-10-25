@@ -12,7 +12,8 @@ interface Func8<I, I2, I3, I4, I5, I6, I7, I8, O> { (in1: I, in2: I2, in3: I3, i
 interface Func9<I, I2, I3, I4, I5, I6, I7, I8, I9, O> { (in1: I, in2: I2, in3: I3, in4: I4, in5: I5, in6: I6, in7: I7, in8: I8, in9: I9): O; }
 
 interface Object {
-    copyTo(target: any, properties?:string[]): any;
+    copyTo(target: any, properties?: string[]): any;
+    with<Obj>(value: any): Obj: 
     project<I, O>(f: Func1<I, O>): O;
     properties(): Array<string>;
     keys(): Array<string>;
@@ -23,7 +24,7 @@ interface Object {
 interface String {
     trimLeft(str: string): string;
     trimRight(str: string): string;
-    trimChars(str: string): string;
+    trimChars(str: string|string[]): string;
 
     startsWith(str: string): boolean;
     endsWith(str: string): boolean;
@@ -63,6 +64,18 @@ module Gaia.Extensions {
                 }
             }
             return target;
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
+
+    Object.defineProperty(Object.prototype, 'with', {
+        value: function <Obj>(obj: Object): Obj {
+
+            if (obj) obj.copyTo(this);
+
+            return this as Obj;
         },
         writable: false,
         configurable: false,
@@ -153,9 +166,18 @@ module Gaia.Extensions {
         enumerable: false
     });
     Object.defineProperty(String.prototype, 'trimChars', {
-        value: function (str: string): string {
-            var _this = this as string;
-            return _this.trimLeft(str).trimRight(str);
+        value: function (str: string | string[]): string {
+
+            var sar: string[];
+            if (typeof str === 'string') sar = [str];
+            else sar = str;
+
+            var localString = this as string;
+            sar.forEach(v => {
+                localString = localString.trimLeft(v).trimRight(v);
+            });
+
+            return localString;
         },
         writable: false,
         configurable: false,

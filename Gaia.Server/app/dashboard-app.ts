@@ -17,10 +17,16 @@ module Gaia.App.Dashboard {
     module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
     module.service('#gaia.utils.notify', Gaia.Utils.Services.NotifyService);
 
+    module.service('#gaia.dashboard.localServices.AccountCounter', Gaia.ViewModels.Dashboard.AccountCounter);
+
     ///ViewModels
     module.controller('NavbarViewModel', Gaia.ViewModels.Shared.NavbarViewModel);
     module.controller('DashboardViewModel', Gaia.ViewModels.Dashboard.DashboardViewModel);
     module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
+    module.controller('BusinessAccountViewModel', Gaia.ViewModels.Dashboard.BusinessAccountViewModel);
+    module.controller('ServiceAccountViewModel', Gaia.ViewModels.Dashboard.ServiceAccountViewModel);
+    module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
+    module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
 
 
     //configure states

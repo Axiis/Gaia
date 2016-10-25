@@ -87,11 +87,19 @@ var Gaia;
                     return oprc.data;
                 });
             };
-            ProfileService.prototype.modifyContactData = function (contactData, config) {
-                return this.transport.put('/api/profiles/contact-data', contactData, config).then(function (oprc) {
-                    if (contactData.EntityId <= 0)
-                        contactData.EntityId = oprc.data.Result;
+            ProfileService.prototype.addContactData = function (contactData, config) {
+                return this.transport.post('/api/profiles/contact-data', contactData, config).then(function (oprc) {
+                    contactData.EntityId = oprc.data.Result;
                 });
+            };
+            ProfileService.prototype.modifyContactData = function (contactData, config) {
+                return this.transport.put('/api/profiles/contact-data', contactData, config).then(function (oprc) { });
+            };
+            ProfileService.prototype.persistContactData = function (contactData) {
+                if (contactData.EntityId <= 0)
+                    return this.addContactData(contactData);
+                else
+                    return this.modifyContactData(contactData);
             };
             ProfileService.prototype.removeContactData = function (ids, config) {
                 return this.transport.delete('/api/profiles/contact-data/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
@@ -102,11 +110,19 @@ var Gaia;
                     return oprc.data;
                 });
             };
-            ProfileService.prototype.modifyCorporateData = function (corporateData, config) {
+            ProfileService.prototype.addCorporateData = function (corporateData, config) {
                 return this.transport.put('/api/profiles/corporate-data', corporateData, config).then(function (oprc) {
-                    if (corporateData.EntityId <= 0)
-                        corporateData.EntityId = oprc.data.Result;
+                    corporateData.EntityId = oprc.data.Result;
                 });
+            };
+            ProfileService.prototype.modifyCorporateData = function (corporateData, config) {
+                return this.transport.put('/api/profiles/corporate-data', corporateData, config).then(function (oprc) { });
+            };
+            ProfileService.prototype.persistCorporateData = function (data) {
+                if (data.EntityId <= 0)
+                    return this.addCorporateData(data);
+                else
+                    return this.modifyCorporateData(data);
             };
             ProfileService.prototype.removeCorporateData = function (ids, config) {
                 return this.transport.delete('/api/profiles/corporate-data/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
@@ -115,5 +131,59 @@ var Gaia;
             return ProfileService;
         }());
         Services.ProfileService = ProfileService;
+        var UserAccountService = (function () {
+            function UserAccountService(transport) {
+                this.transport = transport;
+            }
+            UserAccountService.prototype.getServiceAccounts = function (config) {
+                return this.transport.get('/api/profiles/service-account', null, config).then(function (oprc) {
+                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Gaia.Domain.ServiceAccount(_cd); }) : null;
+                    return oprc.data;
+                });
+            };
+            UserAccountService.prototype.addServiceAccount = function (serviceAccount, config) {
+                return this.transport.post('/api/profiles/service-account', serviceAccount, config).then(function (oprc) {
+                    serviceAccount.EntityId = oprc.data.Result;
+                });
+            };
+            UserAccountService.prototype.modifyServiceAccount = function (serviceAccount, config) {
+                return this.transport.put('/api/profiles/service-account', serviceAccount, config).then(function (oprc) { });
+            };
+            UserAccountService.prototype.persistServiceAccount = function (data) {
+                if (data.EntityId <= 0)
+                    this.addServiceAccount(data);
+                else
+                    return this.modifyServiceAccount(data);
+            };
+            UserAccountService.prototype.removeServiceAccount = function (ids, config) {
+                return this.transport.delete('/api/profiles/service-account/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
+            };
+            UserAccountService.prototype.getFarmAccounts = function (config) {
+                return this.transport.get('/api/profiles/farm-account', null, config).then(function (oprc) {
+                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Gaia.Domain.FarmAccount(_cd); }) : null;
+                    return oprc.data;
+                });
+            };
+            UserAccountService.prototype.addFarmAccount = function (FarmAccount, config) {
+                return this.transport.post('/api/profiles/farm-account', FarmAccount, config).then(function (oprc) {
+                    FarmAccount.EntityId = oprc.data.Result;
+                });
+            };
+            UserAccountService.prototype.modifyFarmAccount = function (FarmAccount, config) {
+                return this.transport.put('/api/profiles/farm-account', FarmAccount, config).then(function (oprc) { });
+            };
+            UserAccountService.prototype.persistFarmAccount = function (data) {
+                if (data.EntityId <= 0)
+                    this.addFarmAccount(data);
+                else
+                    return this.modifyFarmAccount(data);
+            };
+            UserAccountService.prototype.removeFarmAccount = function (ids, config) {
+                return this.transport.delete('/api/profiles/farm-account/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
+            };
+            UserAccountService.$inject = ["#gaia.utils.domainTransport"];
+            return UserAccountService;
+        }());
+        Services.UserAccountService = UserAccountService;
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));

@@ -95,10 +95,17 @@ module Gaia.Services {
                 return oprc.data;
             });
         }
-        public modifyContactData(contactData: Axis.Pollux.Domain.ContactData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/contact-data', contactData, config).then(oprc => {
-                if (contactData.EntityId <= 0) contactData.EntityId = oprc.data.Result;
+        public addContactData(contactData: Axis.Pollux.Domain.ContactData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/profiles/contact-data', contactData, config).then(oprc => {
+                contactData.EntityId = oprc.data.Result;
             });
+        }
+        public modifyContactData(contactData: Axis.Pollux.Domain.ContactData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/contact-data', contactData, config).then(oprc => { });
+        }
+        public persistContactData(contactData: Axis.Pollux.Domain.ContactData): ng.IPromise<void> {
+            if (contactData.EntityId <= 0) return this.addContactData(contactData);
+            else return this.modifyContactData(contactData);
         }
         public removeContactData(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
             return this.transport.delete<void>('/api/profiles/contact-data/?ids=' + ids.join(','), null, config).then(oprc => oprc.data);
@@ -111,14 +118,75 @@ module Gaia.Services {
                 return oprc.data;
             });
         }
-        public modifyCorporateData(corporateData: Axis.Pollux.Domain.CorporateData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+        public addCorporateData(corporateData: Axis.Pollux.Domain.CorporateData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
             return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => {
-                if (corporateData.EntityId <= 0) corporateData.EntityId = oprc.data.Result;
+                corporateData.EntityId = oprc.data.Result;
             });
+        }
+        public modifyCorporateData(corporateData: Axis.Pollux.Domain.CorporateData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => { });
+        }
+        public persistCorporateData(data: Axis.Pollux.Domain.CorporateData): ng.IPromise<void> {
+            if (data.EntityId <= 0) return this.addCorporateData(data);
+            else return this.modifyCorporateData(data);
         }
         public removeCorporateData(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
             return this.transport.delete<void>('/api/profiles/corporate-data/?ids=' + ids.join(','), null, config).then(oprc => oprc.data);
         }
+    }
+
+    export class UserAccountService {
+
+        public getServiceAccounts(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.ServiceAccount[]>> {
+            return this.transport.get<Axis.Luna.Domain.Operation<Gaia.Domain.ServiceAccount[]>>('/api/profiles/service-account', null, config).then(oprc => {
+                oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Gaia.Domain.ServiceAccount(_cd)) : null;
+                return oprc.data;
+            });
+        }
+        public addServiceAccount(serviceAccount: Gaia.Domain.ServiceAccount, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/profiles/service-account', serviceAccount, config).then(oprc => {
+                serviceAccount.EntityId = oprc.data.Result;
+            });
+        }
+        public modifyServiceAccount(serviceAccount: Gaia.Domain.ServiceAccount, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/service-account', serviceAccount, config).then(oprc => { });
+        }
+        public persistServiceAccount(data: Gaia.Domain.ServiceAccount): ng.IPromise<void> {
+            if (data.EntityId <= 0) this.addServiceAccount(data);
+            else return this.modifyServiceAccount(data);
+        }
+        public removeServiceAccount(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.delete<void>('/api/profiles/service-account/?ids=' + ids.join(','), null, config).then(oprc => oprc.data);
+        }
+
+
+        public getFarmAccounts(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.FarmAccount[]>> {
+            return this.transport.get<Axis.Luna.Domain.Operation<Gaia.Domain.FarmAccount[]>>('/api/profiles/farm-account', null, config).then(oprc => {
+                oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Gaia.Domain.FarmAccount(_cd)) : null;
+                return oprc.data;
+            });
+        }
+        public addFarmAccount(FarmAccount: Gaia.Domain.FarmAccount, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => {
+                FarmAccount.EntityId = oprc.data.Result;
+            });
+        }
+        public modifyFarmAccount(FarmAccount: Gaia.Domain.FarmAccount, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => { });
+        }
+        public persistFarmAccount(data: Gaia.Domain.FarmAccount): ng.IPromise<void> {
+            if (data.EntityId <= 0) this.addFarmAccount(data);
+            else return this.modifyFarmAccount(data);
+        }
+        public removeFarmAccount(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
+            return this.transport.delete<void>('/api/profiles/farm-account/?ids=' + ids.join(','), null, config).then(oprc => oprc.data);
+        }
+
+
+        static $inject = ["#gaia.utils.domainTransport"];
+        constructor(private transport: Gaia.Utils.Services.DomainTransport) {
+        }
+
     }
 }
 

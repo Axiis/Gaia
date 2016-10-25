@@ -437,27 +437,29 @@ namespace Gaia.Core.OAModule
                 if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultClientAccessProfile))
                     new[]
                     {
-                        "system/Profiles/Accounts/Farms/@add",
-                        "system/Profiles/Accounts/Farms/@remove",
-                        "system/Profiles/Accounts/Farms/@modify",
-                        "system/Profiles/Accounts/Farms/@get",
+                        "system/UserAccounts/Farms/@add",
+                        "system/UserAccounts/Farms/@remove",
+                        "system/UserAccounts/Farms/@modify",
+                        "system/UserAccounts/Farms/@get",
 
-                        "system/Profiles/Account/Services/@add",
-                        "system/Profiles/Account/Services/@remove",
-                        "system/Profiles/Account/Services/@modify",
-                        "system/Profiles/Account/Services/@get",
+                        "system/UserAccount/Services/@add",
+                        "system/UserAccount/Services/@remove",
+                        "system/UserAccount/Services/@modify",
+                        "system/UserAccount/Services/@get",
 
                         "system/Profiles/UserData/@remove",
                         "system/Profiles/UserData/@add",
                         "system/Profiles/UserData/@get",
-
+                        
                         "system/Profiles/BioData/@modify",
                         "system/Profiles/BioData/@get",
 
+                        "system/Profiles/ContactData/@add",
                         "system/Profiles/ContactData/@modify",
                         "system/Profiles/ContactData/@get",
                         "system/Profiles/ContactData/@remove",
 
+                        "system/Profiles/CorporateData/@add",
                         "system/Profiles/CorporateData/@modify",
                         "system/Profiles/CorporateData/@get",
                         "system/Profiles/CorporateData/@remove",

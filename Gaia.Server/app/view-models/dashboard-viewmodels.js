@@ -5,10 +5,17 @@ var Gaia;
         var Dashboard;
         (function (Dashboard) {
             var DashboardViewModel = (function () {
-                function DashboardViewModel(profileService, domModel, notifyService) {
+                function DashboardViewModel() {
+                }
+                return DashboardViewModel;
+            }());
+            Dashboard.DashboardViewModel = DashboardViewModel;
+            var ProfileViewModel = (function () {
+                function ProfileViewModel(profileService, domModel, notifyService) {
                     this.profileService = profileService;
                     this.domModel = domModel;
                     this.notifyService = notifyService;
+                    this.user = null;
                     ///<<Profile>
                     this.isEditingBioData = false;
                     this.isEditingContactData = false;
@@ -18,7 +25,6 @@ var Gaia;
                     this.hasBiodataPersistenceError = false;
                     this.hasContactdataPersistenceError = false;
                     this.hasProfileImagePersistenceError = false;
-                    this.user = null;
                     this.biodata = null;
                     this.contact = null;
                     ///<Profile Image Stuff>
@@ -30,15 +36,6 @@ var Gaia;
                     /// <Biodata-stuff>
                     ///<contact stuff>
                     this.isPersistingContactdata = false;
-                    /// </contact-stuff>
-                    ///</Profile>
-                    ///<Accounts>
-                    ///<businesses>
-                    this.businessList = [];
-                    this.isListingBusinesses = true;
-                    this.isEditingBusiness = false;
-                    this.isDetailingBusiness = false;
-                    this.currentBusinessData = null;
                     this.refreshBiodata();
                     this.refreshContactData();
                     this.refreshProfileImage();
@@ -48,7 +45,7 @@ var Gaia;
                         Stataus: 1
                     });
                 }
-                Object.defineProperty(DashboardViewModel.prototype, "profileImage", {
+                Object.defineProperty(ProfileViewModel.prototype, "profileImage", {
                     get: function () {
                         return this._profileImage;
                     },
@@ -59,7 +56,7 @@ var Gaia;
                     enumerable: true,
                     configurable: true
                 });
-                DashboardViewModel.prototype.profileImageUrl = function () {
+                ProfileViewModel.prototype.profileImageUrl = function () {
                     if (this.profileImage && this.profileImage.IsDataEmbeded)
                         return this.profileImage.EmbededDataUrl();
                     else if (this.profileImage)
@@ -67,7 +64,7 @@ var Gaia;
                     else
                         return '/content/images/default-image-200.jpg';
                 };
-                DashboardViewModel.prototype.removeProfileImage = function () {
+                ProfileViewModel.prototype.removeProfileImage = function () {
                     var _this = this;
                     if (this.isProfileImageChanged) {
                         this.profileImage = this._originalImage;
@@ -85,10 +82,11 @@ var Gaia;
                         }, function (e) {
                             _this.isRemovingProfileImage = false;
                             _this.hasProfileImagePersistenceError = true;
+                            _this.notifyService.error('Something went wrong while removing your profile image...', 'Oops!');
                         });
                     }
                 };
-                DashboardViewModel.prototype.persistProfileImage = function () {
+                ProfileViewModel.prototype.persistProfileImage = function () {
                     var _this = this;
                     if (this.isPersistingProfileImage)
                         return;
@@ -105,9 +103,10 @@ var Gaia;
                     }); }, function (e) {
                         _this.isPersistingProfileImage = false;
                         _this.hasProfileImagePersistenceError = true;
+                        _this.notifyService.error('Something went wrong while saving your profile image...', 'Oops!');
                     });
                 };
-                DashboardViewModel.prototype.refreshProfileImage = function () {
+                ProfileViewModel.prototype.refreshProfileImage = function () {
                     var _this = this;
                     this.profileService.getUserData().then(function (oprc) {
                         _this._originalImage = _this.profileImage = oprc.Result
@@ -117,7 +116,7 @@ var Gaia;
                         _this.isProfileImageChanged = false;
                     });
                 };
-                DashboardViewModel.prototype.nameDisplay = function () {
+                ProfileViewModel.prototype.nameDisplay = function () {
                     if (this.biodata) {
                         var names = [];
                         names.push(this.biodata.LastName);
@@ -130,47 +129,47 @@ var Gaia;
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.dobDisplay = function () {
+                ProfileViewModel.prototype.dobDisplay = function () {
                     if (this.biodata && this.biodata.Dob) {
-                        return this.biodata.Dob.toMoment().format('YYYY-MM-DD');
+                        return this.biodata.Dob.toMoment().format('Do MMM, YYYY');
                     }
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.genderDisplay = function () {
+                ProfileViewModel.prototype.genderDisplay = function () {
                     if (this.biodata && this.biodata.Gender != null && this.biodata.Gender != undefined) {
                         return Axis.Pollux.Domain.Gender[this.biodata.Gender];
                     }
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.nationalityDisplay = function () {
+                ProfileViewModel.prototype.nationalityDisplay = function () {
                     if (this.biodata && this.biodata.Nationality) {
                         return this.biodata.Nationality;
                     }
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.stateOfOriginDisplay = function () {
+                ProfileViewModel.prototype.stateOfOriginDisplay = function () {
                     if (this.biodata && this.biodata.StateOfOrigin) {
                         return this.biodata.StateOfOrigin;
                     }
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.isFirstNameSet = function () {
+                ProfileViewModel.prototype.isFirstNameSet = function () {
                     if (this.biodata && this.biodata.FirstName)
                         return true;
                     else
                         return false;
                 };
-                DashboardViewModel.prototype.isLastNameSet = function () {
+                ProfileViewModel.prototype.isLastNameSet = function () {
                     if (this.biodata && this.biodata.LastName)
                         return true;
                     else
                         return false;
                 };
-                Object.defineProperty(DashboardViewModel.prototype, "dobBinding", {
+                Object.defineProperty(ProfileViewModel.prototype, "dobBinding", {
                     get: function () {
                         return this._dobField;
                     },
@@ -183,7 +182,7 @@ var Gaia;
                     enumerable: true,
                     configurable: true
                 });
-                DashboardViewModel.prototype.persistBiodata = function () {
+                ProfileViewModel.prototype.persistBiodata = function () {
                     var _this = this;
                     if (this.isPersistingBiodata)
                         return;
@@ -196,40 +195,41 @@ var Gaia;
                     }, function (e) {
                         _this.hasBiodataPersistenceError = true;
                         _this.isPersistingBiodata = false;
+                        _this.notifyService.error('Something went wrong while saving your Bio data...', 'Oops!');
                     });
                 };
-                DashboardViewModel.prototype.refreshBiodata = function () {
+                ProfileViewModel.prototype.refreshBiodata = function () {
                     var _this = this;
                     this.profileService.getBioData().then(function (oprc) {
                         _this.biodata = oprc.Result || new Axis.Pollux.Domain.BioData();
                         _this._dobField = _this.biodata.Dob ? _this.biodata.Dob.toMoment().toDate() : null;
                     });
                 };
-                DashboardViewModel.prototype.phoneDisplay = function () {
+                ProfileViewModel.prototype.phoneDisplay = function () {
                     if (this.contact && this.contact.Phone)
                         return this.contact.Phone;
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.alternatePhoneDisplay = function () {
+                ProfileViewModel.prototype.alternatePhoneDisplay = function () {
                     if (this.contact && this.contact.AlternatePhone)
                         return this.contact.AlternatePhone;
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.emailDisplay = function () {
+                ProfileViewModel.prototype.emailDisplay = function () {
                     if (this.contact && this.contact.Email)
                         return this.contact.Email;
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.alternateEmailDisplay = function () {
+                ProfileViewModel.prototype.alternateEmailDisplay = function () {
                     if (this.contact && this.contact.AlternateEmail)
                         return this.contact.AlternateEmail;
                     else
                         return '-N/A-';
                 };
-                DashboardViewModel.prototype.persistContactData = function () {
+                ProfileViewModel.prototype.persistContactData = function () {
                     var _this = this;
                     if (this.isPersistingContactdata)
                         return;
@@ -242,20 +242,113 @@ var Gaia;
                     }, function (e) {
                         _this.hasContactdataPersistenceError = true;
                         _this.isPersistingContactdata = false;
+                        _this.notifyService.error('Something went wrong while saving your Contact data...', 'Oops!');
                     });
                 };
-                DashboardViewModel.prototype.refreshContactData = function () {
+                ProfileViewModel.prototype.refreshContactData = function () {
                     var _this = this;
                     this.profileService.getContactData().then(function (oprc) {
                         _this.contact = oprc.Result.firstOrDefault() || new Axis.Pollux.Domain.ContactData({ Email: _this.user.UserId });
                     });
                 };
-                DashboardViewModel.prototype.clearBusinessView = function () {
+                /// </contact-stuff>
+                ///</Profile>
+                ProfileViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
+                return ProfileViewModel;
+            }());
+            Dashboard.ProfileViewModel = ProfileViewModel;
+            var BusinessAccountViewModel = (function () {
+                function BusinessAccountViewModel(profileService, domModel, notifyService, counter) {
+                    this.profileService = profileService;
+                    this.domModel = domModel;
+                    this.notifyService = notifyService;
+                    this.user = null;
+                    this.businessList = [];
+                    this.currentBusinessData = null;
+                    this.isListingBusinesses = true;
+                    this.isEditingBusiness = false;
+                    this.isPersistingBusiness = false;
+                    this.isDetailingBusiness = false;
+                    this.hasBusinessPersistenceError = false;
+                    counter.businessVm = this;
+                    this.refreshBusinesss();
+                    this.user = new Axis.Pollux.Domain.User({
+                        UserId: domModel.simpleModel.UserId,
+                        EntityId: domModel.simpleModel.UserId,
+                        Stataus: 1
+                    });
+                }
+                Object.defineProperty(BusinessAccountViewModel.prototype, "businessIncorporationDateBinding", {
+                    get: function () {
+                        return this._incorporationDate;
+                    },
+                    set: function (value) {
+                        if (this.currentBusinessData) {
+                            this.currentBusinessData.IncorporationDate = new Axis.Apollo.Domain.JsonDateTime().fromMoment(moment.utc(value));
+                            this._incorporationDate = value;
+                        }
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                BusinessAccountViewModel.prototype.isDraft = function (business) {
+                    if (business)
+                        return business.Status == Gaia.Utils.BusinessStatus_Draft;
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.isRejected = function (business) {
+                    if (business)
+                        return business.Status == Gaia.Utils.BusinessStatus_Rejected;
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.isVerified = function (business) {
+                    if (business)
+                        return business.Status == Gaia.Utils.BusinessStatus_Verified;
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.isVerifying = function (business) {
+                    if (business)
+                        return business.Status == Gaia.Utils.BusinessStatus_Verifying;
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.isBusinessNameSet = function () {
+                    if (this.currentBusinessData && this.currentBusinessData.CorporateName) {
+                        return this.currentBusinessData.CorporateName.length > 0;
+                    }
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.isBusinessIdSet = function () {
+                    if (this.currentBusinessData && this.currentBusinessData.CorporateId) {
+                        return this.currentBusinessData.CorporateId.length > 0;
+                    }
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.isBusinessIncorporationDateSet = function () {
+                    if (this.currentBusinessData && this.currentBusinessData.IncorporationDate)
+                        return true;
+                    else
+                        return false;
+                };
+                BusinessAccountViewModel.prototype.backToListingBusinesses = function () {
+                    if (this.currentBusinessData['$nascent']) {
+                        this.businessList.remove(this.currentBusinessData);
+                        this.currentBusinessData = null;
+                    }
+                    this.clearBusinessView();
+                    this.isListingBusinesses = true;
+                };
+                BusinessAccountViewModel.prototype.clearBusinessView = function () {
                     this.isListingBusinesses = false;
                     this.isEditingBusiness = false;
                     this.isDetailingBusiness = false;
                 };
-                DashboardViewModel.prototype.getBusinessDescription = function (b) {
+                BusinessAccountViewModel.prototype.getBusinessDescription = function (b) {
                     if (b) {
                         if (b.Description && b.Description.length > 200)
                             return b.Description.substr(0, 200) + '...';
@@ -267,26 +360,31 @@ var Gaia;
                     else
                         return '';
                 };
-                DashboardViewModel.prototype.showBusinessDetails = function (b) {
+                BusinessAccountViewModel.prototype.showBusinessDetails = function (b) {
                     if (b) {
                         this.currentBusinessData = b;
                         this.clearBusinessView();
                         this.isDetailingBusiness = true;
                     }
                 };
-                DashboardViewModel.prototype.addBusiness = function () {
-                    var newobj = new Axis.Pollux.Domain.CorporateData();
+                BusinessAccountViewModel.prototype.addBusiness = function () {
+                    var newobj = new Axis.Pollux.Domain.CorporateData({ OwnerId: this.user.EntityId });
                     newobj.$nascent = true;
                     this.businessList = [newobj].concat(this.businessList);
+                    return newobj;
                 };
-                DashboardViewModel.prototype.editBusiness = function (b) {
+                BusinessAccountViewModel.prototype.addAndEditBusiness = function () {
+                    this.editBusiness(this.addBusiness());
+                };
+                BusinessAccountViewModel.prototype.editBusiness = function (b) {
                     if (b) {
                         this.currentBusinessData = b;
                         this.clearBusinessView();
                         this.isEditingBusiness = true;
+                        $('#richtext-editor').summernote('code', this.currentBusinessData.Description);
                     }
                 };
-                DashboardViewModel.prototype.removeBusiness = function (b) {
+                BusinessAccountViewModel.prototype.removeBusiness = function (b) {
                     var _this = this;
                     if (b && b.$nascent) {
                         this.businessList.remove(b);
@@ -297,43 +395,160 @@ var Gaia;
                             _this.businessList.remove(b);
                             _this.notifyService.success('Business data removed successfully', 'Alert');
                         }, function (e) {
-                            _this.notifyService.success('Something went wrong while removing your business data...', 'Oops!');
+                            _this.notifyService.error('Something went wrong while removing your business data...', 'Oops!');
                         });
                     }
                 };
-                DashboardViewModel.prototype.persistBusiness = function (b) {
+                BusinessAccountViewModel.prototype.persistCurrentBusinessData = function () {
+                    if (this.currentBusinessData) {
+                        this.currentBusinessData.Description = $('#richtext-editor').summernote('code');
+                        this.persistBusiness(this.currentBusinessData);
+                    }
+                };
+                BusinessAccountViewModel.prototype.persistBusiness = function (b) {
                     var _this = this;
                     if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
-                        this.profileService.modifyCorporateData(b)
-                            .then(function (oprc) {
-                            delete b.$nascent;
-                            _this.notifyService.success('Business data was saved successfully', 'Alert');
-                        }, function (e) {
-                            _this.notifyService.success('Something went wrong while saving your business data...', 'Oops!');
-                        });
+                        if (!this.isPersistingBusiness) {
+                            this.isPersistingBusiness = true;
+                            this.profileService.modifyCorporateData(b)
+                                .then(function (oprc) {
+                                delete b.$nascent;
+                                _this.notifyService.success('Business data was saved successfully', 'Alert');
+                                _this.isPersistingBusiness = false;
+                            }, function (e) {
+                                _this.notifyService.error('Something went wrong while saving your business data...', 'Oops!');
+                                _this.isPersistingBusiness = false;
+                            });
+                        }
                     }
                 };
-                DashboardViewModel.prototype.refreshBusinesss = function () {
+                BusinessAccountViewModel.prototype.refreshBusinesss = function () {
                     var _this = this;
                     this.profileService.getCorporateData()
                         .then(function (oprc) {
                         _this.currentBusinessData = null;
                         _this.businessList = oprc.Result || [];
                     }, function (e) {
+                        _this.notifyService.error('Something went wrong while retrieving your business data...', 'Oops!');
                     });
                 };
-                //</businesses>
-                ///</Accounts>
-                DashboardViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
-                return DashboardViewModel;
+                BusinessAccountViewModel.prototype.displayDate = function (date) {
+                    if (date)
+                        return date.toMoment().format('Do MMM, YYYY');
+                    else
+                        return '';
+                };
+                BusinessAccountViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+                return BusinessAccountViewModel;
             }());
-            Dashboard.DashboardViewModel = DashboardViewModel;
-            var ProfileViewModel = (function () {
-                function ProfileViewModel() {
+            Dashboard.BusinessAccountViewModel = BusinessAccountViewModel;
+            var ServiceAccountViewModel = (function () {
+                function ServiceAccountViewModel(accountService, domModel, notifyService, counter) {
+                    this.accountService = accountService;
+                    this.domModel = domModel;
+                    this.notifyService = notifyService;
+                    this.user = null;
+                    this.serviceList = [];
+                    this.currentService = null;
+                    this.isEditingService = false;
+                    this.isPersistingService = false;
+                    this.hasServicePersistenceError = false;
+                    counter.serviceVm = this;
+                    this.refreshServices();
+                    this.user = new Axis.Pollux.Domain.User({
+                        UserId: domModel.simpleModel.UserId,
+                        EntityId: domModel.simpleModel.UserId,
+                        Stataus: 1
+                    });
                 }
-                return ProfileViewModel;
+                ServiceAccountViewModel.prototype.persistService = function (service) {
+                    var _this = this;
+                    if (this.isPersistingService)
+                        return;
+                    this.isPersistingService = true;
+                    this.accountService.persistServiceAccount(service)
+                        .then(function (oprc) {
+                        _this.isEditingService = false;
+                        _this.hasServicePersistenceError = false;
+                        _this.isPersistingService = false;
+                    }, function (e) {
+                        _this.isPersistingService = false;
+                        _this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
+                    });
+                };
+                ServiceAccountViewModel.prototype.refreshServices = function () {
+                    var _this = this;
+                    this.accountService.getServiceAccounts().then(function (oprc) {
+                        _this.serviceList = oprc.Result || [];
+                    });
+                };
+                ServiceAccountViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+                return ServiceAccountViewModel;
             }());
-            Dashboard.ProfileViewModel = ProfileViewModel;
+            Dashboard.ServiceAccountViewModel = ServiceAccountViewModel;
+            var FarmAccountViewModel = (function () {
+                function FarmAccountViewModel(accountService, domModel, notifyService, counter) {
+                    this.accountService = accountService;
+                    this.domModel = domModel;
+                    this.notifyService = notifyService;
+                    this.user = null;
+                    this.farmList = [];
+                    this.currentService = null;
+                    this.isEditingFarm = false;
+                    this.isPersistingFarm = false;
+                    this.hasFarmPersistenceError = false;
+                    counter.farmVm = this;
+                    this.refreshServices();
+                    this.user = new Axis.Pollux.Domain.User({
+                        UserId: domModel.simpleModel.UserId,
+                        EntityId: domModel.simpleModel.UserId,
+                        Stataus: 1
+                    });
+                }
+                FarmAccountViewModel.prototype.persistFarm = function (farm) {
+                    var _this = this;
+                    if (this.isPersistingFarm)
+                        return;
+                    this.isPersistingFarm = true;
+                    this.accountService.persistFarmAccount(farm)
+                        .then(function (oprc) {
+                        _this.isEditingFarm = false;
+                        _this.hasFarmPersistenceError = false;
+                        _this.isPersistingFarm = false;
+                    }, function (e) {
+                        _this.isPersistingFarm = false;
+                        _this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
+                    });
+                };
+                FarmAccountViewModel.prototype.refreshServices = function () {
+                    var _this = this;
+                    this.accountService.getFarmAccounts().then(function (oprc) {
+                        _this.farmList = oprc.Result || [];
+                    });
+                };
+                FarmAccountViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+                return FarmAccountViewModel;
+            }());
+            Dashboard.FarmAccountViewModel = FarmAccountViewModel;
+            var AccountTabsViewModel = (function () {
+                function AccountTabsViewModel(counter) {
+                    this.counter = counter;
+                }
+                AccountTabsViewModel.$inject = ['#gaia.dashboard.localServices.AccountCounter'];
+                return AccountTabsViewModel;
+            }());
+            Dashboard.AccountTabsViewModel = AccountTabsViewModel;
+            ///local services
+            var AccountCounter = (function () {
+                function AccountCounter() {
+                    this.farmVm = null;
+                    this.serviceVm = null;
+                    this.businessVm = null;
+                }
+                AccountCounter.$inject = [];
+                return AccountCounter;
+            }());
+            Dashboard.AccountCounter = AccountCounter;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));

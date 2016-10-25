@@ -144,6 +144,14 @@ namespace Gaia.Server.Controllers
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
+        [HttpPost]
+        [Route("api/profiles/contact-data")]
+        public IHttpActionResult AddContactData([FromBody]ContactData data)
+            => _profileService.AddContactData(data)
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+
         [HttpDelete]
         [Route("api/profiles/contact-data")] //<-- http://abcd.xyz/api/profiles/contact-data/?ids=1,5,3,2,76,etc
         public IHttpActionResult RemoveContactData([FromUri]string ids)
@@ -164,8 +172,16 @@ namespace Gaia.Server.Controllers
 
         [HttpPut]
         [Route("api/profiles/corporate-data")]
-        public IHttpActionResult ModifyCorporate([FromBody]CorporateData data)
+        public IHttpActionResult ModifyCorporateData([FromBody]CorporateData data)
             => _profileService.ModifyCorporateData(data)
+                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
+                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
+                .Result;
+
+        [HttpPost]
+        [Route("api/profiles/corporate-data")]
+        public IHttpActionResult AddCorporateData([FromBody]CorporateData data)
+            => _profileService.AddCorporateData(data)
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;

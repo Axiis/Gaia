@@ -65,6 +65,57 @@ var Gaia;
             CommonDataType[CommonDataType["Object"] = 8] = "Object";
         })(Domain.CommonDataType || (Domain.CommonDataType = {}));
         var CommonDataType = Domain.CommonDataType;
+        (function (FarmType) {
+            FarmType[FarmType["Other"] = 0] = "Other";
+            FarmType[FarmType["Crop"] = 1] = "Crop";
+            FarmType[FarmType["Livestock"] = 2] = "Livestock";
+            FarmType[FarmType["Mixed"] = 3] = "Mixed";
+        })(Domain.FarmType || (Domain.FarmType = {}));
+        var FarmType = Domain.FarmType;
+        (function (ServiceType) {
+            ServiceType[ServiceType["Other"] = 0] = "Other";
+        })(Domain.ServiceType || (Domain.ServiceType = {}));
+        var ServiceType = Domain.ServiceType;
+        var FarmAccount = (function (_super) {
+            __extends(FarmAccount, _super);
+            function FarmAccount(data) {
+                _super.call(this, data);
+                this.OwnerId = null;
+                this.Owner = null;
+                this.Description = null;
+                this.FarmType = null;
+                this.GeoData = null;
+                this.BusinessAccounts = [];
+                if (data) {
+                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                }
+            }
+            //ContextData: ContextData[] = [];
+            FarmAccount.prototype.GeoArea = function () {
+                return Gaia.Utils.GeoArea.Parse(this.GeoData);
+            };
+            return FarmAccount;
+        }(GaiaEntity));
+        Domain.FarmAccount = FarmAccount;
+        var ServiceAccount = (function (_super) {
+            __extends(ServiceAccount, _super);
+            //ContextData: ContextData[] = [];
+            function ServiceAccount(data) {
+                _super.call(this, data);
+                this.OwnerId = null;
+                this.Owner = null;
+                this.Description = null;
+                this.ServiceType = null;
+                this.BusinessAccounts = [];
+                if (data) {
+                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    this.BusinessAccounts = (data['BusinessAccounts'] || [])
+                        .map(function (v) { return new Axis.Pollux.Domain.CorporateData(v); });
+                }
+            }
+            return ServiceAccount;
+        }(GaiaEntity));
+        Domain.ServiceAccount = ServiceAccount;
         var GaiaEntity = (function () {
             function GaiaEntity(data) {
                 if (data) {
@@ -80,8 +131,8 @@ var Gaia;
             __extends(FeatureURI, _super);
             function FeatureURI(data) {
                 _super.call(this, data);
-                if (data)
-                    data.copyTo(this);
+                if (data) {
+                }
             }
             return FeatureURI;
         }(GaiaEntity));
@@ -90,8 +141,8 @@ var Gaia;
             __extends(ProductCategory, _super);
             function ProductCategory(data) {
                 _super.call(this, data);
-                if (data)
-                    data.copyTo(this);
+                if (data) {
+                }
             }
             return ProductCategory;
         }(GaiaEntity));
@@ -100,8 +151,8 @@ var Gaia;
             __extends(ServiceCategory, _super);
             function ServiceCategory(data) {
                 _super.call(this, data);
-                if (data)
-                    data.copyTo(this);
+                if (data) {
+                }
             }
             return ServiceCategory;
         }(GaiaEntity));
@@ -111,7 +162,6 @@ var Gaia;
             function Advert(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
@@ -136,7 +186,6 @@ var Gaia;
             function AdvertHit(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -148,7 +197,6 @@ var Gaia;
             function Comment(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -160,7 +208,6 @@ var Gaia;
             function ContextVerification(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                     this.User = data['User'] ? new Axis.Pollux.Domain.User(data['User']) : null;
                 }
@@ -178,7 +225,6 @@ var Gaia;
             function FarmInfo(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -189,8 +235,8 @@ var Gaia;
             __extends(FeatureAccessDescriptor, _super);
             function FeatureAccessDescriptor(data) {
                 _super.call(this, data);
-                if (data)
-                    data.copyTo(this);
+                if (data) {
+                }
             }
             return FeatureAccessDescriptor;
         }(GaiaEntity));
@@ -201,7 +247,6 @@ var Gaia;
                 _super.call(this, data);
                 this.AccessDescriptors = [];
                 if (data) {
-                    data.copyTo(this);
                     this.AccessDescriptors = (data['AccessDescriptors'] || []).map(function (v) {
                         return new FeatureAccessDescriptor(v);
                     });
@@ -214,7 +259,6 @@ var Gaia;
         var FeedEntry = (function () {
             function FeedEntry(data) {
                 if (data) {
-                    data.copyTo(this);
                     this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
                     this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
                 }
@@ -227,7 +271,6 @@ var Gaia;
             function PinnedFeedEntry(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.PinnedOn = data['PinnedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['PinnedOn']) : null;
                 }
             }
@@ -239,7 +282,6 @@ var Gaia;
             function ForumThread(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -251,7 +293,6 @@ var Gaia;
             function ForumThreadWatch(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -262,8 +303,8 @@ var Gaia;
             __extends(ForumTopic, _super);
             function ForumTopic(data) {
                 _super.call(this, data);
-                if (data)
-                    data.copyTo(this);
+                if (data) {
+                }
             }
             return ForumTopic;
         }(GaiaEntity));
@@ -273,7 +314,6 @@ var Gaia;
             function Notification(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.TargetUser = data['TargetUser'] ? new Axis.Pollux.Domain.User(data['TargetUser']) : null;
                 }
             }
@@ -285,7 +325,6 @@ var Gaia;
             function PinnedFeed(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -297,7 +336,6 @@ var Gaia;
             function Post(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -309,7 +347,6 @@ var Gaia;
             function Rating(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }
@@ -321,7 +358,6 @@ var Gaia;
             function ServiceInfo(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                     this.Category = data['Category'] ? new Gaia.Domain.ServiceCategory(data['Category']) : null;
                 }
@@ -333,8 +369,8 @@ var Gaia;
             __extends(SystemSetting, _super);
             function SystemSetting(data) {
                 _super.call(this, data);
-                if (data)
-                    data.copyTo(this);
+                if (data) {
+                }
             }
             return SystemSetting;
         }(GaiaEntity));
@@ -344,7 +380,6 @@ var Gaia;
             function UserAccessProfile(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
@@ -362,7 +397,6 @@ var Gaia;
             function UserReaction(data) {
                 _super.call(this, data);
                 if (data) {
-                    data.copyTo(this);
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
             }

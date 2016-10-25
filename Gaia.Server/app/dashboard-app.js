@@ -15,10 +15,15 @@ var Gaia;
             Dashboard.module.service('#gaia.utils.domainTransport', Gaia.Utils.Services.DomainTransport);
             Dashboard.module.service('#gaia.utils.domModel', Gaia.Utils.Services.DomModelService);
             Dashboard.module.service('#gaia.utils.notify', Gaia.Utils.Services.NotifyService);
+            Dashboard.module.service('#gaia.dashboard.localServices.AccountCounter', Gaia.ViewModels.Dashboard.AccountCounter);
             ///ViewModels
             Dashboard.module.controller('NavbarViewModel', Gaia.ViewModels.Shared.NavbarViewModel);
             Dashboard.module.controller('DashboardViewModel', Gaia.ViewModels.Dashboard.DashboardViewModel);
             Dashboard.module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
+            Dashboard.module.controller('BusinessAccountViewModel', Gaia.ViewModels.Dashboard.BusinessAccountViewModel);
+            Dashboard.module.controller('ServiceAccountViewModel', Gaia.ViewModels.Dashboard.ServiceAccountViewModel);
+            Dashboard.module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
+            Dashboard.module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
             //configure states
             Dashboard.module.config(function ($stateProvider, $urlRouterProvider) {
                 $urlRouterProvider.otherwise('/dashboard');

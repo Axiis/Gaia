@@ -25,34 +25,43 @@ namespace Gaia.Core.Services
         [Feature("system/Profiles/@verify-registration-verification")]
         Operation VerifyUserRegistration(string targetUser, string contextToken);
 
-
+        #region Biodata
         [Feature("system/Profiles/BioData/@modify")]
-        Operation<long> ModifyBioData(BioData data);
+        Operation ModifyBioData(BioData data);
 
         [Feature("system/Profiles/BioData/@get")]
         Operation<BioData> GetBioData();
+        #endregion
 
+        #region Contact data
+        [Feature("system/Profiles/ContactData/@add")]
+        Operation<long> AddContactData(ContactData data);
 
         [Feature("system/Profiles/ContactData/@modify")]
-        Operation<long> ModifyContactData(ContactData data);
+        Operation ModifyContactData(ContactData data);
 
         [Feature("system/Profiles/ContactData/@remove")]
         Operation RemoveContactData(long[] ids);
 
         [Feature("system/Profiles/ContactData/@get")]
         Operation<IEnumerable<ContactData>> GetContactData();
+        #endregion
 
+        #region Corporate Data
+        [Feature("system/Profiles/CorporateData/@add")]
+        Operation<long> AddCorporateData(CorporateData data);
 
-        [Feature("system/Profiles/Corporate/@modify")]
-        Operation<long> ModifyCorporateData(CorporateData data);
+        [Feature("system/Profiles/CorporateData/@modify")]
+        Operation ModifyCorporateData(CorporateData data);
 
         [Feature("system/Profiles/CorporateData/@remove")]
         Operation RemoveCorporateData(long[] ids);
 
-        [Feature("system/Profiles/Corporate/@get")]
+        [Feature("system/Profiles/CorporateData/@get")]
         Operation<IEnumerable<CorporateData>> GetCorporateData();
+        #endregion
 
-
+        #region User data
         [Feature("system/Profiles/UserData/@add")]
         Operation<IEnumerable<long>> AddData(UserData[] data);
 
@@ -61,6 +70,7 @@ namespace Gaia.Core.Services
 
         [Feature("system/Profiles/UserData/@get")]
         Operation<IEnumerable<UserData>> GetUserData();
+        #endregion
 
 
         [Feature("system/Profiles/@archive-user")]

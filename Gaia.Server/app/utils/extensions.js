@@ -28,6 +28,16 @@ var Gaia;
             configurable: false,
             enumerable: false
         });
+        Object.defineProperty(Object.prototype, 'with', {
+            value: function (obj) {
+                if (obj)
+                    obj.copyTo(this);
+                return this;
+            },
+            writable: false,
+            configurable: false,
+            enumerable: false
+        });
         Object.defineProperty(Object.prototype, 'project', {
             value: function (f) {
                 if (typeof f === 'function')
@@ -114,8 +124,16 @@ var Gaia;
         });
         Object.defineProperty(String.prototype, 'trimChars', {
             value: function (str) {
-                var _this = this;
-                return _this.trimLeft(str).trimRight(str);
+                var sar;
+                if (typeof str === 'string')
+                    sar = [str];
+                else
+                    sar = str;
+                var localString = this;
+                sar.forEach(function (v) {
+                    localString = localString.trimLeft(v).trimRight(v);
+                });
+                return localString;
             },
             writable: false,
             configurable: false,

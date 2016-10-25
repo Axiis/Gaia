@@ -47,7 +47,7 @@
                                             <a class="btn btn-icon btn-success" 
                                                ng-click="vm.persistProfileImage()"
                                                ng-show="vm.isProfileImageChanged">
-                                                <i class="fa fa-floppy-o" style="font-size:17px;"
+                                                <i class="icon-thumbs-up3"
                                                    ng-hide="vm.isPersistingProfileImage"></i>
                                                 <div id="persist-profileImage-ring-loader" ng-show="vm.isPersistingProfileImage"></div>
                                             </a>
@@ -109,7 +109,7 @@
                                                     ng-click="vm.persistBiodata()" 
                                                     type="button" 
                                                     class="btn btn-xs btn-success">
-                                                <i class="fa fa-floppy-o" ng-hide="vm.isPersistingBiodata"></i>
+                                                <i class="icon-thumbs-up3" ng-hide="vm.isPersistingBiodata"></i>
                                                 <div id="bio-ring-loader" ng-show="vm.isPersistingBiodata"></div>
 
                                                 &nbsp;Ok</button>
@@ -232,7 +232,7 @@
                                                     ng-click="vm.persistContactData()"
                                                     type="button"
                                                     class="btn btn-xs btn-success">
-                                                <i class="fa fa-floppy-o" ng-hide="vm.isPersistingContactdata"></i>
+                                                <i class="icon-thumbs-up3" ng-hide="vm.isPersistingContactdata"></i>
                                                 <div id="contact-ring-loader" ng-show="vm.isPersistingContactdata"></div>
 
                                                 &nbsp;Ok
@@ -325,888 +325,399 @@
 
                         <!-- Page tabs -->
                         <div class="tabbable page-tabs">
-                            <ul class="nav nav-pills nav-justified">
-                                <li class="active"><a href="#businesses" data-toggle="tab"><i class="icon-paragraph-justify2"></i> Businesses</a></li>
-                                <li class=""><a href="#stats" data-toggle="tab"><i class="icon-stats2"></i> Services <i class="icon-spinner7 spin pull-right"></i></a></li>
-                                <li class=""><a href="#profile-messages" data-toggle="tab"><i class="icon-bubbles3"></i> Farms <span class="label label-danger">12</span></a></li>
+
+                            <ul class="nav nav-pills nav-justified"
+                                ng-controller="AccountTabsViewModel as vm">
+                                <li class="active">
+                                    <a href="#businesses" data-toggle="tab">
+                                        <i class="icon-briefcase"></i> Businesses
+                                        <span ng-show="vm.businessList.length>0" class="label label-primary">{{vm.businessVm.businessList.length}}</span>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#services" data-toggle="tab">
+                                        <i class="icon-stats2"></i> Services 
+                                        <span ng-show="vm.serviceList.length>0" class="label label-primary">{{vm.serviceVm.serviceList.length}}</span>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#farms" data-toggle="tab"><i class="icon-bubbles3"></i> Farms 
+                                        <span ng-show="vm.farmList.length>0" class="label label-primary">{{vm.farmVm.farmList.length}}</span>
+                                    </a>
+                                </li>
                             </ul>
+
                             <div class="tab-content">
 
                                 <!-- First tab -->
-                                <div class="tab-pane fade in active" id="businesses">
+                                <div class="tab-pane fade in active" id="businesses"
+                                     ng-controller="BusinessAccountViewModel as vm">
 
-                                    <div class="" style="text-align:right; margin-bottom:10px;">
-                                        <button type="button" 
-                                                ng-click="vm.addBusiness()"
-                                                class="btn btn-sm btn-default"><i style="font-size:16px;" class="fa fa-plus"></i>&nbsp;&nbsp;Add</button>
-                                    </div>
+                                    <div ng-show="vm.isListingBusinesses">
 
+                                        <div class="" style="text-align:right; margin-bottom:10px;">
+                                            <button type="button"
+                                                    ng-click="vm.addAndEditBusiness()"
+                                                    class="btn btn-sm btn-info">
+                                                <i style="font-size:16px;" class="fa fa-plus"></i>&nbsp;&nbsp;Add
+                                            </button>
+                                            <hr style="margin-top:10px;" />
+                                        </div>
 
-                                    <div style="text-align:center;">
-                                        <h2 class="text-warning" style="text-align:center;">Oops!</h2>
-                                        <p class="text-muted" style="font-size:16px;">
-                                            You haven't added any business accounts to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
-                                        </p>
-                                    </div>
+                                        <div style="text-align:center;" ng-hide="vm.businessList.length>0">
+                                            <h2 class="text-muted" style="text-align:center;">Oops!</h2>
+                                            <p class="text-muted" style="font-size:16px;">
+                                                You haven't added any business accounts to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
+                                            </p>
+                                        </div>
 
-                                    <div class="block task task-low"
-                                         ng-repeat="business in vm.businessList">
-                                        <div class="row with-padding">
-                                            <div class="col-sm-9">
-                                                <div class="task-description">
-                                                    <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName}}</a>
-                                                    <i>{{business.CorporateId}}</i>
-                                                    <span>{{vm.getBusinessDescription(business)}}</span>
+                                        <div class="block task task-low"
+                                             ng-repeat="business in vm.businessList">
+                                            <div class="row with-padding">
+                                                <div class="col-sm-9">
+                                                    <div class="task-description">
+                                                        <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
+                                                        <i>{{business.CorporateId}}</i>
+                                                        <span ng-bind-html="vm.getBusinessDescription(business)"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="task-info">
+                                                        <span>{{vm.displayDate(business.IncorporationDate)}}</span>
+
+                                                        <span>
+                                                            <span ng-show="vm.isDraft(business)"
+                                                                  class="label label-default">
+                                                                Draft
+                                                            </span>
+                                                            <span ng-show="vm.isVerified(business)"
+                                                                  class="label label-success">
+                                                                Verified
+                                                            </span>
+                                                            <span ng-show="vm.isVerifying(business)"
+                                                                  class="label label-warning">
+                                                                Verifying
+                                                            </span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <div class="task-info">
-                                                    <span>{{business.IncorporationDate}}</span>
-
-                                                    <span>
-                                                        <span ng-show="business.Status == Gaia.Utils.BusinessStatus_Verified"
-                                                              class="label label-success">Verified
-                                                        </span>
-                                                        <span ng-show="business.Status == Gaia.Utils.BusinessStatus_Verifying"
-                                                              class="label label-warning">Verifying
-                                                        </span>
-                                                    </span>
+                                            <div class="panel-footer">
+                                                <div class="pull-right">
+                                                    <ul class="footer-icons-group">
+                                                        <li ng-show="vm.isDraft(business)">
+                                                            <a ng-click="vm.editBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
+                                                        </li>
+                                                        <li ng-show="vm.isDraft(business)">
+                                                            <a ng-click="vm.removeBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="icon-remove3 text-danger"></i></a>
+                                                        </li>
+                                                        <li ng-show="vm.isDraft(business)">
+                                                            <a ng-click="" data-toggle="tooltip" data-placement="bottom" title="Submit for Verification"><i class="icon-checkmark3 text-success"></i></a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="panel-footer">
-                                            <div class="pull-right">
-                                                <ul class="footer-icons-group">
-                                                    <li ng-show="business.Status == Gaia.Utils.BusinessStatus_Draft">
-                                                        <a ng-click="vm.editBusiness(business)"><i class="icon-pencil"></i></a>
-                                                    </li>
-                                                    <li ng-show="business.Status == Gaia.Utils.BusinessStatus_Draft">
-                                                        <a ng-click="vm.removeBusiness(business)"><i class="icon-remove3"></i></a>
-                                                    </li>
-                                                    <li ng-show="business.Status == Gaia.Utils.BusinessStatus_Draft">
-                                                        <a ng-click=""><i class="icon-checkmark3"></i></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
                                     </div>
 
+                                    <div ng-show="vm.isEditingBusiness">
+
+                                        <form action="#" class="block" role="form">
+
+                                            <h6 class="heading-hr clearfix">
+                                                <i class="icon-user"></i> Corporate information:
+
+                                                <span style="display:inline-block; float:right;" class="btn-group">
+                                                    <button ng-click="vm.backToListingBusinesses()"
+                                                            type="button"
+                                                            class="btn btn-xs btn-default">
+                                                        <i class="icon-arrow-left4"></i>
+                                                        &nbsp;Back
+                                                    </button>
+                                                    <button ng-click="vm.persistCurrentBusinessData()"
+                                                            type="button"
+                                                            class="btn btn-xs btn-success">
+                                                        <i class="icon-thumbs-up3" ng-hide="vm.isPersistingBusiness"></i>
+                                                        <div id="persist-business-ring-loader" ng-show="vm.isPersistingBusiness"></div>
+                                                        &nbsp;Ok
+                                                    </button>
+                                                </span>
+                                            </h6>
+
+                                            <div class="block-inner">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Corporate Name</label>
+                                                            <input type="text" ng-model="vm.currentBusinessData.CorporateName" placeholder="Business name" class="form-control">
+                                                            <label ng-hide="vm.isBusinessNameSet()" class="error">This field is required.</label>
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>CAC Ref/Id</label>
+                                                            <input type="text" ng-model="vm.currentBusinessData.CorporateId" placeholder="CAC Ref/Id, etc..." class="form-control">
+                                                            <label ng-hide="vm.isBusinessIdSet()" class="error">This field is required.</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Incorporation date</label>
+                                                            <input class="form-control" type="date" name="date" ng-model="vm.businessIncorporationDateBinding" />
+                                                            <label ng-hide="vm.isBusinessIncorporationDateSet()" class="error">This field is required.</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Company description - other information about the business</label>
+                                                            <div id="richtext-editor"></div>
+                                                            <script type="text/javascript">
+
+    $(function () {
+    
+        $('#richtext-editor').summernote({
+            toolbar: [['style', ['style']],
+                      ['font', ['bold', 'italic', 'underline', 'clear', 'fontname']],
+                      ['fontsize', ['fontsize']],
+                      ['color', ['color']],
+                      ['para', ['ul', 'ol', 'paragraph', 'height']],
+                      ['insert', ['table', 'link', 'picture', 'hr']]],
+            height: 250
+        });
+    });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="jgrowl-showcase">
+                                                <div class="jGrowl" ng-show="vm.hasBusinessPersistenceError">
+                                                    <div class="jGrowl-notification growl-error">
+                                                        <div class="jGrowl-close" ng-click="vm.hasBusinessPersistenceError = false">×</div>
+                                                        <div class="jGrowl-header">Error!</div>
+                                                        <div class="jGrowl-message">Something went wrong while saving your changes</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                    <div ng-show="vm.isDetailingBusiness">
+                                        <div class="clearfix">
+                                            <i class="icon-briefcase pull-left" style="font-size:40px;"></i>
+                                            <button ng-click="vm.backToListingBusinesses()"
+                                                    type="button"
+                                                    class="btn btn-xs btn-default pull-right">
+                                                <i class="icon-arrow-left4"></i>
+                                                &nbsp;Back
+                                            </button>
+                                        </div>
+                                        <hr style="margin-top:10px;" />
+                                        <span class="label" ng-class="vm.businessStatusClass(this.currentBusinessData)">{{vm.businessStatus(this.currentBusiness)}}</span>
+                                        <h2>
+                                            {{vm.currentBusinessData.CorporateName}}
+                                            <small class="display-block" style="margin-top:20px;">{{vm.currentBusinessData.CorporateId}}</small>
+                                            <small class="display-block" style="margin-top:20px;">
+                                                <span class="text-warning">Incorporated on </span> <strong>{{vm.displayDate(vm.currentBusinessData.IncorporationDate)}}</strong>
+                                            </small>
+                                        </h2>
+                                        <hr />
+                                        <div style="margin-top:20px;" ng-bind-html="vm.currentBusinessData.Description"></div>
+
+                                    </div>
 
                                 </div>
                                 <!-- /first tab -->
 
                                 <!-- Second tab -->
-                                <div class="tab-pane fade" id="stats">
+                                <div class="tab-pane fade" id="services"
+                                     ng-controller="ServiceAccountViewModel as vm">
 
-                                    <!-- Stats graphs -->
-                                    <h6><i class="icon-bars"></i> Profile statistics</h6>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="block">
-                                                <div class="bg-success realtime-stats">
-                                                    <div id="updating-widget-1" class="graph" style="padding: 0px; position: relative;"><canvas class="flot-base" width="394" height="150" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 394px; height: 150px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 143px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">0</div><div style="position: absolute; top: 109px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">5</div><div style="position: absolute; top: 75px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">10</div><div style="position: absolute; top: 41px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">15</div><div style="position: absolute; top: 7px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">20</div></div></div><canvas class="flot-overlay" width="394" height="150" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 394px; height: 150px;"></canvas></div>
+                                    <div ng-show="vm.isListingServices">
+
+                                        <div class="" style="text-align:right; margin-bottom:10px;">
+                                            <button type="button"
+                                                    ng-click="vm.addAndEditService()"
+                                                    class="btn btn-sm btn-info">
+                                                <i style="font-size:16px;" class="fa fa-plus"></i>&nbsp;&nbsp;Add
+                                            </button>
+                                            <hr style="margin-top:10px;" />
+                                        </div>
+
+                                        <div style="text-align:center;" ng-hide="vm.businessList.length>0">
+                                            <h2 class="text-muted" style="text-align:center;">Oops!</h2>
+                                            <p class="text-muted" style="font-size:16px;">
+                                                You haven't added any business accounts to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
+                                            </p>
+                                        </div>
+
+                                        <div class="block task task-low"
+                                             ng-repeat="business in vm.businessList">
+                                            <div class="row with-padding">
+                                                <div class="col-sm-9">
+                                                    <div class="task-description">
+                                                        <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
+                                                        <i>{{business.CorporateId}}</i>
+                                                        <span ng-bind-html="vm.getBusinessDescription(business)"></span>
+                                                    </div>
                                                 </div>
+                                                <div class="col-sm-3">
+                                                    <div class="task-info">
+                                                        <span>{{vm.displayDate(business.IncorporationDate)}}</span>
 
-                                                <div class="section-details text-center container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-xs-4">
-                                                            13.5 M <span>total visits</span>
-                                                        </div>
-                                                        <div class="col-xs-4">
-                                                            12.245 <span>new visitors</span>
-                                                        </div>
-                                                        <div class="col-xs-4">
-                                                            $34.290 <span>current balance</span>
-                                                        </div>
+                                                        <span>
+                                                            <span ng-show="vm.isDraft(business)"
+                                                                  class="label label-default">
+                                                                Draft
+                                                            </span>
+                                                            <span ng-show="vm.isVerified(business)"
+                                                                  class="label label-success">
+                                                                Verified
+                                                            </span>
+                                                            <span ng-show="vm.isVerifying(business)"
+                                                                  class="label label-warning">
+                                                                Verifying
+                                                            </span>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="block">
-                                                <div class="bg-info realtime-stats">
-                                                    <div id="updating-widget-2" class="graph" style="padding: 0px; position: relative;"><canvas class="flot-base" width="394" height="150" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 394px; height: 150px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 143px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">0</div><div style="position: absolute; top: 109px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">5</div><div style="position: absolute; top: 75px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">10</div><div style="position: absolute; top: 41px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">15</div><div style="position: absolute; top: 7px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">20</div></div></div><canvas class="flot-overlay" width="394" height="150" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 394px; height: 150px;"></canvas></div>
-                                                </div>
-
-                                                <div class="section-details text-center container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-xs-4">
-                                                            431 <span>new orders</span>
-                                                        </div>
-                                                        <div class="col-xs-4">
-                                                            45.209 <span>total orders</span>
-                                                        </div>
-                                                        <div class="col-xs-4">
-                                                            $51.356 <span>total value</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="block">
-                                                <div class="bg-danger realtime-stats">
-                                                    <div id="updating-widget-3" class="graph" style="padding: 0px; position: relative;"><canvas class="flot-base" width="394" height="150" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 394px; height: 150px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 143px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">0</div><div style="position: absolute; top: 109px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">5</div><div style="position: absolute; top: 75px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">10</div><div style="position: absolute; top: 41px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">15</div><div style="position: absolute; top: 7px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(255, 255, 255); left: 5px; text-align: right;">20</div></div></div><canvas class="flot-overlay" width="394" height="150" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 394px; height: 150px;"></canvas></div>
-                                                </div>
-
-                                                <div class="section-details text-center container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-xs-4">
-                                                            35.1 Gb <span>data uploaded</span>
-                                                        </div>
-                                                        <div class="col-xs-4">
-                                                            92.56 Gb <span>data downloaded</span>
-                                                        </div>
-                                                        <div class="col-xs-4">
-                                                            104.45 Gb <span>available space</span>
-                                                        </div>
-                                                    </div>
+                                            <div class="panel-footer">
+                                                <div class="pull-right">
+                                                    <ul class="footer-icons-group">
+                                                        <li ng-show="vm.isDraft(business)">
+                                                            <a ng-click="vm.editBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
+                                                        </li>
+                                                        <li ng-show="vm.isDraft(business)">
+                                                            <a ng-click="vm.removeBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="icon-remove3 text-danger"></i></a>
+                                                        </li>
+                                                        <li ng-show="vm.isDraft(business)">
+                                                            <a ng-click="" data-toggle="tooltip" data-placement="bottom" title="Submit for Verification"><i class="icon-checkmark3 text-success"></i></a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /stats graphs -->
-                                    <!-- Auto updating graph (filled) -->
-                                    <div class="block">
-                                        <h6><i class="icon-calendar2"></i> Filled updating graph</h6>
-                                        <div class="graph-standard" id="auto_filled" style="padding: 0px; position: relative;"><canvas class="flot-base" width="1339" height="250" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 1339px; height: 250px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; max-width: 20px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 20px; text-align: center;">0</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 148px; text-align: center;">2</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 279px; text-align: center;">4</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 410px; text-align: center;">6</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 541px; text-align: center;">8</div><div style="position: absolute; max-width: 20px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 676px; text-align: center;">10</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 800px; text-align: center;">12</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 931px; text-align: center;">14</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 1062px; text-align: center;">16</div><div style="position: absolute; max-width: 121px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 1193px; text-align: center;">18</div><div style="position: absolute; max-width: 20px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 1331px; text-align: center;">20</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 8px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">20</div><div style="position: absolute; top: 229px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">0</div><div style="position: absolute; top: 174px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">5</div><div style="position: absolute; top: 119px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">10</div><div style="position: absolute; top: 63px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">15</div></div></div><canvas class="flot-overlay" width="1339" height="250" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 1339px; height: 250px;"></canvas></div>
-                                    </div>
-                                    <!-- /auto updating graph (filled) -->
-                                    <!-- Animated graphs -->
-                                    <div class="row">
-                                        <div class="col-md-6">
 
-                                            <!-- Animated graph 1 -->
-                                            <div class="block">
-                                                <h6><i class="icon-calendar2"></i> Animated graph 1</h6>
-                                                <div class="graph-standard" id="animated_1" style="padding: 0px; position: relative;"><canvas class="flot-base" width="655" height="250" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 655px; height: 250px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 12px; text-align: center;">0.0</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 90px; text-align: center;">2.5</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 168px; text-align: center;">5.0</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 246px; text-align: center;">7.5</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 321px; text-align: center;">10.0</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 399px; text-align: center;">12.5</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 477px; text-align: center;">15.0</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 555px; text-align: center;">17.5</div><div style="position: absolute; max-width: 72px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 633px; text-align: center;">20.0</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 8px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">5.0</div><div style="position: absolute; top: 229px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">0.0</div><div style="position: absolute; top: 185px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">1.0</div><div style="position: absolute; top: 141px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">2.0</div><div style="position: absolute; top: 96px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">3.0</div><div style="position: absolute; top: 52px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">4.0</div></div></div><canvas class="flot-overlay" width="655" height="250" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 655px; height: 250px;"></canvas><div class="legend"><div style="position: absolute; width: 106px; height: 36px; top: 13px; right: 16px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:13px;right:16px;;font-size:smaller;color:#333333"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(238,121,81);overflow:hidden"></div></div></td><td class="legendLabel">Fill this</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(59,178,217);overflow:hidden"></div></div></td><td class="legendLabel">Standard Values</td></tr></tbody></table></div></div>
+                                    <!--
+                                    <div ng-show="vm.isEditingBusiness">
+
+                                        <form action="#" class="block" role="form">
+
+                                            <h6 class="heading-hr clearfix">
+                                                <i class="icon-user"></i> Corporate information:
+
+                                                <span style="display:inline-block; float:right;" class="btn-group">
+                                                    <button ng-click="vm.backToListingBusinesses()"
+                                                            type="button"
+                                                            class="btn btn-xs btn-default">
+                                                        <i class="icon-arrow-left4"></i>
+                                                        &nbsp;Back
+                                                    </button>
+                                                    <button ng-click="vm.persistCurrentBusinessData()"
+                                                            type="button"
+                                                            class="btn btn-xs btn-success">
+                                                        <i class="icon-thumbs-up3" ng-hide="vm.isPersistingBusiness"></i>
+                                                        <div id="persist-business-ring-loader" ng-show="vm.isPersistingBusiness"></div>
+                                                        &nbsp;Ok
+                                                    </button>
+                                                </span>
+                                            </h6>
+
+                                            <div class="block-inner">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label>Corporate Name</label>
+                                                            <input type="text" ng-model="vm.currentBusinessData.CorporateName" placeholder="Business name" class="form-control">
+                                                            <label ng-hide="vm.isBusinessNameSet()" class="error">This field is required.</label>
+
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>CAC Ref/Id</label>
+                                                            <input type="text" ng-model="vm.currentBusinessData.CorporateId" placeholder="CAC Ref/Id, etc..." class="form-control">
+                                                            <label ng-hide="vm.isBusinessIdSet()" class="error">This field is required.</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label>Incorporation date</label>
+                                                            <input class="form-control" type="date" name="date" ng-model="vm.businessIncorporationDateBinding" />
+                                                            <label ng-hide="vm.isBusinessIncorporationDateSet()" class="error">This field is required.</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Company description - other information about the business</label>
+                                                            <div id="services-richtext-editor"></div>
+                                                            <script type="text/javascript">
+
+    $(function () {
+
+        $('#services-richtext-editor').summernote({
+            toolbar: [['style', ['style']],
+                      ['font', ['bold', 'italic', 'underline', 'clear', 'fontname']],
+                      ['fontsize', ['fontsize']],
+                      ['color', ['color']],
+                      ['para', ['ul', 'ol', 'paragraph', 'height']],
+                      ['insert', ['table', 'link', 'picture', 'hr']]],
+            height: 250
+        });
+    });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <!-- /animated graph 1 -->
 
-                                        </div>
-
-                                        <div class="col-md-6">
-
-                                            <!-- Animated graph 2 -->
-                                            <div class="block">
-                                                <h6><i class="icon-calendar2"></i> Animated graph 2</h6>
-                                                <div class="graph-standard" id="animated_2" style="padding: 0px; position: relative;"><canvas class="flot-base" width="655" height="250" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 655px; height: 250px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 12px; text-align: center;">0.0</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 90px; text-align: center;">2.5</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 169px; text-align: center;">5.0</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 247px; text-align: center;">7.5</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 322px; text-align: center;">10.0</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 401px; text-align: center;">12.5</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 479px; text-align: center;">15.0</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 558px; text-align: center;">17.5</div><div style="position: absolute; max-width: 65px; top: 244px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 636px; text-align: center;">20.0</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div style="position: absolute; top: 8px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">1.5</div><div style="position: absolute; top: 229px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">-1.5</div><div style="position: absolute; top: 192px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">-1.0</div><div style="position: absolute; top: 155px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">-0.5</div><div style="position: absolute; top: 119px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">0.0</div><div style="position: absolute; top: 82px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">0.5</div><div style="position: absolute; top: 45px; font-style: normal; font-variant: normal; font-weight: 400; font-stretch: normal; font-size: 11px; line-height: 1px; font-family: &quot;Open Sans&quot;, sans-serif; color: rgb(51, 51, 51); left: 5px; text-align: right;">1.0</div></div></div><canvas class="flot-overlay" width="655" height="250" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 655px; height: 250px;"></canvas><div class="legend"><div style="position: absolute; width: 50px; height: 18px; top: 13px; right: 13px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:13px;right:13px;;font-size:smaller;color:#333333"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(59,178,217);overflow:hidden"></div></div></td><td class="legendLabel">sin(x)</td></tr></tbody></table></div></div>
+                                            <div class="jgrowl-showcase">
+                                                <div class="jGrowl" ng-show="vm.hasBusinessPersistenceError">
+                                                    <div class="jGrowl-notification growl-error">
+                                                        <div class="jGrowl-close" ng-click="vm.hasBusinessPersistenceError = false">×</div>
+                                                        <div class="jGrowl-header">Error!</div>
+                                                        <div class="jGrowl-message">Something went wrong while saving your changes</div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <!-- /animated graph 2 -->
 
-                                        </div>
+                                        </form>
                                     </div>
-                                    <!-- /animated graphs -->
+
+                                    <div ng-show="vm.isDetailingBusiness">
+                                        <div class="clearfix">
+                                            <i class="icon-briefcase pull-left" style="font-size:40px;"></i>
+                                            <button ng-click="vm.backToListingBusinesses()"
+                                                    type="button"
+                                                    class="btn btn-xs btn-default pull-right">
+                                                <i class="icon-arrow-left4"></i>
+                                                &nbsp;Back
+                                            </button>
+                                        </div>
+                                        <hr style="margin-top:10px;" />
+                                        <span class="label" ng-class="vm.businessStatusClass(this.currentBusinessData)">{{vm.businessStatus(this.currentBusiness)}}</span>
+                                        <h2>
+                                            {{vm.currentBusinessData.CorporateName}}
+                                            <small class="display-block" style="margin-top:20px;">{{vm.currentBusinessData.CorporateId}}</small>
+                                            <small class="display-block" style="margin-top:20px;">
+                                                <span class="text-warning">Incorporated on </span> <strong>{{vm.displayDate(vm.currentBusinessData.IncorporationDate)}}</strong>
+                                            </small>
+                                        </h2>
+                                        <hr />
+                                        <div style="margin-top:20px;" ng-bind-html="vm.currentBusinessData.Description"></div>
+
+                                    </div>
+                                -->
 
                                 </div>
                                 <!-- /second tab -->
 
                                 <!-- Third tab -->
-                                <div class="tab-pane fade" id="profile-messages">
-                                    <div class="chat-member-heading clearfix">
-                                        <h6 class="pull-left"><i class="icon-bubbles"></i> Messages</h6>
-                                        <div class="pull-right">
-                                            <a href="#" class="btn btn-primary btn-icon btn-xs"><i class="icon-plus-circle"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="block">
-                                        <ul class="message-list">
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>Eugene Kopyov <span class="user-online"></span> <small>/ &nbsp; Wed developer</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#eugene"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse" id="eugene">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>Duncan McMart <span class="user-offline"></span> <small>/ &nbsp; Wed designer</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#duncan"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse" id="duncan">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>Lucy Smith <span class="user-away"></span> <small>/ &nbsp; UI expert</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#lucy"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse in" id="lucy">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>James Jameson <span class="user-away"></span> <small>/ &nbsp; Engineer</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#james"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse" id="james">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>Angel Nowak <span class="user-offline"></span> <small>/ &nbsp; Usability expert</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#angel"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse" id="angel">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>Vin Dins <span class="user-busy"></span> <small>/ &nbsp; Wed developer</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#vin"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse" id="vin">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                            <li>
-                                                <div class="clearfix">
-                                                    <div class="chat-member">
-                                                        <a href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                        <h6>John Doe <span class="user-online"></span> <small>/ &nbsp; Wed developer</small></h6>
-                                                    </div>
-                                                    <div class="chat-actions">
-                                                        <a class="btn btn-link btn-icon btn-xs" data-toggle="collapse" href="#john"><i class="icon-bubble3"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-phone2"></i></a>
-                                                        <a href="#" class="btn btn-link btn-icon btn-xs"><i class="icon-camera5"></i></a>
-                                                    </div>
-                                                </div>
-
-                                                <div class="panel-collapse collapse" id="john">
-                                                    <div class="chat">
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                <span class="typing"></span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc volutpat commodo ullamcorper. Vivamus consequat sapien ac ante pharetra pellentesque. Sed molestie leo vitae erat sagittis, ac posuere nibh faucibus. In nec massa suscipit, sagittis ligula non, accumsan velit.
-                                                                Pellentesque habitant morbi tristique senectus et netus et malesuada fames.
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">10 Nov, 2013</div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Aenean dictum vitae tortor vitae placerat. Donec tristique urna tellus, porttitor commodo quam facilisis sit amet. Pellentesque ullamcorper metus sed libero imperdiet, id consequat libero malesuada. Aenean mattis, nisl nec sodales adipiscing, nunc mauris volutpat nulla, quis dictum sapien nibh vitae metus. Fusce vehicula aliquam enim, sed viverra ipsum elementum at
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nulla venenatis enim et mi egestas blandit. Praesent in consequat eros, et sagittis metus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Mauris at tellus viverra, lobortis elit non, luctus dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla in ornare ligula. Sed in pellentesque justo, vitae tristique urna. Vestibulum congue ligula ac posuere pharetra
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="moment">12 Nov, 2013</div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Pellentesque ut sollicitudin quam, et suscipit lectus. Duis accumsan, purus ac feugiat condimentum, sem risus eleifend mi, vitae sagittis nisi sem nec libero. Nunc mauris tellus, cursus vel faucibus non, accumsan quis risus
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Morbi lacus nulla, tristique eu hendrerit non, auctor ut arcu. Morbi id ligula mi. Vivamus ultricies lobortis erat sed placerat. Etiam molestie urna pulvinar porta fringilla. Aenean vitae lacinia felis, id laoreet diam
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="message reversed">
-                                                            <a class="message-img" href="#"><img src="http://placehold.it/300" alt=""></a>
-                                                            <div class="message-body">
-                                                                Nunc laoreet aliquam enim adipiscing placerat. Donec ac ultricies nisi. Nunc vel varius ante, et luctus elit. In eros urna, dignissim vitae quam eu, facilisis lacinia leo
-                                                                <span class="attribution">14:23pm, 4th Dec 2010</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <textarea name="enter-message" class="form-control" rows="3" cols="1" placeholder="Enter your message..."></textarea>
-                                                    <div class="message-controls">
-                                                        <span class="pull-left"><i class="icon-checkmark-circle"></i> Some basic <a href="#" title="">HTML</a> is OK</span>
-                                                        <div class="pull-right">
-                                                            <div class="upload-options">
-                                                                <a href="#" title="" class="tip" data-original-title="Smileys"><i class="icon-smiley"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Upload photo"><i class="icon-camera3"></i></a>
-                                                                <a href="#" title="" class="tip" data-original-title="Attach file"><i class="icon-attachment"></i></a>
-                                                            </div>
-                                                            <button type="button" class="btn btn-danger btn-loading" data-loading-text="<i class='icon-spinner7 spin'></i> Processing">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="tab-pane fade" id="farms"
+                                     ng-controller="FarmAccountViewModel as vm">
                                 </div>
                                 <!-- /third tab -->
 
@@ -1222,10 +733,11 @@
 
     <script type="text/javascript">
         $(function () {
-            ringLoader($('#bio-ring-loader'), '16px', 'white');
-            ringLoader($('#contact-ring-loader'), '16px', 'white');
-            ringLoader($('#persist-profileImage-ring-loader'), '16px', 'white');
-            ringLoader($('#remove-profileImage-ring-loader'), '16px', 'white');
+            ringLoader($('#bio-ring-loader'), '14px', 'white');
+            ringLoader($('#contact-ring-loader'), '14px', 'white');
+            ringLoader($('#persist-profileImage-ring-loader'), '14px', 'white');
+            ringLoader($('#remove-profileImage-ring-loader'), '14px', 'white');
+            ringLoader($('#persist-business-ring-loader'), '14px', 'white');
         });
     </script>
 </div>
