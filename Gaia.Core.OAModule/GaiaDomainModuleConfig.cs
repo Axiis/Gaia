@@ -1,11 +1,11 @@
-﻿using Axis.Jupiter;
-using Axis.Jupiter.Europa;
+﻿using Axis.Jupiter.Europa;
 using Axis.Jupiter.Europa.Module;
 using Axis.Luna.Extensions;
 using Axis.Pollux.Identity.Principal;
 using Gaia.Core.Domain;
 using Gaia.Core.Domain.Meta;
 using Gaia.Core.OAModule.Mappings;
+using Gaia.Core.OAModule.Mappings.Accounts;
 using Gaia.Core.OAModule.Mappings.Meta;
 using Gaia.Core.Services;
 using Gaia.Core.Utils;
@@ -25,9 +25,10 @@ namespace Gaia.Core.OAModule
             //Configuration
             var asm = typeof(GaiaDomainModuleConfig).Assembly;
             string ns = typeof(AdvertMapping).Namespace,
-                   ns2 = typeof(ServiceCategoryMapping).Namespace;
+                   ns2 = typeof(ServiceCategoryMapping).Namespace,
+                   ns3 = typeof(FarmMapping).Namespace;
             asm.GetTypes()
-               .Where(t => t.Namespace == ns || t.Namespace == ns2)
+               .Where(t => t.Namespace == ns || t.Namespace == ns2 || t.Namespace == ns3)
                .Where(t => t.IsEntityMap())
                .ForAll((cnt, t) => this.UsingConfiguration(Activator.CreateInstance(t).AsDynamic()));
 

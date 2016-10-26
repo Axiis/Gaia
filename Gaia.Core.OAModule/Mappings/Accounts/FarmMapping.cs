@@ -9,7 +9,7 @@ namespace Gaia.Core.OAModule.Mappings.Accounts
 {
     public class FarmMapping: GaiaMap<Farm, long>
     {
-        FarmMapping()
+        public FarmMapping()
         {
             this.Property(e => e.OwnerId).HasMaxLength(250);
             this.HasRequired(e => e.Owner)

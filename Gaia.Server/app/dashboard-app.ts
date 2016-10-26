@@ -8,6 +8,7 @@ module Gaia.App.Dashboard {
 
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);
+    module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
 
     ///Pollux Services
     module.service('#pollux.authentication', Pollux.Services.Authentication);

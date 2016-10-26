@@ -8,7 +8,7 @@ namespace Gaia.Core.OAModule.Mappings.Accounts
 {
     public class ServiceMapping: GaiaMap<Domain.Accounts.Service, long>
     {
-        ServiceMapping()
+        public ServiceMapping()
         {
             this.Property(e => e.OwnerId).HasMaxLength(250);
             this.HasRequired(e => e.Owner)

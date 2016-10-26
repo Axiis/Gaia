@@ -449,7 +449,7 @@ module Gaia.ViewModels.Dashboard {
         }
 
 
-        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+        static $inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
         constructor(private accountService: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
             private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
 
@@ -498,7 +498,7 @@ module Gaia.ViewModels.Dashboard {
         }
 
 
-        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+        static $inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
         constructor(private accountService: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
             private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
 

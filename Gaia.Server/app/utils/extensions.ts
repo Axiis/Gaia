@@ -13,7 +13,7 @@ interface Func9<I, I2, I3, I4, I5, I6, I7, I8, I9, O> { (in1: I, in2: I2, in3: I
 
 interface Object {
     copyTo(target: any, properties?: string[]): any;
-    with<Obj>(value: any): Obj: 
+    with<Obj>(value: any): Obj; 
     project<I, O>(f: Func1<I, O>): O;
     properties(): Array<string>;
     keys(): Array<string>;
