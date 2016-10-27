@@ -28,6 +28,7 @@ module Gaia.App.Dashboard {
     module.controller('ServiceAccountViewModel', Gaia.ViewModels.Dashboard.ServiceAccountViewModel);
     module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
     module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
+    module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
 
 
     //configure states

@@ -443,10 +443,10 @@ namespace Gaia.Core.OAModule
                         "system/UserAccounts/Farms/@modify",
                         "system/UserAccounts/Farms/@get",
 
-                        "system/UserAccount/Services/@add",
-                        "system/UserAccount/Services/@remove",
-                        "system/UserAccount/Services/@modify",
-                        "system/UserAccount/Services/@get",
+                        "system/UserAccounts/Services/@add",
+                        "system/UserAccounts/Services/@remove",
+                        "system/UserAccounts/Services/@modify",
+                        "system/UserAccounts/Services/@get",
 
                         "system/Profiles/UserData/@remove",
                         "system/Profiles/UserData/@add",

@@ -77,7 +77,7 @@ var Gaia;
             };
             ProfileService.prototype.modifyBioData = function (biodata, config) {
                 return this.transport.put('/api/profiles/bio-data', biodata, config).then(function (oprc) {
-                    if (biodata.EntityId <= 0)
+                    if (!biodata.EntityId || biodata.EntityId <= 0)
                         biodata.EntityId = oprc.data.Result;
                 });
             };
@@ -96,7 +96,7 @@ var Gaia;
                 return this.transport.put('/api/profiles/contact-data', contactData, config).then(function (oprc) { });
             };
             ProfileService.prototype.persistContactData = function (contactData) {
-                if (contactData.EntityId <= 0)
+                if (!contactData.EntityId || contactData.EntityId <= 0)
                     return this.addContactData(contactData);
                 else
                     return this.modifyContactData(contactData);
@@ -111,7 +111,7 @@ var Gaia;
                 });
             };
             ProfileService.prototype.addCorporateData = function (corporateData, config) {
-                return this.transport.put('/api/profiles/corporate-data', corporateData, config).then(function (oprc) {
+                return this.transport.post('/api/profiles/corporate-data', corporateData, config).then(function (oprc) {
                     corporateData.EntityId = oprc.data.Result;
                 });
             };
@@ -119,7 +119,7 @@ var Gaia;
                 return this.transport.put('/api/profiles/corporate-data', corporateData, config).then(function (oprc) { });
             };
             ProfileService.prototype.persistCorporateData = function (data) {
-                if (data.EntityId <= 0)
+                if (!data.EntityId || data.EntityId <= 0)
                     return this.addCorporateData(data);
                 else
                     return this.modifyCorporateData(data);
@@ -150,7 +150,7 @@ var Gaia;
                 return this.transport.put('/api/profiles/service-account', serviceAccount, config).then(function (oprc) { });
             };
             UserAccountService.prototype.persistServiceAccount = function (data) {
-                if (data.EntityId <= 0)
+                if (!data.EntityId || data.EntityId <= 0)
                     this.addServiceAccount(data);
                 else
                     return this.modifyServiceAccount(data);
@@ -173,7 +173,7 @@ var Gaia;
                 return this.transport.put('/api/profiles/farm-account', FarmAccount, config).then(function (oprc) { });
             };
             UserAccountService.prototype.persistFarmAccount = function (data) {
-                if (data.EntityId <= 0)
+                if (!data.EntityId || data.EntityId <= 0)
                     this.addFarmAccount(data);
                 else
                     return this.modifyFarmAccount(data);
@@ -187,4 +187,3 @@ var Gaia;
         Services.UserAccountService = UserAccountService;
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=gaia-services.js.map

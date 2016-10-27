@@ -22,4 +22,3 @@ var Gaia;
         })(Shared = ViewModels.Shared || (ViewModels.Shared = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=shared-viewmodels.js.map

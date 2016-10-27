@@ -76,6 +76,17 @@ var Gaia;
             ServiceType[ServiceType["Other"] = 0] = "Other";
         })(Domain.ServiceType || (Domain.ServiceType = {}));
         var ServiceType = Domain.ServiceType;
+        var GaiaEntity = (function () {
+            function GaiaEntity(data) {
+                if (data) {
+                    data.copyTo(this);
+                    this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
+                    this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
+                }
+            }
+            return GaiaEntity;
+        }());
+        Domain.GaiaEntity = GaiaEntity;
         var FarmAccount = (function (_super) {
             __extends(FarmAccount, _super);
             function FarmAccount(data) {
@@ -116,17 +127,6 @@ var Gaia;
             return ServiceAccount;
         }(GaiaEntity));
         Domain.ServiceAccount = ServiceAccount;
-        var GaiaEntity = (function () {
-            function GaiaEntity(data) {
-                if (data) {
-                    data.copyTo(this);
-                    this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
-                    this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
-                }
-            }
-            return GaiaEntity;
-        }());
-        Domain.GaiaEntity = GaiaEntity;
         var FeatureURI = (function (_super) {
             __extends(FeatureURI, _super);
             function FeatureURI(data) {
@@ -405,4 +405,3 @@ var Gaia;
         Domain.UserReaction = UserReaction;
     })(Domain = Gaia.Domain || (Gaia.Domain = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=gaia-domain.js.map

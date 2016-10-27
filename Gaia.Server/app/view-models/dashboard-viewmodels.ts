@@ -206,7 +206,7 @@ module Gaia.ViewModels.Dashboard {
             if (this.isPersistingContactdata) return;
 
             this.isPersistingContactdata = true;
-            this.profileService.modifyContactData(this.contact)
+            this.profileService.persistContactData(this.contact)
                 .then(oprc => {
                     this.isEditingContactData = false;
                     this.hasContactdataPersistenceError = false;
@@ -373,7 +373,7 @@ module Gaia.ViewModels.Dashboard {
             if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
                 if (!this.isPersistingBusiness) {
                     this.isPersistingBusiness = true;
-                    this.profileService.modifyCorporateData(b)
+                    this.profileService.persistCorporateData(b)
                         .then(oprc => {
                             delete (b as any).$nascent;
                             this.notifyService.success('Business data was saved successfully', 'Alert');
@@ -423,11 +423,68 @@ module Gaia.ViewModels.Dashboard {
         serviceList: Gaia.Domain.ServiceAccount[] = [];
         currentService: Gaia.Domain.ServiceAccount = null;
 
+        serviceCategories: string[] = [];
+
+        isListingServices: boolean = true;
         isEditingService: boolean = false;
         isPersistingService: boolean = false;
+        isDetailingService: boolean = false;
         hasServicePersistenceError: boolean = false;
 
+        get selectedServiceCategry(): string {
+            if (this.currentService && this.currentService.ServiceType) return Gaia.Domain.ServiceType[this.currentService.ServiceType] as string;
+            else return 'Not Selected';
+        }
 
+        clearUI() {
+            this.isListingServices = this.isEditingService = this.isPersistingService = this.hasServicePersistenceError = false;
+        }
+
+        backToListingServices() {
+            if (this.currentService['$nascent']) {
+                this.serviceList.remove(this.currentService);
+                this.currentService = null;
+            }
+
+            this.clearUI();
+            this.isListingServices = true;
+        }
+
+        serviceCategory(service: Gaia.Domain.ServiceAccount): string {
+            if (service) return Gaia.Domain.ServiceType[service.ServiceType];
+            else return '';
+        }
+        selectCategory(type: string) {
+            if (this.currentService) {
+                this.currentService = Gaia.Domain.ServiceType[type];
+            }
+        }
+
+        addService(): Gaia.Domain.ServiceAccount {
+            var newobj = new Gaia.Domain.ServiceAccount({ OwnerId: this.user.EntityId });
+            (newobj as any).$nascent = true;
+            this.serviceList = [newobj].concat(this.serviceList);
+            return newobj;
+        }
+        addAndEditService() {
+            this.editService(this.addService());
+        }
+        editService(s: Gaia.Domain.ServiceAccount) {
+            if (s) {
+                this.currentService = s;
+                this.clearUI();
+                this.isEditingService = true;
+
+                ($('#services-richtext-editor') as any).summernote('code', this.currentService.Description);
+            }
+        }
+
+        persistCurrentService() {
+            if (this.currentService) {
+                this.currentService.Description = ($('#services-richtext-editor') as any).summernote('code');
+                this.persistService(this.currentService);
+            }
+        }
         persistService(service: Gaia.Domain.ServiceAccount) {
             if (this.isPersistingService) return;
 
@@ -461,6 +518,11 @@ module Gaia.ViewModels.Dashboard {
                 EntityId: domModel.simpleModel.UserId,
                 Stataus: 1
             });
+
+            this.serviceCategories = Object
+                .keys(Gaia.Domain.ServiceType)
+                .map(k => Gaia.Domain.ServiceType[k] as string)
+                .filter(v => typeof v === "string");
         }
     }
 
@@ -472,6 +534,7 @@ module Gaia.ViewModels.Dashboard {
         farmList: Gaia.Domain.FarmAccount[] = [];
         currentService: Gaia.Domain.FarmAccount = null;
 
+        isListingFarms: boolean = false;
         isEditingFarm: boolean = false;
         isPersistingFarm: boolean = false;
         hasFarmPersistenceError: boolean = false;

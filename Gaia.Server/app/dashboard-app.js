@@ -25,6 +25,7 @@ var Gaia;
             Dashboard.module.controller('ServiceAccountViewModel', Gaia.ViewModels.Dashboard.ServiceAccountViewModel);
             Dashboard.module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
             Dashboard.module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
+            Dashboard.module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
             //configure states
             Dashboard.module.config(function ($stateProvider, $urlRouterProvider) {
                 $urlRouterProvider.otherwise('/dashboard');
@@ -45,4 +46,3 @@ var Gaia;
         })(Dashboard = App.Dashboard || (App.Dashboard = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-app.js.map

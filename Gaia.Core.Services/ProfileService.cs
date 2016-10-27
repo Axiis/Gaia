@@ -181,7 +181,8 @@ namespace Gaia.Core.Services
                     {
                         _user.Status = UserStatus.Active;
                         userstore.Modify(_user, true);
-                    }));
+                    }))
+                    .ThrowIf(opr => !opr.Succeeded, opr => opr.GetException());
             });
 
 
@@ -216,15 +217,16 @@ namespace Gaia.Core.Services
                 var userstore = DataContext.Store<User>();
                 return ContextVerifier.VerifyContext(targetUser, UserRegistrationContext, contextToken)
                                       .Then(opr => userstore.Query
-                                                            .Where(_user => _user.EntityId == targetUser)
-                                                            .Where(_user => _user.Status == UserStatus.Archived)
-                                                            .FirstOrDefault()
-                                                            .ThrowIfNull("could not find user")
-                                                            .UsingValue(_user =>
-                                                            {
-                                                                _user.Status = UserStatus.Active;
-                                                                userstore.Modify(_user, true);
-                                                            }));
+                                      .Where(_user => _user.EntityId == targetUser)
+                                      .Where(_user => _user.Status == UserStatus.Archived)
+                                      .FirstOrDefault()
+                                      .ThrowIfNull("could not find user")
+                                      .UsingValue(_user =>
+                                      {
+                                          _user.Status = UserStatus.Active;
+                                          userstore.Modify(_user, true);
+                                      }))
+                                      .ThrowIf(opr => !opr.Succeeded, opr => opr.GetException());
             });
 
 
@@ -239,6 +241,7 @@ namespace Gaia.Core.Services
             {
                 var _user = UserContext.CurrentUser;
                 var store = DataContext.Store<BioData>();
+                data.OwnerId = _user.UserId;
 
                 var persisted = store.Query
                     .Where(_ud => _ud.OwnerId == _user.EntityId)

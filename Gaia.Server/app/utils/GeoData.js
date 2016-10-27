@@ -126,4 +126,3 @@ var Gaia;
         Utils.GeoArea = GeoArea;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=GeoData.js.map

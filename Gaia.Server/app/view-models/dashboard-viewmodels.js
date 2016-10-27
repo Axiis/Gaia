@@ -234,7 +234,7 @@ var Gaia;
                     if (this.isPersistingContactdata)
                         return;
                     this.isPersistingContactdata = true;
-                    this.profileService.modifyContactData(this.contact)
+                    this.profileService.persistContactData(this.contact)
                         .then(function (oprc) {
                         _this.isEditingContactData = false;
                         _this.hasContactdataPersistenceError = false;
@@ -410,7 +410,7 @@ var Gaia;
                     if (b && b.Status == Gaia.Utils.BusinessStatus_Draft) {
                         if (!this.isPersistingBusiness) {
                             this.isPersistingBusiness = true;
-                            this.profileService.modifyCorporateData(b)
+                            this.profileService.persistCorporateData(b)
                                 .then(function (oprc) {
                                 delete b.$nascent;
                                 _this.notifyService.success('Business data was saved successfully', 'Alert');
@@ -450,8 +450,11 @@ var Gaia;
                     this.user = null;
                     this.serviceList = [];
                     this.currentService = null;
+                    this.serviceCategories = [];
+                    this.isListingServices = true;
                     this.isEditingService = false;
                     this.isPersistingService = false;
+                    this.isDetailingService = false;
                     this.hasServicePersistenceError = false;
                     counter.serviceVm = this;
                     this.refreshServices();
@@ -460,7 +463,66 @@ var Gaia;
                         EntityId: domModel.simpleModel.UserId,
                         Stataus: 1
                     });
+                    this.serviceCategories = Object
+                        .keys(Gaia.Domain.ServiceType)
+                        .map(function (k) { return Gaia.Domain.ServiceType[k]; })
+                        .filter(function (v) { return typeof v === "string"; });
                 }
+                Object.defineProperty(ServiceAccountViewModel.prototype, "selectedServiceCategry", {
+                    get: function () {
+                        if (this.currentService && this.currentService.ServiceType)
+                            return Gaia.Domain.ServiceType[this.currentService.ServiceType];
+                        else
+                            return 'Not Selected';
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                ServiceAccountViewModel.prototype.clearUI = function () {
+                    this.isListingServices = this.isEditingService = this.isPersistingService = this.hasServicePersistenceError = false;
+                };
+                ServiceAccountViewModel.prototype.backToListingServices = function () {
+                    if (this.currentService['$nascent']) {
+                        this.serviceList.remove(this.currentService);
+                        this.currentService = null;
+                    }
+                    this.clearUI();
+                    this.isListingServices = true;
+                };
+                ServiceAccountViewModel.prototype.serviceCategory = function (service) {
+                    if (service)
+                        return Gaia.Domain.ServiceType[service.ServiceType];
+                    else
+                        return '';
+                };
+                ServiceAccountViewModel.prototype.selectCategory = function (type) {
+                    if (this.currentService) {
+                        this.currentService = Gaia.Domain.ServiceType[type];
+                    }
+                };
+                ServiceAccountViewModel.prototype.addService = function () {
+                    var newobj = new Gaia.Domain.ServiceAccount({ OwnerId: this.user.EntityId });
+                    newobj.$nascent = true;
+                    this.serviceList = [newobj].concat(this.serviceList);
+                    return newobj;
+                };
+                ServiceAccountViewModel.prototype.addAndEditService = function () {
+                    this.editService(this.addService());
+                };
+                ServiceAccountViewModel.prototype.editService = function (s) {
+                    if (s) {
+                        this.currentService = s;
+                        this.clearUI();
+                        this.isEditingService = true;
+                        $('#services-richtext-editor').summernote('code', this.currentService.Description);
+                    }
+                };
+                ServiceAccountViewModel.prototype.persistCurrentService = function () {
+                    if (this.currentService) {
+                        this.currentService.Description = $('#services-richtext-editor').summernote('code');
+                        this.persistService(this.currentService);
+                    }
+                };
                 ServiceAccountViewModel.prototype.persistService = function (service) {
                     var _this = this;
                     if (this.isPersistingService)
@@ -494,6 +556,7 @@ var Gaia;
                     this.user = null;
                     this.farmList = [];
                     this.currentService = null;
+                    this.isListingFarms = false;
                     this.isEditingFarm = false;
                     this.isPersistingFarm = false;
                     this.hasFarmPersistenceError = false;
@@ -552,4 +615,3 @@ var Gaia;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-viewmodels.js.map

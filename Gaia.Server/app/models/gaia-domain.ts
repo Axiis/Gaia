@@ -74,6 +74,25 @@ module Gaia.Domain {
     }
 
 
+    export class GaiaEntity<Key>{
+        EntityId: Key;
+        CreatedBy: string;
+        ModifiedBy: string;
+
+        CreatedOn: Axis.Apollo.Domain.JsonDateTime;
+        ModifiedOn: Axis.Apollo.Domain.JsonDateTime;
+
+        constructor(data?: Object) {
+            if (data) {
+                data.copyTo(this);
+
+                this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
+                this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
+            }
+        }
+    }
+
+
     export class FarmAccount extends GaiaEntity<number> {
 
         OwnerId: string = null;
@@ -114,26 +133,7 @@ module Gaia.Domain {
             if (data) {
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 this.BusinessAccounts = (data['BusinessAccounts'] as Array<any> || [])
-                    .map(v =>  new Axis.Pollux.Domain.CorporateData(v));
-            }
-        }
-    }
-
-
-    export class GaiaEntity<Key>{
-        EntityId: Key;
-        CreatedBy: string;
-        ModifiedBy: string;
-
-        CreatedOn: Axis.Apollo.Domain.JsonDateTime;
-        ModifiedOn: Axis.Apollo.Domain.JsonDateTime;
-
-        constructor(data?: Object) {
-            if (data) {
-                data.copyTo(this);
-
-                this.CreatedOn = data['CreatedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['CreatedOn']) : null;
-                this.ModifiedOn = data['ModifiedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ModifiedOn']) : null;
+                    .map(v => new Axis.Pollux.Domain.CorporateData(v));
             }
         }
     }
