@@ -346,7 +346,7 @@ module Gaia.ViewModels.Dashboard {
                 this.clearBusinessView();
                 this.isEditingBusiness = true;
 
-                ($('#richtext-editor') as any).summernote('code', this.currentBusinessData.Description);
+                ($('#richtext-editor') as any).summernote('code', this.currentBusinessData.Description || '');
             }
         }
         removeBusiness(b: Axis.Pollux.Domain.CorporateData) {
@@ -431,8 +431,8 @@ module Gaia.ViewModels.Dashboard {
         isDetailingService: boolean = false;
         hasServicePersistenceError: boolean = false;
 
-        get selectedServiceCategry(): string {
-            if (this.currentService && this.currentService.ServiceType) return Gaia.Domain.ServiceType[this.currentService.ServiceType] as string;
+        get selectedServiceCategory(): string {
+            if (this.currentService && !Object.isNullOrUndefined(this.currentService.ServiceType)) return Gaia.Domain.ServiceType[this.currentService.ServiceType] as string;
             else return 'Not Selected';
         }
 
@@ -451,12 +451,12 @@ module Gaia.ViewModels.Dashboard {
         }
 
         serviceCategory(service: Gaia.Domain.ServiceAccount): string {
-            if (service) return Gaia.Domain.ServiceType[service.ServiceType];
+            if (service && service.ServiceType) return Gaia.Domain.ServiceType[service.ServiceType];
             else return '';
         }
         selectCategory(type: string) {
             if (this.currentService) {
-                this.currentService = Gaia.Domain.ServiceType[type];
+                this.currentService.ServiceType = Gaia.Domain.ServiceType[type];
             }
         }
 
@@ -475,8 +475,24 @@ module Gaia.ViewModels.Dashboard {
                 this.clearUI();
                 this.isEditingService = true;
 
-                ($('#services-richtext-editor') as any).summernote('code', this.currentService.Description);
+                ($('#services-richtext-editor') as any).summernote('code', this.currentService.Description || '');
             }
+        }
+
+        showServiceDetail(s: Gaia.Domain.ServiceAccount) {
+            if (!Object.isNullOrUndefined(s)) {
+                this.currentService = s;
+                this.clearUI();
+                this.isDetailingService = true;
+            }
+        }
+        getServiceDescription(s: Gaia.Domain.ServiceAccount): string {
+            if (!Object.isNullOrUndefined(s)) {
+                if (s.Description && s.Description.length > 200) return s.Description.substr(0, 200) + '...';
+                else if (s.Description) return s.Description;
+                else return '';
+            }
+            else return '';
         }
 
         persistCurrentService() {
@@ -491,12 +507,12 @@ module Gaia.ViewModels.Dashboard {
             this.isPersistingService = true;
             this.accountService.persistServiceAccount(service)
                 .then(oprc => {
-                    this.isEditingService = false;
-                    this.hasServicePersistenceError = false;
+                    delete (service as any).$nascent;
+                    this.notifyService.success('Your service account information was saved successfully', 'Alert');
                     this.isPersistingService = false;
                 }, e => {
+                    this.notifyService.error('Something went wrong while saving your service account information...', 'Oops!');
                     this.isPersistingService = false;
-                    this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
                 });
         }
         refreshServices() {

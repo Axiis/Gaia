@@ -91,12 +91,12 @@ var Gaia;
             __extends(FarmAccount, _super);
             function FarmAccount(data) {
                 _super.call(this, data);
-                this.OwnerId = null;
-                this.Owner = null;
-                this.Description = null;
-                this.FarmType = null;
-                this.GeoData = null;
                 this.BusinessAccounts = [];
+                //set default values
+                if (Object.isNullOrUndefined(this.FarmType))
+                    this.FarmType = null;
+                if (Object.isNullOrUndefined(this.BusinessAccounts))
+                    this.BusinessAccounts = [];
                 if (data) {
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
@@ -110,14 +110,13 @@ var Gaia;
         Domain.FarmAccount = FarmAccount;
         var ServiceAccount = (function (_super) {
             __extends(ServiceAccount, _super);
-            //ContextData: ContextData[] = [];
+            //ContextData: ContextData[];
             function ServiceAccount(data) {
                 _super.call(this, data);
-                this.OwnerId = null;
-                this.Owner = null;
-                this.Description = null;
-                this.ServiceType = null;
-                this.BusinessAccounts = [];
+                if (Object.isNullOrUndefined(this.ServiceType))
+                    this.ServiceType = null;
+                if (Object.isNullOrUndefined(this.BusinessAccounts))
+                    this.BusinessAccounts = [];
                 if (data) {
                     this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                     this.BusinessAccounts = (data['BusinessAccounts'] || [])
@@ -405,3 +404,4 @@ var Gaia;
         Domain.UserReaction = UserReaction;
     })(Domain = Gaia.Domain || (Gaia.Domain = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=gaia-domain.js.map

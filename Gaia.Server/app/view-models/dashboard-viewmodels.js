@@ -381,7 +381,7 @@ var Gaia;
                         this.currentBusinessData = b;
                         this.clearBusinessView();
                         this.isEditingBusiness = true;
-                        $('#richtext-editor').summernote('code', this.currentBusinessData.Description);
+                        $('#richtext-editor').summernote('code', this.currentBusinessData.Description || '');
                     }
                 };
                 BusinessAccountViewModel.prototype.removeBusiness = function (b) {
@@ -468,9 +468,9 @@ var Gaia;
                         .map(function (k) { return Gaia.Domain.ServiceType[k]; })
                         .filter(function (v) { return typeof v === "string"; });
                 }
-                Object.defineProperty(ServiceAccountViewModel.prototype, "selectedServiceCategry", {
+                Object.defineProperty(ServiceAccountViewModel.prototype, "selectedServiceCategory", {
                     get: function () {
-                        if (this.currentService && this.currentService.ServiceType)
+                        if (this.currentService && !Object.isNullOrUndefined(this.currentService.ServiceType))
                             return Gaia.Domain.ServiceType[this.currentService.ServiceType];
                         else
                             return 'Not Selected';
@@ -490,14 +490,14 @@ var Gaia;
                     this.isListingServices = true;
                 };
                 ServiceAccountViewModel.prototype.serviceCategory = function (service) {
-                    if (service)
+                    if (service && service.ServiceType)
                         return Gaia.Domain.ServiceType[service.ServiceType];
                     else
                         return '';
                 };
                 ServiceAccountViewModel.prototype.selectCategory = function (type) {
                     if (this.currentService) {
-                        this.currentService = Gaia.Domain.ServiceType[type];
+                        this.currentService.ServiceType = Gaia.Domain.ServiceType[type];
                     }
                 };
                 ServiceAccountViewModel.prototype.addService = function () {
@@ -514,8 +514,27 @@ var Gaia;
                         this.currentService = s;
                         this.clearUI();
                         this.isEditingService = true;
-                        $('#services-richtext-editor').summernote('code', this.currentService.Description);
+                        $('#services-richtext-editor').summernote('code', this.currentService.Description || '');
                     }
+                };
+                ServiceAccountViewModel.prototype.showServiceDetail = function (s) {
+                    if (!Object.isNullOrUndefined(s)) {
+                        this.currentService = s;
+                        this.clearUI();
+                        this.isDetailingService = true;
+                    }
+                };
+                ServiceAccountViewModel.prototype.getServiceDescription = function (s) {
+                    if (!Object.isNullOrUndefined(s)) {
+                        if (s.Description && s.Description.length > 200)
+                            return s.Description.substr(0, 200) + '...';
+                        else if (s.Description)
+                            return s.Description;
+                        else
+                            return '';
+                    }
+                    else
+                        return '';
                 };
                 ServiceAccountViewModel.prototype.persistCurrentService = function () {
                     if (this.currentService) {
@@ -530,12 +549,12 @@ var Gaia;
                     this.isPersistingService = true;
                     this.accountService.persistServiceAccount(service)
                         .then(function (oprc) {
-                        _this.isEditingService = false;
-                        _this.hasServicePersistenceError = false;
+                        delete service.$nascent;
+                        _this.notifyService.success('Your service account information was saved successfully', 'Alert');
                         _this.isPersistingService = false;
                     }, function (e) {
+                        _this.notifyService.error('Something went wrong while saving your service account information...', 'Oops!');
                         _this.isPersistingService = false;
-                        _this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
                     });
                 };
                 ServiceAccountViewModel.prototype.refreshServices = function () {
@@ -615,3 +634,4 @@ var Gaia;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=dashboard-viewmodels.js.map

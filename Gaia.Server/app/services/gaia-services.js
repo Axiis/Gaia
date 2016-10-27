@@ -151,7 +151,7 @@ var Gaia;
             };
             UserAccountService.prototype.persistServiceAccount = function (data) {
                 if (!data.EntityId || data.EntityId <= 0)
-                    this.addServiceAccount(data);
+                    return this.addServiceAccount(data);
                 else
                     return this.modifyServiceAccount(data);
             };
@@ -174,7 +174,7 @@ var Gaia;
             };
             UserAccountService.prototype.persistFarmAccount = function (data) {
                 if (!data.EntityId || data.EntityId <= 0)
-                    this.addFarmAccount(data);
+                    return this.addFarmAccount(data);
                 else
                     return this.modifyFarmAccount(data);
             };
@@ -187,3 +187,4 @@ var Gaia;
         Services.UserAccountService = UserAccountService;
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=gaia-services.js.map

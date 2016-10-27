@@ -95,6 +95,14 @@ var Gaia;
             configurable: false,
             enumerable: false
         });
+        Object.isNullOrUndefined = function (value) {
+            if (typeof value === 'undefined')
+                return true;
+            else if (value === null)
+                return true;
+            else
+                return false;
+        };
         ///string extension
         Object.defineProperty(String.prototype, 'trimLeft', {
             value: function (str) {
@@ -207,3 +215,4 @@ var Gaia;
         };
     })(Extensions = Gaia.Extensions || (Gaia.Extensions = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=extensions.js.map

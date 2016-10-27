@@ -95,11 +95,11 @@ module Gaia.Domain {
 
     export class FarmAccount extends GaiaEntity<number> {
 
-        OwnerId: string = null;
-        Owner: Axis.Pollux.Domain.User = null;
-        Description: string = null;
-        FarmType: FarmType = null;
-        GeoData: string = null;
+        OwnerId: string;
+        Owner: Axis.Pollux.Domain.User;
+        Description: string;
+        FarmType: FarmType;
+        GeoData: string;
 
         BusinessAccounts: Axis.Pollux.Domain.CorporateData[] = [];
         //ContextData: ContextData[] = [];
@@ -111,6 +111,10 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
 
+            //set default values
+            if (Object.isNullOrUndefined(this.FarmType)) this.FarmType = null;
+            if (Object.isNullOrUndefined(this.BusinessAccounts)) this.BusinessAccounts = [];
+
             if (data) {
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
             }
@@ -119,16 +123,19 @@ module Gaia.Domain {
 
     export class ServiceAccount extends GaiaEntity<number>{
 
-        OwnerId: string = null;
-        Owner: Axis.Pollux.Domain.User = null;
-        Description: string = null;
-        ServiceType: ServiceType = null;
+        OwnerId: string;
+        Owner: Axis.Pollux.Domain.User;
+        Description: string;
+        ServiceType: ServiceType;
 
-        BusinessAccounts: Axis.Pollux.Domain.CorporateData[] = [];
-        //ContextData: ContextData[] = [];
+        BusinessAccounts: Axis.Pollux.Domain.CorporateData[];
+        //ContextData: ContextData[];
 
         constructor(data?: Object) {
             super(data);
+            
+            if (Object.isNullOrUndefined(this.ServiceType)) this.ServiceType = null;
+            if (Object.isNullOrUndefined(this.BusinessAccounts)) this.BusinessAccounts = [];
 
             if (data) {
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;

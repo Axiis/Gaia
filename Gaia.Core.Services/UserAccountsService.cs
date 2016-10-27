@@ -115,7 +115,11 @@ namespace Gaia.Core.Services
             });
 
         public Operation<IEnumerable<Service>> GetServiceAccounts()
-            => FeatureAccess.Guard(UserContext, () => DataContext.Store<Service>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var services = DataContext.Store<Service>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).ToArray();
+                return services.AsEnumerable();
+            });
 
         public Operation RemoveServiceAccount(long[] ids)
             => FeatureAccess.Guard(UserContext, () =>

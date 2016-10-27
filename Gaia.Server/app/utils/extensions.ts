@@ -21,6 +21,10 @@ interface Object {
     propertyMaps(): Array<Gaia.Utils.Map<string, any>>;
 }
 
+interface ObjectConstructor {
+    isNullOrUndefined(value: any): boolean;
+}
+
 interface String {
     trimLeft(str: string): string;
     trimRight(str: string): string;
@@ -139,6 +143,12 @@ module Gaia.Extensions {
         configurable: false,
         enumerable: false
     });
+
+    Object.isNullOrUndefined = function (value: any): boolean {
+        if (typeof value === 'undefined') return true;
+        else if (value === null) return true;
+        else return false;
+    };
 
 
     ///string extension

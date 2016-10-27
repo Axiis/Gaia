@@ -152,7 +152,7 @@ module Gaia.Services {
             return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/service-account', serviceAccount, config).then(oprc => { });
         }
         public persistServiceAccount(data: Gaia.Domain.ServiceAccount): ng.IPromise<void> {
-            if (!data.EntityId || data.EntityId <= 0) this.addServiceAccount(data);
+            if (!data.EntityId || data.EntityId <= 0) return this.addServiceAccount(data);
             else return this.modifyServiceAccount(data);
         }
         public removeServiceAccount(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
@@ -175,7 +175,7 @@ module Gaia.Services {
             return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => { });
         }
         public persistFarmAccount(data: Gaia.Domain.FarmAccount): ng.IPromise<void> {
-            if (!data.EntityId || data.EntityId <= 0) this.addFarmAccount(data);
+            if (!data.EntityId || data.EntityId <= 0) return this.addFarmAccount(data);
             else return this.modifyFarmAccount(data);
         }
         public removeFarmAccount(ids: number[], config?: ng.IRequestShortcutConfig): ng.IPromise<void> {

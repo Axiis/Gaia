@@ -75,7 +75,7 @@ namespace Gaia.Server
                         NullValueHandling = NullValueHandling.Ignore,
                         ObjectCreationHandling = ObjectCreationHandling.Auto,
                         FloatFormatHandling = FloatFormatHandling.DefaultValue,
-                        PreserveReferencesHandling = PreserveReferencesHandling.All,
+                        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
                         StringEscapeHandling = StringEscapeHandling.Default
                     }
                 });

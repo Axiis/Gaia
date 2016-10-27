@@ -372,50 +372,53 @@
                                             </p>
                                         </div>
 
-                                        <div class="block task task-low"
+                                        <div class="col-md-4"
+                                             style="padding-left:0px;"
                                              ng-repeat="business in vm.businessList">
-                                            <div class="row with-padding">
-                                                <div class="col-sm-9">
-                                                    <div class="task-description">
-                                                        <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
-                                                        <i>{{business.CorporateId}}</i>
-                                                        <span ng-bind-html="vm.getBusinessDescription(business)"></span>
+                                            <div class="block task task-low">
+                                                <div class="row with-padding">
+                                                    <div class="col-sm-9">
+                                                        <div class="task-description">
+                                                            <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
+                                                            <i>{{business.CorporateId}}</i>
+                                                            <span ng-bind-html="vm.getBusinessDescription(business)"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="task-info">
-                                                        <span>{{vm.displayDate(business.IncorporationDate)}}</span>
+                                                    <div class="col-sm-3">
+                                                        <div class="task-info">
+                                                            <span>{{vm.displayDate(business.IncorporationDate)}}</span>
 
-                                                        <span>
-                                                            <span ng-show="vm.isDraft(business)"
-                                                                  class="label label-default">
-                                                                Draft
+                                                            <span>
+                                                                <span ng-show="vm.isDraft(business)"
+                                                                      class="label label-default">
+                                                                    Draft
+                                                                </span>
+                                                                <span ng-show="vm.isVerified(business)"
+                                                                      class="label label-success">
+                                                                    Verified
+                                                                </span>
+                                                                <span ng-show="vm.isVerifying(business)"
+                                                                      class="label label-warning">
+                                                                    Verifying
+                                                                </span>
                                                             </span>
-                                                            <span ng-show="vm.isVerified(business)"
-                                                                  class="label label-success">
-                                                                Verified
-                                                            </span>
-                                                            <span ng-show="vm.isVerifying(business)"
-                                                                  class="label label-warning">
-                                                                Verifying
-                                                            </span>
-                                                        </span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="panel-footer">
-                                                <div class="pull-right">
-                                                    <ul class="footer-icons-group">
-                                                        <li ng-show="vm.isDraft(business)">
-                                                            <a ng-click="vm.editBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
-                                                        </li>
-                                                        <li ng-show="vm.isDraft(business)">
-                                                            <a ng-click="vm.removeBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="icon-remove3 text-danger"></i></a>
-                                                        </li>
-                                                        <li ng-show="vm.isDraft(business)">
-                                                            <a ng-click="" data-toggle="tooltip" data-placement="bottom" title="Submit for Verification"><i class="icon-checkmark3 text-success"></i></a>
-                                                        </li>
-                                                    </ul>
+                                                <div class="panel-footer">
+                                                    <div class="pull-right">
+                                                        <ul class="footer-icons-group">
+                                                            <li ng-show="vm.isDraft(business)">
+                                                                <a ng-click="vm.editBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
+                                                            </li>
+                                                            <li ng-show="vm.isDraft(business)">
+                                                                <a ng-click="vm.removeBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="icon-remove3 text-danger"></i></a>
+                                                            </li>
+                                                            <li ng-show="vm.isDraft(business)">
+                                                                <a ng-click="" data-toggle="tooltip" data-placement="bottom" title="Submit for Verification"><i class="icon-checkmark3 text-success"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -547,57 +550,47 @@
                                             <hr style="margin-top:10px;" />
                                         </div>
 
-                                        <div style="text-align:center;" ng-hide="vm.businessList.length>0">
+                                        <div style="text-align:center;" ng-hide="vm.serviceList.length>0">
                                             <h2 class="text-muted" style="text-align:center;">Oops!</h2>
                                             <p class="text-muted" style="font-size:16px;">
                                                 You haven't added any <strong class="text-info">Service accounts</strong> to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
                                             </p>
                                         </div>
 
-                                        <div class="block task task-low"
-                                             ng-repeat="business in vm.businessList">
-                                            <div class="row with-padding">
-                                                <div class="col-sm-9">
-                                                    <div class="task-description">
-                                                        <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
-                                                        <i>{{business.CorporateId}}</i>
-                                                        <span ng-bind-html="vm.getBusinessDescription(business)"></span>
+                                        <div class="col-md-4" 
+                                             style="padding-left:0px;"
+                                             ng-repeat="service in vm.serviceList">
+                                            <div class="block task task-normal">
+                                                <div class="row with-padding">
+                                                    <div class="col-sm-9">
+                                                        <div class="task-description">
+                                                            <a ng-click="vm.showServiceDetails(service)">{{serviceCategory(service)+' Service' || '-Not Available-'}}</a>
+                                                            <span ng-bind-html="vm.getServiceDescription(service)"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <div class="task-info">
-                                                        <span>{{vm.displayDate(business.IncorporationDate)}}</span>
+                                                    <div class="col-sm-3">
+                                                        <div class="task-info">
+                                                            <span></span>
 
-                                                        <span>
-                                                            <span ng-show="vm.isDraft(business)"
-                                                                  class="label label-default">
-                                                                Draft
-                                                            </span>
-                                                            <span ng-show="vm.isVerified(business)"
-                                                                  class="label label-success">
-                                                                Verified
-                                                            </span>
-                                                            <span ng-show="vm.isVerifying(business)"
-                                                                  class="label label-warning">
-                                                                Verifying
-                                                            </span>
-                                                        </span>
+                                                            <span></span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="panel-footer">
-                                                <div class="pull-right">
-                                                    <ul class="footer-icons-group">
-                                                        <li ng-show="vm.isDraft(business)">
-                                                            <a ng-click="vm.editBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
-                                                        </li>
-                                                        <li ng-show="vm.isDraft(business)">
-                                                            <a ng-click="vm.removeBusiness(business)" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="icon-remove3 text-danger"></i></a>
-                                                        </li>
-                                                        <li ng-show="vm.isDraft(business)">
-                                                            <a ng-click="" data-toggle="tooltip" data-placement="bottom" title="Submit for Verification"><i class="icon-checkmark3 text-success"></i></a>
-                                                        </li>
-                                                    </ul>
+                                                <div class="panel-footer">
+                                                    <div class="pull-right">
+                                                        <ul class="footer-icons-group">
+                                                            <li>
+                                                                <a ng-click="vm.editService(service)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
+                                                            </li>
+                                                            <li>
+                                                                <a ng-click=""
+                                                                   data-toggle="tooltip"
+                                                                   data-placement="bottom" title="Delete">
+                                                                    <i class="icon-remove3 text-danger"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -638,8 +631,9 @@
                                                                     {{vm.selectedServiceCategory}}
                                                                     <span class="caret"></span>
                                                                 </button>
-                                                                <ul class="dropdown-menu dropdown-menu-right icons-right" style="display: none;">
-                                                                    <li ng-repeat="type in vm.serviceCategories">
+                                                                <ul class="dropdown-menu dropdown-menu-right icons-right" style="">
+                                                                    <li ng-repeat="type in vm.serviceCategories" 
+                                                                        ng-class="{active:(vm.selectedServiceCategory == type)}">
                                                                         <a ng-click="vm.selectCategory(type)">{{type}}</a>
                                                                     </li>
                                                                 </ul>
