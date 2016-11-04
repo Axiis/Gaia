@@ -51,6 +51,11 @@ namespace Gaia.Server.DI
             //shared context configuration.
             var config = new ContextConfiguration<EuropaContext>()
                 .WithConnection(ConfigurationManager.ConnectionStrings["EuropaContext"].ConnectionString)
+                .WithEFConfiguraton(_efc =>
+                {
+                    _efc.LazyLoadingEnabled = false;
+                    _efc.ProxyCreationEnabled = false;
+                })
                 .WithInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<EuropaContext>())
                 .UsingModule(new IdentityAccessModuleConfig())
                 .UsingModule(new AuthenticationAccessModuleConfig())

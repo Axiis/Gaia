@@ -56,12 +56,17 @@ namespace Gaia.Core.Services
                     .FirstOrDefault()
                     .ThrowIfNull("data not found");
 
-                data.CopyTo(persisted);
+                data.CopyTo(persisted, nameof(Farm.Owner));
                 store.Modify(persisted, true);
             });
 
         public Operation<IEnumerable<Farm>> GetFarmAccounts()
-            => FeatureAccess.Guard(UserContext, () => DataContext.Store<Farm>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<Farm>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .UsingEach(_ud => _ud.Owner = null);
+            });
 
         public Operation RemoveFarmAccount(long[] ids)
             => FeatureAccess.Guard(UserContext, () =>
@@ -110,14 +115,16 @@ namespace Gaia.Core.Services
                     .FirstOrDefault()
                     .ThrowIfNull("data not found");
 
-                data.CopyTo(persisted);
+                data.CopyTo(persisted, nameof(Service.Owner));
                 store.Modify(persisted, true);
             });
 
         public Operation<IEnumerable<Service>> GetServiceAccounts()
             => FeatureAccess.Guard(UserContext, () =>
             {
-                var services = DataContext.Store<Service>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).ToArray();
+                var services = DataContext.Store<Service>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .UsingEach(_ud => _ud.Owner = null);
                 return services.AsEnumerable();
             });
 

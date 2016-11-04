@@ -21,6 +21,7 @@ interface Object {
     propertyMaps(): Array<Gaia.Utils.Map<string, any>>;
 }
 
+
 interface ObjectConstructor {
     isNullOrUndefined(value: any): boolean;
 }
@@ -42,6 +43,9 @@ interface Array<T> {
     group<K>(keySelector: Func1<T, K>): Array<Gaia.Utils.Map<K, Array<T>>>;
     remove(value: T): T[];
     removeAt(index: number): T[];
+    clear();
+    reduce<U>(seed: U, transformFunc: Func2<U, T, U>): U;
+    contains(value: T): boolean;
 }
 
 module Gaia.Extensions {
@@ -216,7 +220,7 @@ module Gaia.Extensions {
     ///number extension
 
 
-    ///array extensions
+    ///array extensions    
 
     Array.prototype.paginate = function<Data>(sequence: Array<Data>, pageIndex: number, pageSize: number): Gaia.Utils.SequencePage<Data> {
 
@@ -256,6 +260,15 @@ module Gaia.Extensions {
         }
     }
 
+    Array.prototype.clear = function () {
+        var _this = this as Array<any>;
+
+        if (_this.length <= 0) return;
+        else {
+            _this.splice(0, _this.length);
+        }
+    }
+
     Array.prototype.group = function <K, V>(keySelector: Func1<V, K>): Array<Gaia.Utils.Map<K, Array<V>>> {
 
         var arr = this as Array<V>;
@@ -272,6 +285,21 @@ module Gaia.Extensions {
                 Value: _map.Value as Array<V>
             } as Gaia.Utils.Map<K, Array<V>>;
         });
+    }
+
+    Array.prototype.reduce = function <T, U>(seed: U, transformFunc: Func2<U, T, U>): U {
+        var arr = this as Array<T>;
+
+        var v = seed;
+        for (var cnt = 0; cnt < arr.length; cnt++) {
+            v = transformFunc(v, arr[cnt]);
+        }
+        return v;
+    }
+
+    Array.prototype.contains = function <T>(value: T): boolean {
+        var arr = this as Array<T>;
+        return arr.indexOf(value) < 0;
     }
 
 }

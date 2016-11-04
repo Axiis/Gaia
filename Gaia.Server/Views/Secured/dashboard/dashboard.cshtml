@@ -372,14 +372,14 @@
                                             </p>
                                         </div>
 
-                                        <div class="col-md-4"
+                                        <div class="col-md-4 col-sm-6"
                                              style="padding-left:0px;"
                                              ng-repeat="business in vm.businessList">
-                                            <div class="block task task-low">
+                                            <div class="block task task-blue">
                                                 <div class="row with-padding">
                                                     <div class="col-sm-9">
                                                         <div class="task-description">
-                                                            <a ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
+                                                            <a class="text-info" ng-click="vm.showBusinessDetails(business)">{{business.CorporateName || '-N/A-'}}</a>
                                                             <i>{{business.CorporateId}}</i>
                                                             <span ng-bind-html="vm.getBusinessDescription(business)"></span>
                                                         </div>
@@ -452,18 +452,18 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-4">
-                                                            <label>Corporate Name</label>
+                                                            <label><strong>Corporate Name</strong></label>
                                                             <input type="text" ng-model="vm.currentBusinessData.CorporateName" placeholder="Business name" class="form-control">
                                                             <label ng-hide="vm.isBusinessNameSet()" class="error">This field is required.</label>
 
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <label>CAC Ref/Id</label>
+                                                            <label><strong>CAC Ref/Id</strong></label>
                                                             <input type="text" ng-model="vm.currentBusinessData.CorporateId" placeholder="CAC Ref/Id, etc..." class="form-control">
                                                             <label ng-hide="vm.isBusinessIdSet()" class="error">This field is required.</label>
                                                         </div>
                                                         <div class="col-md-4">
-                                                            <label>Incorporation date</label>
+                                                            <label><strong>Incorporation date</strong></label>
                                                             <input class="form-control" type="date" name="date" ng-model="vm.businessIncorporationDateBinding" />
                                                             <label ng-hide="vm.isBusinessIncorporationDateSet()" class="error">This field is required.</label>
                                                         </div>
@@ -473,7 +473,7 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label>Company description - other information about the business</label>
+                                                            <label><strong>Company description - other information about the business</strong></label>
                                                             <div id="richtext-editor"></div>
                                                             <script type="text/javascript">
 
@@ -553,18 +553,18 @@
                                         <div style="text-align:center;" ng-hide="vm.serviceList.length>0">
                                             <h2 class="text-muted" style="text-align:center;">Oops!</h2>
                                             <p class="text-muted" style="font-size:16px;">
-                                                You haven't added any <strong class="text-info">Service accounts</strong> to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
+                                                You haven't added any <strong class="text-warning">Service accounts</strong> to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
                                             </p>
                                         </div>
 
-                                        <div class="col-md-4" 
+                                        <div class="col-md-4 col-sm-6" 
                                              style="padding-left:0px;"
                                              ng-repeat="service in vm.serviceList">
-                                            <div class="block task task-normal">
+                                            <div class="block task task-high">
                                                 <div class="row with-padding">
                                                     <div class="col-sm-9">
                                                         <div class="task-description">
-                                                            <a ng-click="vm.showServiceDetails(service)">{{serviceCategory(service)+' Service' || '-Not Available-'}}</a>
+                                                            <a class="text-warning" ng-click="vm.showServiceDetails(service)">{{'['+vm.serviceCategory(service)+'] Service' || '-Not Available-'}}</a>
                                                             <span ng-bind-html="vm.getServiceDescription(service)"></span>
                                                         </div>
                                                     </div>
@@ -595,7 +595,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     
                                     <div ng-show="vm.isEditingService">
 
@@ -625,7 +624,7 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-4">
-                                                            <label>Service category &nbsp;&nbsp;</label>
+                                                            <label><strong>Service category</strong> &nbsp;&nbsp;</label>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                                                     {{vm.selectedServiceCategory}}
@@ -645,7 +644,7 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <label>Service Description</label>
+                                                            <label><strong>Service Description</strong></label>
                                                             <div id="services-richtext-editor"></div>
                                                             <script type="text/javascript">
 
@@ -681,9 +680,9 @@
 
                                     </div>
 
-                                    <div ng-show="vm.isDetailingServices">
+                                    <div ng-show="vm.isDetailingService">
                                         <div class="clearfix">
-                                            <i class="icon-briefcase pull-left" style="font-size:40px;"></i>
+                                            <i class="icon-office pull-left" style="font-size:40px;"></i>
                                             <button ng-click="vm.backToListingServices()"
                                                     type="button"
                                                     class="btn btn-xs btn-default pull-right">
@@ -705,6 +704,175 @@
                                 <!-- Third tab -->
                                 <div class="tab-pane fade" id="farms"
                                      ng-controller="FarmAccountViewModel as vm">
+
+                                    <div ng-show="vm.isListingFarms">
+
+                                        <div class="" style="text-align:right; margin-bottom:10px;">
+                                            <button type="button"
+                                                    ng-click="vm.addAndEditFarm()"
+                                                    class="btn btn-sm btn-info">
+                                                <i style="font-size:16px;" class="fa fa-plus"></i>&nbsp;&nbsp;Add
+                                            </button>
+                                            <hr style="margin-top:10px;" />
+                                        </div>
+
+                                        <div style="text-align:center;" ng-hide="vm.farmList.length>0">
+                                            <h2 class="text-muted" style="text-align:center;">Oops!</h2>
+                                            <p class="text-muted" style="font-size:16px;">
+                                                You haven't added any <strong class="text-success">Farm accounts</strong> to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6"
+                                             style="padding-left:0px;"
+                                             ng-repeat="farm in vm.farmList">
+                                            <div class="block task task-normal">
+                                                <div class="row with-padding">
+                                                    <div class="col-sm-9">
+                                                        <div class="task-description">
+                                                            <a class="text-success" ng-click="vm.showFarmDetails(farm)">{{'['+vm.farmCategory(farm)+'] Farm' || '-Not Available-'}}</a>
+                                                            <span ng-bind-html="vm.getFarmDescription(farm)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="task-info">
+                                                            <span></span>
+
+                                                            <span></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <div class="pull-right">
+                                                        <ul class="footer-icons-group">
+                                                            <li>
+                                                                <a ng-click="vm.editFarm(farm)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
+                                                            </li>
+                                                            <li>
+                                                                <a ng-click=""
+                                                                   data-toggle="tooltip"
+                                                                   data-placement="bottom" title="Delete">
+                                                                    <i class="icon-remove3 text-danger"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-show="vm.isEditingFarm">
+
+                                        <form action="#" class="block" role="form">
+
+                                            <h6 class="heading-hr clearfix">
+                                                <i class="icon-user"></i> Farm information:
+
+                                                <span style="display:inline-block; float:right;" class="btn-group">
+                                                    <button ng-click="vm.backToListingFarms()"
+                                                            type="button"
+                                                            class="btn btn-xs btn-default">
+                                                        <i class="icon-arrow-left4"></i>
+                                                        &nbsp;Back
+                                                    </button>
+                                                    <button ng-click="vm.persistCurrentFarm()"
+                                                            type="button"
+                                                            class="btn btn-xs btn-success">
+                                                        <i class="icon-thumbs-up3" ng-hide="vm.isPersistingFarm"></i>
+                                                        <div id="persist-farm-ring-loader" ng-show="vm.isPersistingFarm"></div>
+                                                        &nbsp;Ok
+                                                    </button>
+                                                </span>
+                                            </h6>
+
+                                            <div class="block-inner">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label><strong>Farm category</strong> &nbsp;&nbsp;</label>
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                                    {{vm.selectedFarmCategory}}
+                                                                    <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu dropdown-menu-right icons-right" style="">
+                                                                    <li ng-repeat="type in vm.farmCategories"
+                                                                        ng-class="{active:(vm.selectedFarmCategory == type)}">
+                                                                        <a ng-click="vm.selectCategory(type)">{{type}}</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label><strong>Geo Data</strong></label>
+                                                            <input class="form-control" type="text" ng-model="vm.currentFarm.GeoData" />
+                                                            <label ng-show="Object.isNullOrUndefined(vm.currentFarm.GeoData)" class="error">This field is required.</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label><strong>Farm Description</strong></label>
+                                                            <div id="farms-richtext-editor"></div>
+                                                            <script type="text/javascript">
+
+    $(function () {
+
+        $('#farms-richtext-editor').summernote({
+            toolbar: [['style', ['style']],
+                      ['font', ['bold', 'italic', 'underline', 'clear', 'fontname']],
+                      ['fontsize', ['fontsize']],
+                      ['color', ['color']],
+                      ['para', ['ul', 'ol', 'paragraph', 'height']],
+                      ['insert', ['table', 'link', 'picture', 'hr']]],
+            height: 250
+        });
+    });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="jgrowl-showcase">
+                                                <div class="jGrowl" ng-show="vm.hasFarmPersistenceError">
+                                                    <div class="jGrowl-notification growl-error">
+                                                        <div class="jGrowl-close" ng-click="vm.hasFarmPersistenceError = false">×</div>
+                                                        <div class="jGrowl-header">Error!</div>
+                                                        <div class="jGrowl-message">Something went wrong while saving your changes</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+
+                                    <div ng-show="vm.isDetailingFarm">
+                                        <div class="clearfix">
+                                            <i class="icon-office pull-left" style="font-size:40px;"></i>
+                                            <button ng-click="vm.backToListingFarms()"
+                                                    type="button"
+                                                    class="btn btn-xs btn-default pull-right">
+                                                <i class="icon-arrow-left4"></i>
+                                                &nbsp;Back
+                                            </button>
+                                        </div>
+                                        <hr style="margin-top:10px;" />
+                                        <h2>
+                                            {{vm.farmCategory(vm.currentFarm)}}
+                                        </h2>
+                                        <hr />
+                                        <div style="margin-top:20px;" ng-bind-html="vm.currentFarm.Description"></div>
+                                    </div>
                                 </div>
                                 <!-- /third tab -->
 
@@ -726,6 +894,7 @@
             ringLoader($('#remove-profileImage-ring-loader'), '14px', 'white');
             ringLoader($('#persist-business-ring-loader'), '14px', 'white');
             ringLoader($('#persist-service-ring-loader'), '14px', 'white');
+            ringLoader($('#persist-farm-ring-loader'), '14px', 'white');
         });
     </script>
 </div>

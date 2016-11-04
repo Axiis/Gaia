@@ -21,7 +21,7 @@ namespace Gaia.Core
         {
             Name = "ProfileImage",
             Type = Axis.Luna.CommonDataType.Url,
-            Data = "http://placehold.it/300" //<-- url to a default image
+            Data = "{'Name':'IMG-20161003-WA0009.jpg','Mime':'image/jpeg','Data':'/content/images/default-200.jpg','IsDataEmbeded':false}" //<-- url to a default image
         };
         public static UserData CloneForUser(this UserData original, string userId) => new UserData
         {

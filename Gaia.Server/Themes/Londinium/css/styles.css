@@ -869,6 +869,9 @@ ul.list-justified li {
 .task-low {
   border-left-color: #bbb;
 }
+.task-blue {
+  border-left-color: #3CA2BB;
+}
 
 .task-desc a {
   font-weight: 600;

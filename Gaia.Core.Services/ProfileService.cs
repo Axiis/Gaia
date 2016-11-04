@@ -250,7 +250,7 @@ namespace Gaia.Core.Services
 
                 if (persisted != null)
                 {
-                    data.CopyTo(persisted);
+                    data.CopyTo(persisted, nameof(BioData.Owner));
                     store.Modify(persisted, true);
                 }
                 else store.Add(data).Context.CommitChanges();
@@ -290,12 +290,17 @@ namespace Gaia.Core.Services
                     .FirstOrDefault()
                     .ThrowIfNull("data not found");
 
-                data.CopyTo(persisted);
+                data.CopyTo(persisted, nameof(CorporateData));
                 store.Modify(persisted, true);
             });
 
         public Operation<IEnumerable<ContactData>> GetContactData()
-            => FeatureAccess.Guard(UserContext, () => DataContext.Store<ContactData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<ContactData>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .UsingEach(_ud => _ud.Owner = null);
+            });
 
         public Operation RemoveContactData(long[] ids)
             => FeatureAccess.Guard(UserContext, () =>
@@ -345,12 +350,17 @@ namespace Gaia.Core.Services
                     .FirstOrDefault()
                     .ThrowIfNull("data not found");
 
-                data.CopyTo(persisted);
+                data.CopyTo(persisted, nameof(CorporateData.Owner));
                 store.Modify(persisted, true);
             });
 
         public Operation<IEnumerable<CorporateData>> GetCorporateData()
-            => FeatureAccess.Guard(UserContext, () => DataContext.Store<CorporateData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<CorporateData>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .UsingEach(_ud => _ud.Owner = null);
+            });
 
         public Operation RemoveCorporateData(long[] ids)
             => FeatureAccess.Guard(UserContext, () =>
@@ -414,7 +424,12 @@ namespace Gaia.Core.Services
             });
 
         public Operation<IEnumerable<UserData>> GetUserData()
-            => FeatureAccess.Guard(UserContext, () => DataContext.Store<UserData>().Query.Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId).AsEnumerable());
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<UserData>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .UsingEach(_ud => _ud.Owner = null);
+            });
         #endregion
 
 

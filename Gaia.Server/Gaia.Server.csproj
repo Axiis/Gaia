@@ -365,9 +365,11 @@
     <TypeScriptCompile Include="app\dashboard-app.ts" />
     <TypeScriptCompile Include="app\directives\binaryData.ts" />
     <TypeScriptCompile Include="app\login-app.ts" />
+    <TypeScriptCompile Include="app\marketplace-app.ts" />
     <TypeScriptCompile Include="app\models\axis-apollo-domain.ts" />
     <TypeScriptCompile Include="app\models\axis-luna-domain.ts" />
     <TypeScriptCompile Include="app\models\axis-pollux-domain.ts" />
+    <TypeScriptCompile Include="app\services\context-toolbar.ts" />
     <TypeScriptCompile Include="app\services\pollux-services.ts" />
     <TypeScriptCompile Include="app\services\utility-services.ts" />
     <TypeScriptCompile Include="app\utils\constants.ts" />
@@ -594,6 +596,10 @@
     <Content Include="Views\web.config" />
     <Content Include="Views\login\login-message.cshtml" />
     <Content Include="Views\secured\dashboard\dashboard.cshtml" />
+    <Content Include="Views\secured\market-place\configure.cshtml" />
+    <Content Include="Views\secured\market-place\customer.cshtml" />
+    <Content Include="Views\secured\market-place\merchant.cshtml" />
+    <Content Include="Views\secured\market-place\shell.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -601,6 +607,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <TypeScriptCompile Include="app\utils\GeoData.ts" />
+    <TypeScriptCompile Include="app\view-models\marketplace-viewmodels.ts" />
     <TypeScriptCompile Include="scripts\typings\moment\moment.d.ts" />
     <TypeScriptCompile Include="scripts\typings\toastr\toastr.d.ts" />
   </ItemGroup>

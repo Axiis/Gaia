@@ -124,38 +124,38 @@ var Gaia;
                             names.push(this.biodata.MiddleName);
                         names.push(this.biodata.FirstName);
                         var ns = names.join(' ');
-                        return ns.trim().length > 0 ? ns : '-N/A-';
+                        return ns.trim().length > 0 ? ns : '--';
                     }
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.dobDisplay = function () {
                     if (this.biodata && this.biodata.Dob) {
                         return this.biodata.Dob.toMoment().format('Do MMM, YYYY');
                     }
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.genderDisplay = function () {
                     if (this.biodata && this.biodata.Gender != null && this.biodata.Gender != undefined) {
                         return Axis.Pollux.Domain.Gender[this.biodata.Gender];
                     }
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.nationalityDisplay = function () {
                     if (this.biodata && this.biodata.Nationality) {
                         return this.biodata.Nationality;
                     }
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.stateOfOriginDisplay = function () {
                     if (this.biodata && this.biodata.StateOfOrigin) {
                         return this.biodata.StateOfOrigin;
                     }
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.isFirstNameSet = function () {
                     if (this.biodata && this.biodata.FirstName)
@@ -209,25 +209,25 @@ var Gaia;
                     if (this.contact && this.contact.Phone)
                         return this.contact.Phone;
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.alternatePhoneDisplay = function () {
                     if (this.contact && this.contact.AlternatePhone)
                         return this.contact.AlternatePhone;
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.emailDisplay = function () {
                     if (this.contact && this.contact.Email)
                         return this.contact.Email;
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.alternateEmailDisplay = function () {
                     if (this.contact && this.contact.AlternateEmail)
                         return this.contact.AlternateEmail;
                     else
-                        return '-N/A-';
+                        return '--';
                 };
                 ProfileViewModel.prototype.persistContactData = function () {
                     var _this = this;
@@ -490,7 +490,7 @@ var Gaia;
                     this.isListingServices = true;
                 };
                 ServiceAccountViewModel.prototype.serviceCategory = function (service) {
-                    if (service && service.ServiceType)
+                    if (!Object.isNullOrUndefined(service) && !Object.isNullOrUndefined(service.ServiceType))
                         return Gaia.Domain.ServiceType[service.ServiceType];
                     else
                         return '';
@@ -517,7 +517,7 @@ var Gaia;
                         $('#services-richtext-editor').summernote('code', this.currentService.Description || '');
                     }
                 };
-                ServiceAccountViewModel.prototype.showServiceDetail = function (s) {
+                ServiceAccountViewModel.prototype.showServiceDetails = function (s) {
                     if (!Object.isNullOrUndefined(s)) {
                         this.currentService = s;
                         this.clearUI();
@@ -568,43 +568,123 @@ var Gaia;
             }());
             Dashboard.ServiceAccountViewModel = ServiceAccountViewModel;
             var FarmAccountViewModel = (function () {
-                function FarmAccountViewModel(accountService, domModel, notifyService, counter) {
-                    this.accountService = accountService;
+                function FarmAccountViewModel(accountFarm, domModel, notifyFarm, counter) {
+                    this.accountFarm = accountFarm;
                     this.domModel = domModel;
-                    this.notifyService = notifyService;
+                    this.notifyFarm = notifyFarm;
                     this.user = null;
                     this.farmList = [];
-                    this.currentService = null;
-                    this.isListingFarms = false;
+                    this.currentFarm = null;
+                    this.farmCategories = [];
+                    this.isListingFarms = true;
                     this.isEditingFarm = false;
                     this.isPersistingFarm = false;
+                    this.isDetailingFarm = false;
                     this.hasFarmPersistenceError = false;
                     counter.farmVm = this;
-                    this.refreshServices();
+                    this.refreshFarms();
                     this.user = new Axis.Pollux.Domain.User({
                         UserId: domModel.simpleModel.UserId,
                         EntityId: domModel.simpleModel.UserId,
                         Stataus: 1
                     });
+                    this.farmCategories = Object
+                        .keys(Gaia.Domain.FarmType)
+                        .map(function (k) { return Gaia.Domain.FarmType[k]; })
+                        .filter(function (v) { return typeof v === "string"; });
                 }
+                Object.defineProperty(FarmAccountViewModel.prototype, "selectedFarmCategory", {
+                    get: function () {
+                        if (this.currentFarm && !Object.isNullOrUndefined(this.currentFarm.FarmType))
+                            return Gaia.Domain.FarmType[this.currentFarm.FarmType];
+                        else
+                            return 'Not Selected';
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                FarmAccountViewModel.prototype.clearUI = function () {
+                    this.isListingFarms = this.isEditingFarm = this.isPersistingFarm = this.hasFarmPersistenceError = false;
+                };
+                FarmAccountViewModel.prototype.backToListingFarms = function () {
+                    if (this.currentFarm['$nascent']) {
+                        this.farmList.remove(this.currentFarm);
+                        this.currentFarm = null;
+                    }
+                    this.clearUI();
+                    this.isListingFarms = true;
+                };
+                FarmAccountViewModel.prototype.farmCategory = function (farm) {
+                    if (!Object.isNullOrUndefined(farm) && !Object.isNullOrUndefined(farm.FarmType))
+                        return Gaia.Domain.FarmType[farm.FarmType];
+                    else
+                        return '';
+                };
+                FarmAccountViewModel.prototype.selectCategory = function (type) {
+                    if (this.currentFarm) {
+                        this.currentFarm.FarmType = Gaia.Domain.FarmType[type];
+                    }
+                };
+                FarmAccountViewModel.prototype.addFarm = function () {
+                    var newobj = new Gaia.Domain.FarmAccount({ OwnerId: this.user.EntityId });
+                    newobj.$nascent = true;
+                    this.farmList = [newobj].concat(this.farmList);
+                    return newobj;
+                };
+                FarmAccountViewModel.prototype.addAndEditFarm = function () {
+                    this.editFarm(this.addFarm());
+                };
+                FarmAccountViewModel.prototype.editFarm = function (s) {
+                    if (s) {
+                        this.currentFarm = s;
+                        this.clearUI();
+                        this.isEditingFarm = true;
+                        $('#farms-richtext-editor').summernote('code', this.currentFarm.Description || '');
+                    }
+                };
+                FarmAccountViewModel.prototype.showFarmDetails = function (s) {
+                    if (!Object.isNullOrUndefined(s)) {
+                        this.currentFarm = s;
+                        this.clearUI();
+                        this.isDetailingFarm = true;
+                    }
+                };
+                FarmAccountViewModel.prototype.getFarmDescription = function (s) {
+                    if (!Object.isNullOrUndefined(s)) {
+                        if (s.Description && s.Description.length > 200)
+                            return s.Description.substr(0, 200) + '...';
+                        else if (s.Description)
+                            return s.Description;
+                        else
+                            return '';
+                    }
+                    else
+                        return '';
+                };
+                FarmAccountViewModel.prototype.persistCurrentFarm = function () {
+                    if (this.currentFarm) {
+                        this.currentFarm.Description = $('#farms-richtext-editor').summernote('code');
+                        this.persistFarm(this.currentFarm);
+                    }
+                };
                 FarmAccountViewModel.prototype.persistFarm = function (farm) {
                     var _this = this;
                     if (this.isPersistingFarm)
                         return;
                     this.isPersistingFarm = true;
-                    this.accountService.persistFarmAccount(farm)
+                    this.accountFarm.persistFarmAccount(farm)
                         .then(function (oprc) {
-                        _this.isEditingFarm = false;
-                        _this.hasFarmPersistenceError = false;
+                        delete farm.$nascent;
+                        _this.notifyFarm.success('Your farm account information was saved successfully', 'Alert');
                         _this.isPersistingFarm = false;
                     }, function (e) {
+                        _this.notifyFarm.error('Something went wrong while saving your farm account information...', 'Oops!');
                         _this.isPersistingFarm = false;
-                        _this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
                     });
                 };
-                FarmAccountViewModel.prototype.refreshServices = function () {
+                FarmAccountViewModel.prototype.refreshFarms = function () {
                     var _this = this;
-                    this.accountService.getFarmAccounts().then(function (oprc) {
+                    this.accountFarm.getFarmAccounts().then(function (oprc) {
                         _this.farmList = oprc.Result || [];
                     });
                 };
@@ -634,4 +714,3 @@ var Gaia;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-viewmodels.js.map

@@ -1,0 +1,286 @@
+﻿@model Gaia.Server.Controllers.MVC.Models.ShellModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <title>Gaia - Market Place</title>
+
+    <link href="/themes/londinium/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/themes/londinium/css/londinium-theme.css" rel="stylesheet" type="text/css">
+    <link href="/themes/londinium/css/styles.css" rel="stylesheet" type="text/css">
+    <link href="/themes/londinium/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="~/fonts/cyrillic-ext.css" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/toastr.min.css" rel="stylesheet" type="text/css">
+    <link href="~/scripts/summernote/summernote.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="~/Content/ring-loader.css" />
+    <link rel="stylesheet" href="~/Content/cube-loader.css" />
+
+    <link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css" />
+
+
+    <script type="text/javascript" src="~/scripts/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery-ui-1.10.1.min.js"></script>
+    <script type="text/javascript" src="~/scripts/toastr.min.js"></script>
+    <script type="text/javascript" src="~/scripts/summernote/summernote.min.js"></script>
+
+    @*
+    <script type="text/javascript" src="/themes/londinium/js/plugins/charts/sparkline.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uniform.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/select2.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/inputmask.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/autosize.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/inputlimit.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/listbox.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/multiselect.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/validate.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/tags.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/switch.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uploader/plupload.full.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uploader/plupload.queue.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/wysihtml5/wysihtml5.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/wysihtml5/toolbar.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/daterangepicker.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/fancybox.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/moment.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/datatables.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/colorpicker.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/timepicker.min.js"></script>
+    *@
+
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uniform.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/multiselect.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/daterangepicker.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/moment.js"></script>
+
+    <script type="text/javascript" src="~/themes/londinium/js/application_blank.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="~/scripts/loaders.js"></script>
+
+    <script type="text/javascript" src="~/scripts/moment.min.js"></script>
+
+    <script type="text/javascript" src="~/scripts/angular.min.js"></script>
+    <script type="text/javascript" src="~/scripts/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="~/scripts/angular-animate.min.js"></script>
+    <script type="text/javascript" src="~/scripts/angular-route.min.js"></script>
+    <script type="text/javascript" src="~/scripts/angular-ui-router.min.js"></script>
+
+</head>
+<body class="navbar-fixed" ng-app="gaiaMarketPlace">
+    <!-- Navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="NavbarViewModel as vm">
+        <div class="navbar-header">
+            <a class="navbar-brand" style="padding:1px;" href="#">
+                <img src="~/Content/images/GaiaLogo.svg" style="height:50px; width:40px;" alt="Gaia">
+                <span style="display:inline-block;margin-bottom:5px; vertical-align:bottom; font-family:jura; font-size:x-large">Gaia</span>
+            </a>
+            <a class="sidebar-toggle"><i class="icon-paragraph-justify2"></i></a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-icons">
+                <span class="sr-only">Toggle navbar</span>
+                <i class="icon-grid3"></i>
+            </button>
+            <button type="button" class="navbar-toggle offcanvas">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="icon-paragraph-justify2"></i>
+            </button>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right collapse" id="navbar-icons">
+            <li class="">
+                <a href="/view-server/secured/settings/shell">
+                    <i class="fa fa-wrench"></i>
+                </a>
+            </li>
+            <li class="dropdown">
+                <a data-toggle="dropdown" class="dropdown-toggle">
+                    <i class="fa fa-bell"></i>
+                </a>
+                @*
+            <div class="popup dropdown-menu dropdown-menu-right">
+                <div class="popup-header">
+                    <span>Notifications</span>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th class="text-center">Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status status-success item-before"></span> <a href="#">Frontpage fixes</a></td>
+                            <td><span class="text-smaller text-semibold">Bugs</span></td>
+                            <td class="text-center"><span class="label label-success">87%</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="status status-danger item-before"></span> <a href="#">CSS compilation</a></td>
+                            <td><span class="text-smaller text-semibold">Bugs</span></td>
+                            <td class="text-center"><span class="label label-danger">18%</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="status status-info item-before"></span> <a href="#">Responsive layout changes</a></td>
+                            <td><span class="text-smaller text-semibold">Layout</span></td>
+                            <td class="text-center"><span class="label label-info">52%</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="status status-success item-before"></span> <a href="#">Add categories filter</a></td>
+                            <td><span class="text-smaller text-semibold">Content</span></td>
+                            <td class="text-center"><span class="label label-success">100%</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="status status-success item-before"></span> <a href="#">Media grid padding issue</a></td>
+                            <td><span class="text-smaller text-semibold">Bugs</span></td>
+                            <td class="text-center"><span class="label label-success">100%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                *@
+            </li>
+            <li class="user dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="~/Content/images/default-user.png" style="border-radius:50%;" alt="">
+                    <span>@Model.UserId</span>
+                    <i class="caret"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right icons-right">
+                    <li><a href ng-click="vm.logout()"><i class="icon-exit"></i> Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- /navbar -->
+
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-content">
+
+                <!-- Main navigation -->
+                <ul class="navigation">
+                    <li class=""><a href="/view-server/secured/dashboard/shell"><span>Dashboard</span> <i class="icon-screen2"></i></a></li>
+                </ul>
+
+                <ul class="navigation">
+                    <li class="">
+                        <a href="/view-server/secured/gaia/shell"><span>Gaia</span> 
+                            <i class="">
+                                <img src="~/Content/images/GaiaLogo.svg" style="height:24px; width:24px;" />
+                            </i>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navigation">
+                    <li>
+                        <a href="/view-server/secured/activities/shell"><span>Activities</span> <i class="icon-star4"></i></a>
+                    </li>
+                    <li>
+                        <a href="/view-server/secured/community/shell"><span>Community</span> <i class="fa fa-users"></i></a>
+                    </li>
+                    <li class="active">
+                        <a href><span>Market Place</span> <i class="fa fa-shopping-cart"></i></a>
+                    </li>
+                </ul>
+
+                <ul class="navigation">
+                    <li>
+                        <a href="/view-server/secured/settings/shell"><span>Settings</span> <i class="fa fa-wrench"></i></a>
+                    </li>
+                </ul>
+                <!-- /main navigation -->
+
+            </div>
+        </div>
+        <!-- /sidebar -->
+
+        <!-- Page content -->
+        <div class="page-content" ng-controller="MarketPlaceViewModel as vm">
+
+            <div class="page-header">
+                <div class="page-title">
+                    <h3>Market Place <small>Buy &amp; Sell products/services</small></h3>
+                </div>
+
+                <context-toolbar id="context-toolbar" class="col-md-8 col-sm-8 col-xs-12 "></context-toolbar>
+            </div>
+
+            <div class="tabbable page-tabs">
+                <ul class="nav nav-tabs">
+                    <li class="" ng-class="{active: vm.currentState() == 'customer'}">
+                        <a ui-sref="customer" style="line-height:22px;">
+                            <i class="icon-basket" style="font-size:20px;"></i> Buy
+                        </a>
+                    </li>
+                    <li class="" ng-class="{active: vm.currentState() == 'merchant'}">
+                        <a ui-sref="merchant" style="line-height:22px;">
+                            <i style="background-image:url('/Content/images/merchant.svg'); width:22px; height:22px;" class="svg-icon"></i> Sell
+                        </a>
+                    </li>
+                    <li class="pull-right" ng-class="{active: vm.currentState() == 'configure'}">
+                        <a ui-sref="configure" style="line-height:22px;">
+                            <i class="icon-heart2" style="font-size:18px;"></i> My Preferences
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" style="overflow:visible;">
+                    <div class="tab-pane active gaia-fade-in gaia-slide-in-left" ui-view></div>
+                </div>
+            </div>
+            
+            
+            <!-- Footer -->
+            <div class="footer clearfix" style="margin-top:20px;">
+                <div class="pull-left"><b>&copy; &nbsp;@DateTime.Now.Year.</b> &nbsp; Powered By <a href="http://DevSoft.net.ng">DevSoft</a></div>
+                <div class="pull-right icons-group">
+                    <a href="#"><i class="icon-screen2"></i></a>
+                    <a href="#"><i class="icon-balance"></i></a>
+                    <a href="#"><i class="icon-cog3"></i></a>
+                </div>
+            </div>
+            <!-- /footer -->
+
+        </div>
+        <!-- /page content -->
+    </div>
+    <!-- /content -->
+
+    <div class="hidden" 
+         id="local-models"
+         simple-models="UserId:@Model.UserId;"></div>
+
+
+    <script type="text/javascript" src="~/app/utils/extensions.js"></script>
+    <script type="text/javascript" src="~/app/utils/tools.js"></script>
+    <script type="text/javascript" src="~/app/utils/constants.js"></script>
+    <script type="text/javascript" src="~/app/utils/map.js"></script>
+    <script type="text/javascript" src="~/app/models/axis-luna-domain.js"></script>
+    <script type="text/javascript" src="~/app/models/axis-apollo-domain.js"></script>
+    <script type="text/javascript" src="~/app/models/axis-pollux-domain.js"></script>
+    <script type="text/javascript" src="~/app/models/gaia-domain.js"></script>
+    <script type="text/javascript" src="~/app/directives/binaryData.js"></script>
+    <script type="text/javascript" src="~/app/services/utility-services.js"></script>
+    <script type="text/javascript" src="~/app/services/gaia-services.js"></script>
+    <script type="text/javascript" src="~/app/services/pollux-services.js"></script>
+    <script type="text/javascript" src="~/app/services/context-toolbar.js"></script>
+    <script type="text/javascript" src="~/app/view-models/marketplace-viewmodels.js"></script>
+    <script type="text/javascript" src="~/app/view-models/shared-viewmodels.js"></script>
+    <script type="text/javascript" src="~/app/marketplace-app.js"></script>
+</body>
+</html>

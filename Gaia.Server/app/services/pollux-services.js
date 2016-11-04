@@ -12,4 +12,3 @@ var Pollux;
         Services.Authentication = Authentication;
     })(Services = Pollux.Services || (Pollux.Services = {}));
 })(Pollux || (Pollux = {}));
-//# sourceMappingURL=pollux-services.js.map

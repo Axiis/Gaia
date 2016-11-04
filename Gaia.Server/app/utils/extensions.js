@@ -165,7 +165,7 @@ var Gaia;
             enumerable: false
         });
         ///number extension
-        ///array extensions
+        ///array extensions    
         Array.prototype.paginate = function (sequence, pageIndex, pageSize) {
             if (pageIndex < 0 || pageSize < 1)
                 throw 'invalid pagination arguments';
@@ -198,6 +198,14 @@ var Gaia;
                 return null;
             }
         };
+        Array.prototype.clear = function () {
+            var _this = this;
+            if (_this.length <= 0)
+                return;
+            else {
+                _this.splice(0, _this.length);
+            }
+        };
         Array.prototype.group = function (keySelector) {
             var arr = this;
             var map = {};
@@ -213,6 +221,17 @@ var Gaia;
                 };
             });
         };
+        Array.prototype.reduce = function (seed, transformFunc) {
+            var arr = this;
+            var v = seed;
+            for (var cnt = 0; cnt < arr.length; cnt++) {
+                v = transformFunc(v, arr[cnt]);
+            }
+            return v;
+        };
+        Array.prototype.contains = function (value) {
+            var arr = this;
+            return arr.indexOf(value) < 0;
+        };
     })(Extensions = Gaia.Extensions || (Gaia.Extensions = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=extensions.js.map

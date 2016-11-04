@@ -42,4 +42,3 @@ var Gaia;
         var Encoding = Utils.Encoding;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=map.js.map

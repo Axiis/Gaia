@@ -19,5 +19,84 @@ textarea {
 @font-face {
     font-family: 'jura';
     src: url('/Content/fonts/jura/Jura-Medium.ttf') format('truetype');
-}
+}
+
+#context-toolbar {
+    margin:30px 0; 
+    float: right;
+}
+
+@media (max-width: 768px) {
+    #context-toolbar{
+        margin-top: 0px;
+        padding: 0px;
+    }
+}
+
+.svg-icon{
+    background-origin: border-box;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display:inline-block;
+}
+
+.gaia-fade-in.ng-enter {
+    transition: .5s;
+    opacity: 0;
+} 
+.gaia-fade-in.ng-enter-active {
+    opacity: 1;
+}
+
+.gaia-fade-out.ng-enter {
+    transition: .5s;
+    opacity: 1;
+} 
+.gaia-fade-out.ng-enter-active {
+    opacity: 0;
+}
+
+
+.gaia-slide-in-left.ng-enter {
+    transition: .3s ease-out;
+    margin-right:-40px;
+    margin-left:40px;
+}
+.gaia-slide-in-left.ng-enter-active {
+    margin-right:0;
+    margin-left:0;
+}
+
+.gaia-slide-out-left.ng-leave {
+    transition: .3s ease-out;
+    margin-right:0;
+    margin-left:0;
+}
+.gaia-slide-out-left.ng-leave-active {
+    margin-right:40px;
+    margin-left:-40px;
+}
+
+
+.gaia-slide-in-right.ng-enter {
+    transition: .3s ease-out;
+    margin-left:-40px;
+    margin-right:40px;
+}
+.gaia-slide-in-right.ng-enter-active {
+    margin-right:0;
+    margin-left:0;
+}
+
+.gaia-slide-out-right.ng-leave {
+    transition: .3s ease-out;
+    margin-left:0;
+    margin-right:0;
+}
+.gaia-slide-out-right.ng-leave-active {
+    margin-right:40px;
+    margin-left:-40px;
+}
+
 

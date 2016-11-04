@@ -108,33 +108,33 @@ module Gaia.ViewModels.Dashboard {
                 names.push(this.biodata.FirstName);
 
                 var ns = names.join(' ');
-                return ns.trim().length > 0 ? ns : '-N/A-';
+                return ns.trim().length > 0 ? ns : '--';
             }
-            else return '-N/A-';
+            else return '--';
         }
         dobDisplay(): string {
             if (this.biodata && this.biodata.Dob) {
                 return this.biodata.Dob.toMoment().format('Do MMM, YYYY');
             }
-            else return '-N/A-';
+            else return '--';
         }
         genderDisplay(): string {
             if (this.biodata && this.biodata.Gender != null && this.biodata.Gender != undefined) {
                 return Axis.Pollux.Domain.Gender[this.biodata.Gender];
             }
-            else return '-N/A-';
+            else return '--';
         }
         nationalityDisplay(): string {
             if (this.biodata && this.biodata.Nationality) {
                 return this.biodata.Nationality
             }
-            else return '-N/A-';
+            else return '--';
         }
         stateOfOriginDisplay(): string {
             if (this.biodata && this.biodata.StateOfOrigin) {
                 return this.biodata.StateOfOrigin
             }
-            else return '-N/A-';
+            else return '--';
         }
 
         isFirstNameSet(): boolean {
@@ -186,20 +186,20 @@ module Gaia.ViewModels.Dashboard {
 
         phoneDisplay(): string {
             if (this.contact && this.contact.Phone) return this.contact.Phone;
-            else return '-N/A-';
+            else return '--';
         }
         alternatePhoneDisplay(): string {
             if (this.contact && this.contact.AlternatePhone) return this.contact.AlternatePhone;
-            else return '-N/A-';
+            else return '--';
         }
 
         emailDisplay(): string {
             if (this.contact && this.contact.Email) return this.contact.Email;
-            else return '-N/A-'
+            else return '--'
         }
         alternateEmailDisplay(): string {
             if (this.contact && this.contact.AlternateEmail) return this.contact.AlternateEmail;
-            else return '-N/A-'
+            else return '--'
         }
 
         persistContactData() {
@@ -451,7 +451,7 @@ module Gaia.ViewModels.Dashboard {
         }
 
         serviceCategory(service: Gaia.Domain.ServiceAccount): string {
-            if (service && service.ServiceType) return Gaia.Domain.ServiceType[service.ServiceType];
+            if (!Object.isNullOrUndefined(service) && !Object.isNullOrUndefined(service.ServiceType)) return Gaia.Domain.ServiceType[service.ServiceType];
             else return '';
         }
         selectCategory(type: string) {
@@ -479,7 +479,7 @@ module Gaia.ViewModels.Dashboard {
             }
         }
 
-        showServiceDetail(s: Gaia.Domain.ServiceAccount) {
+        showServiceDetails(s: Gaia.Domain.ServiceAccount) {
             if (!Object.isNullOrUndefined(s)) {
                 this.currentService = s;
                 this.clearUI();
@@ -548,47 +548,124 @@ module Gaia.ViewModels.Dashboard {
         user: Axis.Pollux.Domain.User = null;
 
         farmList: Gaia.Domain.FarmAccount[] = [];
-        currentService: Gaia.Domain.FarmAccount = null;
+        currentFarm: Gaia.Domain.FarmAccount = null;
 
-        isListingFarms: boolean = false;
+        farmCategories: string[] = [];
+
+        isListingFarms: boolean = true;
         isEditingFarm: boolean = false;
         isPersistingFarm: boolean = false;
+        isDetailingFarm: boolean = false;
         hasFarmPersistenceError: boolean = false;
 
+        get selectedFarmCategory(): string {
+            if (this.currentFarm && !Object.isNullOrUndefined(this.currentFarm.FarmType)) return Gaia.Domain.FarmType[this.currentFarm.FarmType] as string;
+            else return 'Not Selected';
+        }
 
+        clearUI() {
+            this.isListingFarms = this.isEditingFarm = this.isPersistingFarm = this.hasFarmPersistenceError = false;
+        }
+
+        backToListingFarms() {
+            if (this.currentFarm['$nascent']) {
+                this.farmList.remove(this.currentFarm);
+                this.currentFarm = null;
+            }
+
+            this.clearUI();
+            this.isListingFarms = true;
+        }
+
+        farmCategory(farm: Gaia.Domain.FarmAccount): string {
+            if (!Object.isNullOrUndefined(farm) && !Object.isNullOrUndefined(farm.FarmType)) return Gaia.Domain.FarmType[farm.FarmType];
+            else return '';
+        }
+        selectCategory(type: string) {
+            if (this.currentFarm) {
+                this.currentFarm.FarmType = Gaia.Domain.FarmType[type];
+            }
+        }
+
+        addFarm(): Gaia.Domain.FarmAccount {
+            var newobj = new Gaia.Domain.FarmAccount({ OwnerId: this.user.EntityId });
+            (newobj as any).$nascent = true;
+            this.farmList = [newobj].concat(this.farmList);
+            return newobj;
+        }
+        addAndEditFarm() {
+            this.editFarm(this.addFarm());
+        }
+        editFarm(s: Gaia.Domain.FarmAccount) {
+            if (s) {
+                this.currentFarm = s;
+                this.clearUI();
+                this.isEditingFarm = true;
+
+                ($('#farms-richtext-editor') as any).summernote('code', this.currentFarm.Description || '');
+            }
+        }
+
+        showFarmDetails(s: Gaia.Domain.FarmAccount) {
+            if (!Object.isNullOrUndefined(s)) {
+                this.currentFarm = s;
+                this.clearUI();
+                this.isDetailingFarm = true;
+            }
+        }
+        getFarmDescription(s: Gaia.Domain.FarmAccount): string {
+            if (!Object.isNullOrUndefined(s)) {
+                if (s.Description && s.Description.length > 200) return s.Description.substr(0, 200) + '...';
+                else if (s.Description) return s.Description;
+                else return '';
+            }
+            else return '';
+        }
+
+        persistCurrentFarm() {
+            if (this.currentFarm) {
+                this.currentFarm.Description = ($('#farms-richtext-editor') as any).summernote('code');
+                this.persistFarm(this.currentFarm);
+            }
+        }
         persistFarm(farm: Gaia.Domain.FarmAccount) {
             if (this.isPersistingFarm) return;
 
             this.isPersistingFarm = true;
-            this.accountService.persistFarmAccount(farm)
+            this.accountFarm.persistFarmAccount(farm)
                 .then(oprc => {
-                    this.isEditingFarm = false;
-                    this.hasFarmPersistenceError = false;
+                    delete (farm as any).$nascent;
+                    this.notifyFarm.success('Your farm account information was saved successfully', 'Alert');
                     this.isPersistingFarm = false;
                 }, e => {
+                    this.notifyFarm.error('Something went wrong while saving your farm account information...', 'Oops!');
                     this.isPersistingFarm = false;
-                    this.notifyService.error('Something went wrong while saving your Service Account...', 'Oops!');
                 });
         }
-        refreshServices() {
-            this.accountService.getFarmAccounts().then(oprc => {
+        refreshFarms() {
+            this.accountFarm.getFarmAccounts().then(oprc => {
                 this.farmList = oprc.Result || [];
             });
         }
 
 
         static $inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
-        constructor(private accountService: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
-            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
+        constructor(private accountFarm: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
+            private notifyFarm: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
 
             counter.farmVm = this;
 
-            this.refreshServices();
+            this.refreshFarms();
             this.user = new Axis.Pollux.Domain.User({
                 UserId: domModel.simpleModel.UserId,
                 EntityId: domModel.simpleModel.UserId,
                 Stataus: 1
             });
+
+            this.farmCategories = Object
+                .keys(Gaia.Domain.FarmType)
+                .map(k => Gaia.Domain.FarmType[k] as string)
+                .filter(v => typeof v === "string");
         }
     }
 
