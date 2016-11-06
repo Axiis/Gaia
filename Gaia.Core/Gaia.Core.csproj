@@ -63,11 +63,15 @@
     <Compile Include="Domain\Accounts\Service.cs" />
     <Compile Include="Domain\Advert.cs" />
     <Compile Include="Domain\AdvertHit.cs" />
+    <Compile Include="Domain\Blob.cs" />
     <Compile Include="Domain\ForumThreadWatch.cs" />
     <Compile Include="Domain\IBaseHash.cs" />
+    <Compile Include="Domain\MarketPlace\Product.cs" />
+    <Compile Include="Domain\MarketPlace\Service.cs" />
+    <Compile Include="Domain\MarketPlace\ServiceDataContract.cs" />
+    <Compile Include="Domain\MarketPlace\ServiceInterface.cs" />
     <Compile Include="Domain\Post.cs" />
     <Compile Include="Domain\Comment.cs" />
-    <Compile Include="Domain\FarmInfo.cs" />
     <Compile Include="Domain\FeatureAccessDescriptor.cs" />
     <Compile Include="Domain\FeatureAccessProfile.cs" />
     <Compile Include="Domain\FeedEntry.cs" />
@@ -79,7 +83,6 @@
     <Compile Include="Domain\Meta\FeatureURI.cs" />
     <Compile Include="Domain\Notification.cs" />
     <Compile Include="Domain\PinnedFeed.cs" />
-    <Compile Include="Domain\ServiceInfo.cs" />
     <Compile Include="Domain\SystemSetting.cs" />
     <Compile Include="Domain\UserReaction.cs" />
     <Compile Include="Domain\UserStatus.cs" />
@@ -119,7 +122,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Domain\MarketPlace\" />
     <Folder Include="Domain\Transaction\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
