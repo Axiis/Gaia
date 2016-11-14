@@ -714,3 +714,4 @@ var Gaia;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=dashboard-viewmodels.js.map

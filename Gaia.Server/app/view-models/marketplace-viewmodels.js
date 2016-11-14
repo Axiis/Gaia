@@ -37,3 +37,4 @@ var Gaia;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=marketplace-viewmodels.js.map

@@ -31,7 +31,7 @@
 
 2. Verify that logging in form WebApi will also log in the user into MVC, so that all our "cshtml" pages can be guarded by the [authorize] attribute.
    This will ensure that only the login page can be peeked at. Refer to [2016/06/17]#7 as it explains that all access into the system will have a user
-   account - unauthorized users will be "borrowed" the guest account access, and will be limited to only unrestricted places.
+   account - unauthorized users will be "borrowed" the guest account access, and will be limited to only unrestricted places. [DONE] 
 
 
 2016/08/16 ====================================================================================
@@ -52,3 +52,8 @@
 2016/10/20 ====================================================================================
 
 1.	 Modify the "copyTo" Typescript extension function to include the option of specifying the properties to be copied. [DONE]
+
+
+2016/11/14 ====================================================================================
+
+1.	 Add permissions/access descriptors for the marketplace manager/service

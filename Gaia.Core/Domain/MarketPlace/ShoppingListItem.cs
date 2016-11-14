@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gaia.Core.Domain.MarketPlace
 {
-    public class ServiceInterface: GaiaEntity<long>
+    public class ShoppingListItem: GaiaEntity<long>
     {
-        public string Name { get; set; }
-        public ServiceDataContract DataContract { get; set; }
     }
 }

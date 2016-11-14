@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Gaia.Core.Utils;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gaia.Core.Domain.MarketPlace
 {
-    public class Product: GaiaEntity<long>
+    public class Product: GaiaEntity<long>, ISearchableItem
     {
+        public static readonly string TransactionIdFormat = "P-X00-00X0-XXX00X";
+        public string TransactionId { get; set; } = IdGenerator.NewId(TransactionIdFormat);
+
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -16,7 +16,12 @@ namespace Gaia.Core.Domain.MarketPlace
 
         public ProductStatus Status { get; set; }
 
-        public ICollection<Blob>
+        public string Tags { get; set; }
+
+        public SearchableItemType Type => SearchableItemType.Product; //ignore in db
+
+        public ICollection<Blob> Images { get; set; } = new HashSet<Blob>();
+        public ICollection<Blob> Videos { get; set; } = new HashSet<Blob>();
     }
 
     public enum ProductStatus

@@ -1,0 +1,14 @@
+
+=======================================================================================================================
+Service DDL Spec
+
+The Service DDL defines a structure for expressing data needed by a service interface. It is a simple JSON-like structure
+that specifies data structure, as well as a way to group the data durinig presentation for viewing and editing if necessary.
+
+{
+	[$groupName: <quoted group name string>]
+	[$groupDescription: <quoted group description string>]
+	<unique-data-name>: <quoted types: int|long|real|float|string|boolean|object|blob|date-time|time-span|uri|phone|email|location> *
+
+	[$groups: <array of groups that repeat the above structure>]
+}

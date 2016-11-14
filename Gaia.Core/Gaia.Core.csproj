@@ -66,10 +66,15 @@
     <Compile Include="Domain\Blob.cs" />
     <Compile Include="Domain\ForumThreadWatch.cs" />
     <Compile Include="Domain\IBaseHash.cs" />
+    <Compile Include="Domain\MarketPlace\AggregateOrder.cs" />
+    <Compile Include="Domain\MarketPlace\ISearchableItem.cs" />
+    <Compile Include="Domain\MarketPlace\Order.cs" />
     <Compile Include="Domain\MarketPlace\Product.cs" />
     <Compile Include="Domain\MarketPlace\Service.cs" />
     <Compile Include="Domain\MarketPlace\ServiceDataContract.cs" />
     <Compile Include="Domain\MarketPlace\ServiceInterface.cs" />
+    <Compile Include="Domain\MarketPlace\ShoppingCartItem.cs" />
+    <Compile Include="Domain\MarketPlace\ShoppingListItem.cs" />
     <Compile Include="Domain\Post.cs" />
     <Compile Include="Domain\Comment.cs" />
     <Compile Include="Domain\FeatureAccessDescriptor.cs" />
@@ -84,6 +89,7 @@
     <Compile Include="Domain\Notification.cs" />
     <Compile Include="Domain\PinnedFeed.cs" />
     <Compile Include="Domain\SystemSetting.cs" />
+    <Compile Include="Domain\Transaction\OrderTransaction.cs" />
     <Compile Include="Domain\UserReaction.cs" />
     <Compile Include="Domain\UserStatus.cs" />
     <Compile Include="Domain\UserAccessProfile.cs" />
@@ -117,13 +123,12 @@
     <Compile Include="Utils\FeatureAttribute.cs" />
     <Compile Include="Utils\GeoData.cs" />
     <Compile Include="Utils\NamedQueries.cs" />
+    <Compile Include="Utils\IdGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Domain\Transaction\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

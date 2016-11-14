@@ -12,6 +12,8 @@ using Axis.Pollux.RBAC.OAModule;
 using Gaia.Core.OAModule;
 using System.Data.Entity;
 using Gaia.Core.Domain.Accounts;
+using Gaia.Core.Domain.MarketPlace;
+using Marketplace = Gaia.Core.Domain.MarketPlace;
 
 namespace Test.Gaia.Domain
 {
@@ -116,16 +118,33 @@ namespace Test.Gaia.Domain
             //Console.WriteLine($"5th Configuration compiled in: {DateTime.Now - start}");
 
 
-            var s = context.Store<Service>().Query.FirstOrDefault();
+            //var s = context.Store<Service>().Query.FirstOrDefault();
 
-            Console.WriteLine($"[service-description:{s.Description}] [user: {s.OwnerId}] [userObject: {s.Owner != null}]");
+            //Console.WriteLine($"[service-description:{s.Description}] [user: {s.OwnerId}] [userObject: {s.Owner != null}]");
 
-            var u = context.Store<Axis.Pollux.Identity.Principal.User>().Query.FirstOrDefault(_u => _u.EntityId == "stanley.damasus@gmail.com");
-            Console.WriteLine($"[user:{u.UserId}]");
+            //var u = context.Store<Axis.Pollux.Identity.Principal.User>().Query.FirstOrDefault(_u => _u.EntityId == "stanley.damasus@gmail.com");
+            //Console.WriteLine($"[user:{u.UserId}]");
 
-            var s2 = context.Store<Service>().Query.OrderBy(_u => _u.EntityId).Skip(1).FirstOrDefault();
-            Console.WriteLine($"[service-description:{s2.Description}] [user: {s2.OwnerId}] [userObject: {s2.Owner != null}]");
+            //var s2 = context.Store<Service>().Query.OrderBy(_u => _u.EntityId).Skip(1).FirstOrDefault();
+            //Console.WriteLine($"[service-description:{s2.Description}] [user: {s2.OwnerId}] [userObject: {s2.Owner != null}]");
 
+        }
+
+        [TestMethod]
+        public void TestMethod4()
+        {
+            var r = new Random(Guid.NewGuid().GetHashCode());
+            var s = IdGenerator.NewId(Marketplace.Order.TransactionIdFormat, r);
+
+            var collisions = 0L;
+            for(int cnt=0;cnt<1; cnt++)
+            {
+                if (s == IdGenerator.NewId(Marketplace.Order.TransactionIdFormat, r)) collisions++;
+            }
+
+            Console.WriteLine(collisions);
+
+            Assert.AreEqual(false, collisions > 0);
         }
     }
 }
