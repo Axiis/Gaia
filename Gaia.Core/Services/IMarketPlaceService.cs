@@ -19,13 +19,13 @@ namespace Gaia.Core.Services
         Operation<IEnumerable<ServiceCategory>> GetServiceCategories();
 
         /// <summary>
-        /// Retrieves a paginated slice of the Orders for the current user. By default, this method will return the entire list of orders. Varying the values
+        /// Retrieves a paginated slice of the Orders for the current merchant. By default, this method will return the entire list of orders. Varying the values
         /// of the parameters
         /// </summary>
         /// <param name="pageIndex">the index of the page requested</param>
         /// <param name="pageSize">the number of elements per page</param>
         /// <returns></returns>
-        Operation<SequencePage<Order>> GetOrders(long pageIndex = 0, int pageSize = -1);
+        Operation<SequencePage<Order>> GetMerchantOrders(long pageIndex = 0, int pageSize = -1);
 
         Operation ModifyOrder(Order order);
 
@@ -43,13 +43,14 @@ namespace Gaia.Core.Services
         #endregion
 
         #region Customer
-        Operation<SequencePage<ISearchableItem>> FindItem(string searchString, string tags = null);
+        Operation<SequencePage<ISearchableItem>> FindProduct(string searchString, int pageSize, long pageIndex = 0L);
+        Operation<SequencePage<ISearchableItem>> FindService(string searchString, int pageSize, long pageIndex = 0L);
 
 
-        Operation<long> AddToBasket(long itemId, SearchableItemType type = SearchableItemType.Product);
+        Operation<long> AddToBasket(long itemId, ItemType type = ItemType.Product);
 
 
-        Operation<long> AddToList(string listName, long itemId, SearchableItemType type = SearchableItemType.Product);
+        Operation<long> AddToList(string listName, long itemId, ItemType type = ItemType.Product);
 
 
         Operation RemoveFromBasket(long baskeItemId);
@@ -58,6 +59,17 @@ namespace Gaia.Core.Services
         Operation RemoveFromList(string listName, long basketItemId);
 
         Operation Pay(long[] basketItemIds);
+
+
+
+        /// <summary>
+        /// Retrieves a paginated slice of the Orders for the current customer. By default, this method will return the entire list of orders. Varying the values
+        /// of the parameters
+        /// </summary>
+        /// <param name="pageIndex">the index of the page requested</param>
+        /// <param name="pageSize">the number of elements per page</param>
+        /// <returns></returns>
+        Operation<SequencePage<Order>> GetCustomerOrders(long pageIndex = 0, int pageSize = -1);
         #endregion
 
         #region Configure

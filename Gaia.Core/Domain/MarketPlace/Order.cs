@@ -1,9 +1,10 @@
-﻿using Gaia.Core.Utils;
+﻿using Axis.Pollux.Identity.Principal;
+using Gaia.Core.Utils;
 using System;
 
 namespace Gaia.Core.Domain.MarketPlace
 {
-    public class Order
+    public class Order: GaiaEntity<long>
     {
         public static readonly string TransactionIdFormat = "O-X00-0000-XXX00X-X0X0";
         public string TransactionId { get; set; } = IdGenerator.NewId(TransactionIdFormat);
@@ -16,6 +17,9 @@ namespace Gaia.Core.Domain.MarketPlace
         public string Message { get; set; }
         public DateTime MessageTimeStamp { get; set; }
         public OrderStatus Status { get; set; }
+
+        public User Customer { get; set; }
+        public User Merchant { get; set; }
 
         public string InputData { get; set;  }
         public string OutputData { get; set; }

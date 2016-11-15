@@ -18,7 +18,7 @@ namespace Gaia.Core.Domain.MarketPlace
 
         public string Tags { get; set; }
 
-        public SearchableItemType Type => SearchableItemType.Product; //ignore in db
+        public ItemType ItemType => ItemType.Product; //ignore in db
 
         public ICollection<Blob> Images { get; set; } = new HashSet<Blob>();
         public ICollection<Blob> Videos { get; set; } = new HashSet<Blob>();

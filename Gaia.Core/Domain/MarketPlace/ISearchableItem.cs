@@ -11,12 +11,6 @@ namespace Gaia.Core.Domain.MarketPlace
         string Title { get; set; }
         string Description { get; set; }
         string Tags { get; set; }
-        SearchableItemType Type { get; }
-    }
-
-    public enum SearchableItemType
-    {
-        Product, 
-        Service
+        ItemType ItemType { get; }
     }
 }

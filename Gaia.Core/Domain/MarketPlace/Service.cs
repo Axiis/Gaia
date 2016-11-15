@@ -16,7 +16,7 @@ namespace Gaia.Core.Domain.MarketPlace
 
         public string Tags { get; set; }
 
-        public SearchableItemType Type => SearchableItemType.Service; //ignore in db
+        public ItemType ItemType => ItemType.Service; //ignore in db
 
         //public PaymentChannel PaymentChannel { get; set; }
 

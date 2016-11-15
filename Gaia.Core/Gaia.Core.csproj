@@ -67,6 +67,7 @@
     <Compile Include="Domain\ForumThreadWatch.cs" />
     <Compile Include="Domain\IBaseHash.cs" />
     <Compile Include="Domain\MarketPlace\AggregateOrder.cs" />
+    <Compile Include="Domain\MarketPlace\ItemType.cs" />
     <Compile Include="Domain\MarketPlace\ISearchableItem.cs" />
     <Compile Include="Domain\MarketPlace\Order.cs" />
     <Compile Include="Domain\MarketPlace\Product.cs" />
