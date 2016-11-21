@@ -20,8 +20,9 @@ namespace Gaia.Core.Domain.MarketPlace
 
         public ItemType ItemType => ItemType.Product; //ignore in db
 
-        public ICollection<Blob> Images { get; set; } = new HashSet<Blob>();
-        public ICollection<Blob> Videos { get; set; } = new HashSet<Blob>();
+
+        public ICollection<Blob> Images { get; set; } = new HashSet<Blob>(); //ignore
+        public ICollection<Blob> Videos { get; set; } = new HashSet<Blob>(); //ignore
     }
 
     public enum ProductStatus

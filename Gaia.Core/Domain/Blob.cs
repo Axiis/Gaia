@@ -14,6 +14,7 @@ namespace Gaia.Core.Domain
         public string Name { get; set; }
 
         public string Context { get; set; }
+        public long ContextId { get; set; }
 
         public BinaryData ToBinaryData() => new BinaryData
         {

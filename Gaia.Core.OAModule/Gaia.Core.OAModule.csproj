@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GaiaMap.cs" />
+    <Compile Include="Mappings\BlobMapping.cs" />
     <Compile Include="Mappings\FarmMapping.cs" />
     <Compile Include="Mappings\AdvertMappings.cs" />
     <Compile Include="Mappings\MarketPlace\MarketPlaceMappings.cs" />

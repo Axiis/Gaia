@@ -21,6 +21,8 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
         {
             this.Property(e => e.TransactionId)
                 .HasMaxLength(22);
+
+            this.HasOptional(e => e.Next).WithMany().HasForeignKey(e => e.NextId);
         }
     }
 
@@ -35,6 +37,8 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
                 .HasColumnType("nText");
 
             this.Ignore(e => e.ItemType);
+            this.Ignore(e => e.Images);
+            this.Ignore(e => e.Videos);
         }
     }
 

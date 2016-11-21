@@ -26,6 +26,8 @@ namespace Gaia.Core.Domain.MarketPlace
 
         public Order Previous { get; set; }
         public Order Next { get; set; }
+        
+        public long? NextId { get; set; }
     }
 
 
