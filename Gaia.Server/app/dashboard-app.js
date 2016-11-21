@@ -22,7 +22,6 @@ var Gaia;
             Dashboard.module.controller('DashboardViewModel', Gaia.ViewModels.Dashboard.DashboardViewModel);
             Dashboard.module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
             Dashboard.module.controller('BusinessAccountViewModel', Gaia.ViewModels.Dashboard.BusinessAccountViewModel);
-            Dashboard.module.controller('ServiceAccountViewModel', Gaia.ViewModels.Dashboard.ServiceAccountViewModel);
             Dashboard.module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
             Dashboard.module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
             Dashboard.module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);

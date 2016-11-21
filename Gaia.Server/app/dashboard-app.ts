@@ -25,7 +25,6 @@ module Gaia.App.Dashboard {
     module.controller('DashboardViewModel', Gaia.ViewModels.Dashboard.DashboardViewModel);
     module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
     module.controller('BusinessAccountViewModel', Gaia.ViewModels.Dashboard.BusinessAccountViewModel);
-    module.controller('ServiceAccountViewModel', Gaia.ViewModels.Dashboard.ServiceAccountViewModel);
     module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
     module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
     module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);

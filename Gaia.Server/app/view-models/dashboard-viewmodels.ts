@@ -416,139 +416,12 @@ module Gaia.ViewModels.Dashboard {
     }
 
 
-    export class ServiceAccountViewModel {
-
-        user: Axis.Pollux.Domain.User = null;
-
-        serviceList: Gaia.Domain.ServiceAccount[] = [];
-        currentService: Gaia.Domain.ServiceAccount = null;
-
-        serviceCategories: string[] = [];
-
-        isListingServices: boolean = true;
-        isEditingService: boolean = false;
-        isPersistingService: boolean = false;
-        isDetailingService: boolean = false;
-        hasServicePersistenceError: boolean = false;
-
-        get selectedServiceCategory(): string {
-            if (this.currentService && !Object.isNullOrUndefined(this.currentService.ServiceType)) return Gaia.Domain.ServiceType[this.currentService.ServiceType] as string;
-            else return 'Not Selected';
-        }
-
-        clearUI() {
-            this.isListingServices = this.isEditingService = this.isPersistingService = this.hasServicePersistenceError = false;
-        }
-
-        backToListingServices() {
-            if (this.currentService['$nascent']) {
-                this.serviceList.remove(this.currentService);
-                this.currentService = null;
-            }
-
-            this.clearUI();
-            this.isListingServices = true;
-        }
-
-        serviceCategory(service: Gaia.Domain.ServiceAccount): string {
-            if (!Object.isNullOrUndefined(service) && !Object.isNullOrUndefined(service.ServiceType)) return Gaia.Domain.ServiceType[service.ServiceType];
-            else return '';
-        }
-        selectCategory(type: string) {
-            if (this.currentService) {
-                this.currentService.ServiceType = Gaia.Domain.ServiceType[type];
-            }
-        }
-
-        addService(): Gaia.Domain.ServiceAccount {
-            var newobj = new Gaia.Domain.ServiceAccount({ OwnerId: this.user.EntityId });
-            (newobj as any).$nascent = true;
-            this.serviceList = [newobj].concat(this.serviceList);
-            return newobj;
-        }
-        addAndEditService() {
-            this.editService(this.addService());
-        }
-        editService(s: Gaia.Domain.ServiceAccount) {
-            if (s) {
-                this.currentService = s;
-                this.clearUI();
-                this.isEditingService = true;
-
-                ($('#services-richtext-editor') as any).summernote('code', this.currentService.Description || '');
-            }
-        }
-
-        showServiceDetails(s: Gaia.Domain.ServiceAccount) {
-            if (!Object.isNullOrUndefined(s)) {
-                this.currentService = s;
-                this.clearUI();
-                this.isDetailingService = true;
-            }
-        }
-        getServiceDescription(s: Gaia.Domain.ServiceAccount): string {
-            if (!Object.isNullOrUndefined(s)) {
-                if (s.Description && s.Description.length > 200) return s.Description.substr(0, 200) + '...';
-                else if (s.Description) return s.Description;
-                else return '';
-            }
-            else return '';
-        }
-
-        persistCurrentService() {
-            if (this.currentService) {
-                this.currentService.Description = ($('#services-richtext-editor') as any).summernote('code');
-                this.persistService(this.currentService);
-            }
-        }
-        persistService(service: Gaia.Domain.ServiceAccount) {
-            if (this.isPersistingService) return;
-
-            this.isPersistingService = true;
-            this.accountService.persistServiceAccount(service)
-                .then(oprc => {
-                    delete (service as any).$nascent;
-                    this.notifyService.success('Your service account information was saved successfully', 'Alert');
-                    this.isPersistingService = false;
-                }, e => {
-                    this.notifyService.error('Something went wrong while saving your service account information...', 'Oops!');
-                    this.isPersistingService = false;
-                });
-        }
-        refreshServices() {
-            this.accountService.getServiceAccounts().then(oprc => {
-                this.serviceList = oprc.Result || [];
-            });
-        }
-
-
-        static $inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
-        constructor(private accountService: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
-            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
-
-            counter.serviceVm = this;
-
-            this.refreshServices();
-            this.user = new Axis.Pollux.Domain.User({
-                UserId: domModel.simpleModel.UserId,
-                EntityId: domModel.simpleModel.UserId,
-                Stataus: 1
-            });
-
-            this.serviceCategories = Object
-                .keys(Gaia.Domain.ServiceType)
-                .map(k => Gaia.Domain.ServiceType[k] as string)
-                .filter(v => typeof v === "string");
-        }
-    }
-
-
     export class FarmAccountViewModel {
 
         user: Axis.Pollux.Domain.User = null;
 
-        farmList: Gaia.Domain.FarmAccount[] = [];
-        currentFarm: Gaia.Domain.FarmAccount = null;
+        farmList: Gaia.Domain.Farm[] = [];
+        currentFarm: Gaia.Domain.Farm = null;
 
         farmCategories: string[] = [];
 
@@ -577,7 +450,7 @@ module Gaia.ViewModels.Dashboard {
             this.isListingFarms = true;
         }
 
-        farmCategory(farm: Gaia.Domain.FarmAccount): string {
+        farmCategory(farm: Gaia.Domain.Farm): string {
             if (!Object.isNullOrUndefined(farm) && !Object.isNullOrUndefined(farm.FarmType)) return Gaia.Domain.FarmType[farm.FarmType];
             else return '';
         }
@@ -587,8 +460,8 @@ module Gaia.ViewModels.Dashboard {
             }
         }
 
-        addFarm(): Gaia.Domain.FarmAccount {
-            var newobj = new Gaia.Domain.FarmAccount({ OwnerId: this.user.EntityId });
+        addFarm(): Gaia.Domain.Farm {
+            var newobj = new Gaia.Domain.Farm({ OwnerId: this.user.EntityId });
             (newobj as any).$nascent = true;
             this.farmList = [newobj].concat(this.farmList);
             return newobj;
@@ -596,7 +469,7 @@ module Gaia.ViewModels.Dashboard {
         addAndEditFarm() {
             this.editFarm(this.addFarm());
         }
-        editFarm(s: Gaia.Domain.FarmAccount) {
+        editFarm(s: Gaia.Domain.Farm) {
             if (s) {
                 this.currentFarm = s;
                 this.clearUI();
@@ -606,14 +479,14 @@ module Gaia.ViewModels.Dashboard {
             }
         }
 
-        showFarmDetails(s: Gaia.Domain.FarmAccount) {
+        showFarmDetails(s: Gaia.Domain.Farm) {
             if (!Object.isNullOrUndefined(s)) {
                 this.currentFarm = s;
                 this.clearUI();
                 this.isDetailingFarm = true;
             }
         }
-        getFarmDescription(s: Gaia.Domain.FarmAccount): string {
+        getFarmDescription(s: Gaia.Domain.Farm): string {
             if (!Object.isNullOrUndefined(s)) {
                 if (s.Description && s.Description.length > 200) return s.Description.substr(0, 200) + '...';
                 else if (s.Description) return s.Description;
@@ -628,11 +501,11 @@ module Gaia.ViewModels.Dashboard {
                 this.persistFarm(this.currentFarm);
             }
         }
-        persistFarm(farm: Gaia.Domain.FarmAccount) {
+        persistFarm(farm: Gaia.Domain.Farm) {
             if (this.isPersistingFarm) return;
 
             this.isPersistingFarm = true;
-            this.accountFarm.persistFarmAccount(farm)
+            this.accountFarm.persistFarm(farm)
                 .then(oprc => {
                     delete (farm as any).$nascent;
                     this.notifyFarm.success('Your farm account information was saved successfully', 'Alert');
@@ -682,7 +555,6 @@ module Gaia.ViewModels.Dashboard {
     export class AccountCounter {
 
         farmVm: FarmAccountViewModel = null;
-        serviceVm: ServiceAccountViewModel = null;
         businessVm: BusinessAccountViewModel = null;
 
         static $inject = [];

@@ -67,19 +67,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GaiaMap.cs" />
-    <Compile Include="Mappings\Accounts\FarmMapping.cs" />
-    <Compile Include="Mappings\Accounts\ServiceMapping.cs" />
+    <Compile Include="Mappings\FarmMapping.cs" />
     <Compile Include="Mappings\AdvertMappings.cs" />
+    <Compile Include="Mappings\MarketPlace\MarketPlaceMappings.cs" />
     <Compile Include="Mappings\PostMapping.cs" />
     <Compile Include="Mappings\CommentMapping.cs" />
-    <Compile Include="Mappings\FarmInfoMapping.cs" />
     <Compile Include="Mappings\FeatureAccessMappings.cs" />
     <Compile Include="Mappings\ForumMappings.cs" />
     <Compile Include="Mappings\Meta\MetaMappings.cs" />
     <Compile Include="Mappings\NotificationMapping.cs" />
     <Compile Include="Mappings\PinnedFeedMapping.cs" />
     <Compile Include="Mappings\RatingMapping.cs" />
-    <Compile Include="Mappings\ServiceInfoMapping.cs" />
     <Compile Include="Mappings\SystemSettingMapping.cs" />
     <Compile Include="Mappings\UserReactionMapping.cs" />
     <Compile Include="Mappings\UserAccessProfileMapping.cs" />
@@ -98,7 +96,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Mappings\MarketPlace\" />
     <Folder Include="Mappings\Transaction\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

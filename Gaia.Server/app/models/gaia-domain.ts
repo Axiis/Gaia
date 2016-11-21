@@ -69,8 +69,60 @@ module Gaia.Domain {
         Mixed
     }
 
-    export enum ServiceType {
-        Other
+    export enum ItemType {
+        Product,
+        Service
+    }
+
+    export enum ServiceStatus {
+        Available,
+        Unavailable,
+        Suspended
+    }
+
+    export enum ProductStatus {
+        Published,
+        Reviewing
+    }
+
+    export enum OrderStatus {
+        /// <summary>
+        /// A brand-new order will always be in this state. This is the only point (for now) where an order may be cancelled
+        /// </summary>
+        Staged,
+
+        /// <summary> as the payment is still being processed by the payment services
+        /// </summary>
+        ProcessingPayment,
+
+        /// <summary>
+        /// Soon after payment is confirmed, the service provider is notified that a new order has been placed by a customer.
+        /// At this point, the system is awaiting acknowledgment from the service provider. Acknowledging the order begins
+        /// the order-processing phase of the transaction
+        /// </summary>
+        AwaitingAcknowledgment,
+
+        /// <summary>
+        /// All of the intermediate processes that happens at the service provider's end will be represented by this state.
+        /// "Acknowledging" an order automatically brings the order to this state.
+        /// </summary>
+        ServicingOrder,
+
+        /// <summary>
+        /// Once the order has been concluded, e.g, product picked up, or shipment delivered, etc, the service provider
+        /// changes the status of the order to fulfilled.
+        /// </summary>
+        OrderFulfilled,
+
+        /// <summary>
+        /// A customer may cancel a "staged" transaction. No other action will be taken on the order.
+        /// </summary>
+        OrderCancelled,
+
+        /// <summary>
+        /// If some irrecoverable error happens during the life time of the order, before it is fulfilled, it is aborted.
+        /// </summary>
+        OrderAborted
     }
 
 
@@ -93,7 +145,7 @@ module Gaia.Domain {
     }
 
 
-    export class FarmAccount extends GaiaEntity<number> {
+    export class Farm extends GaiaEntity<number> {
 
         OwnerId: string;
         Owner: Axis.Pollux.Domain.User;
@@ -117,30 +169,6 @@ module Gaia.Domain {
 
             if (data) {
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-            }
-        }
-    }
-
-    export class ServiceAccount extends GaiaEntity<number>{
-
-        OwnerId: string;
-        Owner: Axis.Pollux.Domain.User;
-        Description: string;
-        ServiceType: ServiceType;
-
-        BusinessAccounts: Axis.Pollux.Domain.CorporateData[];
-        //ContextData: ContextData[];
-
-        constructor(data?: Object) {
-            super(data);
-            
-            if (Object.isNullOrUndefined(this.ServiceType)) this.ServiceType = null;
-            if (Object.isNullOrUndefined(this.BusinessAccounts)) this.BusinessAccounts = [];
-
-            if (data) {
-                this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-                this.BusinessAccounts = (data['BusinessAccounts'] as Array<any> || [])
-                    .map(v => new Axis.Pollux.Domain.CorporateData(v));
             }
         }
     }
@@ -502,6 +530,151 @@ module Gaia.Domain {
             super(data);
             if (data) {
                 this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+            }
+        }
+    }
+
+    export class OrderAggregate extends GaiaEntity<number>{
+        TransactionId: string;
+        TimeStamp: Axis.Apollo.Domain.JsonDateTime;
+        Owner: Axis.Pollux.Domain.User;
+        Orders: Order[];
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.TimeStamp = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
+                var _orders = ((data['Orders'] || []) as Array<Object>).map(r => new Order(r));
+                this.Orders.push(..._orders);
+            }
+        }
+    }
+
+    export class Order extends GaiaEntity<number> {
+        TransactionId: string;
+        Service: Service;
+        Amount: number;
+        TimeStamp: Axis.Apollo.Domain.JsonDateTime;
+
+        Message: string;
+        MessageTimeStamp: Axis.Apollo.Domain.JsonDateTime;
+
+        Status: OrderStatus;
+
+        Customer: Axis.Pollux.Domain.User;
+        Merchant: Axis.Pollux.Domain.User;
+
+        InputData: string;
+        OutputData: string;
+
+        Previous: Order;
+        Next: Order;
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.Service = !Object.isNullOrUndefined(data['Service']) ? new Service(data['Service']) : null;
+                this.TimeStamp = !Object.isNullOrUndefined(data['TimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['TimeStamp']) : null;
+                this.MessageTimeStamp = !Object.isNullOrUndefined(data['MessageTimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['MessageTimeStamp']) : null;
+                this.Customer = !Object.isNullOrUndefined(data['Customer']) ? new Axis.Pollux.Domain.User(data['Customer']) : null;
+                this.Merchant = !Object.isNullOrUndefined(data['Merchant']) ? new Axis.Pollux.Domain.User(data['Merchant']) : null;
+
+                this.Previous = !Object.isNullOrUndefined(data['Previous']) ? new Order(data['Previous']) : null;
+                this.Next = !Object.isNullOrUndefined(data['Next']) ? new Order(data['Next']) : null;
+            }
+        }
+    }
+
+    export class Service extends GaiaEntity<number>{
+        TransactionId: string;
+        Title: string;
+        Description: string;
+        Status: ServiceStatus;
+        Cost: number;
+        Product: Product;
+        Tags: string;
+        ItemType: ItemType;
+
+        Inputs: ServiceInterface[];
+        Outputs: ServiceInterface[];
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.Product = !Object.isNullOrUndefined(this.Product) ? new Product(this.Product) : null;
+                this.Inputs = !Object.isNullOrUndefined(this.Inputs) ? this.Inputs.map(r => new ServiceInterface(r)) : [];
+                this.Outputs = !Object.isNullOrUndefined(this.Outputs) ? this.Outputs.map(r => new ServiceInterface(r)) : [];
+            }
+        }
+    }
+
+    export class Product extends GaiaEntity<number>{
+        TransactionId: string;
+        Title: string;
+        Description: string;
+        Status: ProductStatus;
+        Cost: number;
+        StockCount: number;
+        Tags: string;
+        ItemType: ItemType;
+
+        Images: Axis.Luna.Domain.BinaryData[];
+        Videos: Axis.Luna.Domain.BinaryData[];
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
+                this.Videos = !Object.isNullOrUndefined(this.Videos) ? this.Videos.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
+            }
+        }
+    }
+
+    export class ServiceInterface extends GaiaEntity<number>{
+        Name: string;
+        Datacontract: ServiceDataContract;
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.Datacontract = !Object.isNullOrUndefined(this.Datacontract) ? new ServiceDataContract(this.Datacontract) : null;
+            }
+        }
+    }
+
+    export class ServiceDataContract extends GaiaEntity<number> {
+        Name: string;
+        DDL: string;
+
+        constructor(data?: Object) {
+            super(data);
+        }
+    }
+
+    export class ShoppingCartItem extends GaiaEntity<number>{
+        ItemType: ItemType;
+        ItemId: number;
+        Owner: Axis.Pollux.Domain.User;
+        Quantity: number;
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
+            }
+        }
+    }
+
+    export class ShoppingListItem extends GaiaEntity<number>{
+        ItemType: ItemType;
+        ItemId: number;
+        Owner: Axis.Pollux.Domain.User;
+        ListName: string;
+
+        constructor(data?: Object) {
+            super(data);
+            if (!Object.isNullOrUndefined(data)) {
+                this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
             }
         }
     }

@@ -72,6 +72,20 @@ namespace Gaia.Core.Services
         Operation<IEnumerable<UserData>> GetUserData();
         #endregion
 
+        #region Farm
+        [Feature("system/Profiles/Farms/@add")]
+        Operation<long> AddFarmAccount(Farm data);
+
+        [Feature("system/Profiles/Farms/@modify")]
+        Operation ModifyFarmAccount(Farm data);
+
+        [Feature("system/Profiles/Farms/@remove")]
+        Operation RemoveFarmAccount(long[] ids);
+
+        [Feature("system/Profiles/Farms/@get")]
+        Operation<IEnumerable<Farm>> GetFarmAccounts();
+        #endregion
+
 
         [Feature("system/Profiles/@archive-user")]
         Operation<User> ArchiveUser(string targetUser);

@@ -72,10 +72,56 @@ var Gaia;
             FarmType[FarmType["Mixed"] = 3] = "Mixed";
         })(Domain.FarmType || (Domain.FarmType = {}));
         var FarmType = Domain.FarmType;
-        (function (ServiceType) {
-            ServiceType[ServiceType["Other"] = 0] = "Other";
-        })(Domain.ServiceType || (Domain.ServiceType = {}));
-        var ServiceType = Domain.ServiceType;
+        (function (ItemType) {
+            ItemType[ItemType["Product"] = 0] = "Product";
+            ItemType[ItemType["Service"] = 1] = "Service";
+        })(Domain.ItemType || (Domain.ItemType = {}));
+        var ItemType = Domain.ItemType;
+        (function (ServiceStatus) {
+            ServiceStatus[ServiceStatus["Available"] = 0] = "Available";
+            ServiceStatus[ServiceStatus["Unavailable"] = 1] = "Unavailable";
+            ServiceStatus[ServiceStatus["Suspended"] = 2] = "Suspended";
+        })(Domain.ServiceStatus || (Domain.ServiceStatus = {}));
+        var ServiceStatus = Domain.ServiceStatus;
+        (function (ProductStatus) {
+            ProductStatus[ProductStatus["Published"] = 0] = "Published";
+            ProductStatus[ProductStatus["Reviewing"] = 1] = "Reviewing";
+        })(Domain.ProductStatus || (Domain.ProductStatus = {}));
+        var ProductStatus = Domain.ProductStatus;
+        (function (OrderStatus) {
+            /// <summary>
+            /// A brand-new order will always be in this state. This is the only point (for now) where an order may be cancelled
+            /// </summary>
+            OrderStatus[OrderStatus["Staged"] = 0] = "Staged";
+            /// <summary> as the payment is still being processed by the payment services
+            /// </summary>
+            OrderStatus[OrderStatus["ProcessingPayment"] = 1] = "ProcessingPayment";
+            /// <summary>
+            /// Soon after payment is confirmed, the service provider is notified that a new order has been placed by a customer.
+            /// At this point, the system is awaiting acknowledgment from the service provider. Acknowledging the order begins
+            /// the order-processing phase of the transaction
+            /// </summary>
+            OrderStatus[OrderStatus["AwaitingAcknowledgment"] = 2] = "AwaitingAcknowledgment";
+            /// <summary>
+            /// All of the intermediate processes that happens at the service provider's end will be represented by this state.
+            /// "Acknowledging" an order automatically brings the order to this state.
+            /// </summary>
+            OrderStatus[OrderStatus["ServicingOrder"] = 3] = "ServicingOrder";
+            /// <summary>
+            /// Once the order has been concluded, e.g, product picked up, or shipment delivered, etc, the service provider
+            /// changes the status of the order to fulfilled.
+            /// </summary>
+            OrderStatus[OrderStatus["OrderFulfilled"] = 4] = "OrderFulfilled";
+            /// <summary>
+            /// A customer may cancel a "staged" transaction. No other action will be taken on the order.
+            /// </summary>
+            OrderStatus[OrderStatus["OrderCancelled"] = 5] = "OrderCancelled";
+            /// <summary>
+            /// If some irrecoverable error happens during the life time of the order, before it is fulfilled, it is aborted.
+            /// </summary>
+            OrderStatus[OrderStatus["OrderAborted"] = 6] = "OrderAborted";
+        })(Domain.OrderStatus || (Domain.OrderStatus = {}));
+        var OrderStatus = Domain.OrderStatus;
         var GaiaEntity = (function () {
             function GaiaEntity(data) {
                 if (data) {
@@ -87,9 +133,9 @@ var Gaia;
             return GaiaEntity;
         }());
         Domain.GaiaEntity = GaiaEntity;
-        var FarmAccount = (function (_super) {
-            __extends(FarmAccount, _super);
-            function FarmAccount(data) {
+        var Farm = (function (_super) {
+            __extends(Farm, _super);
+            function Farm(data) {
                 _super.call(this, data);
                 this.BusinessAccounts = [];
                 //set default values
@@ -102,30 +148,12 @@ var Gaia;
                 }
             }
             //ContextData: ContextData[] = [];
-            FarmAccount.prototype.GeoArea = function () {
+            Farm.prototype.GeoArea = function () {
                 return Gaia.Utils.GeoArea.Parse(this.GeoData);
             };
-            return FarmAccount;
+            return Farm;
         }(GaiaEntity));
-        Domain.FarmAccount = FarmAccount;
-        var ServiceAccount = (function (_super) {
-            __extends(ServiceAccount, _super);
-            //ContextData: ContextData[];
-            function ServiceAccount(data) {
-                _super.call(this, data);
-                if (Object.isNullOrUndefined(this.ServiceType))
-                    this.ServiceType = null;
-                if (Object.isNullOrUndefined(this.BusinessAccounts))
-                    this.BusinessAccounts = [];
-                if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-                    this.BusinessAccounts = (data['BusinessAccounts'] || [])
-                        .map(function (v) { return new Axis.Pollux.Domain.CorporateData(v); });
-                }
-            }
-            return ServiceAccount;
-        }(GaiaEntity));
-        Domain.ServiceAccount = ServiceAccount;
+        Domain.Farm = Farm;
         var FeatureURI = (function (_super) {
             __extends(FeatureURI, _super);
             function FeatureURI(data) {
@@ -402,6 +430,103 @@ var Gaia;
             return UserReaction;
         }(GaiaEntity));
         Domain.UserReaction = UserReaction;
+        var OrderAggregate = (function (_super) {
+            __extends(OrderAggregate, _super);
+            function OrderAggregate(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.TimeStamp = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
+                    var _orders = (data['Orders'] || []).map(function (r) { return new Order(r); });
+                    (_a = this.Orders).push.apply(_a, _orders);
+                }
+                var _a;
+            }
+            return OrderAggregate;
+        }(GaiaEntity));
+        Domain.OrderAggregate = OrderAggregate;
+        var Order = (function (_super) {
+            __extends(Order, _super);
+            function Order(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.Service = !Object.isNullOrUndefined(data['Service']) ? new Service(data['Service']) : null;
+                    this.TimeStamp = !Object.isNullOrUndefined(data['TimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['TimeStamp']) : null;
+                    this.MessageTimeStamp = !Object.isNullOrUndefined(data['MessageTimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['MessageTimeStamp']) : null;
+                    this.Customer = !Object.isNullOrUndefined(data['Customer']) ? new Axis.Pollux.Domain.User(data['Customer']) : null;
+                    this.Merchant = !Object.isNullOrUndefined(data['Merchant']) ? new Axis.Pollux.Domain.User(data['Merchant']) : null;
+                    this.Previous = !Object.isNullOrUndefined(data['Previous']) ? new Order(data['Previous']) : null;
+                    this.Next = !Object.isNullOrUndefined(data['Next']) ? new Order(data['Next']) : null;
+                }
+            }
+            return Order;
+        }(GaiaEntity));
+        Domain.Order = Order;
+        var Service = (function (_super) {
+            __extends(Service, _super);
+            function Service(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.Product = !Object.isNullOrUndefined(this.Product) ? new Product(this.Product) : null;
+                    this.Inputs = !Object.isNullOrUndefined(this.Inputs) ? this.Inputs.map(function (r) { return new ServiceInterface(r); }) : [];
+                    this.Outputs = !Object.isNullOrUndefined(this.Outputs) ? this.Outputs.map(function (r) { return new ServiceInterface(r); }) : [];
+                }
+            }
+            return Service;
+        }(GaiaEntity));
+        Domain.Service = Service;
+        var Product = (function (_super) {
+            __extends(Product, _super);
+            function Product(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(function (r) { return new Axis.Luna.Domain.BinaryData(r); }) : [];
+                    this.Videos = !Object.isNullOrUndefined(this.Videos) ? this.Videos.map(function (r) { return new Axis.Luna.Domain.BinaryData(r); }) : [];
+                }
+            }
+            return Product;
+        }(GaiaEntity));
+        Domain.Product = Product;
+        var ServiceInterface = (function (_super) {
+            __extends(ServiceInterface, _super);
+            function ServiceInterface(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.Datacontract = !Object.isNullOrUndefined(this.Datacontract) ? new ServiceDataContract(this.Datacontract) : null;
+                }
+            }
+            return ServiceInterface;
+        }(GaiaEntity));
+        Domain.ServiceInterface = ServiceInterface;
+        var ServiceDataContract = (function (_super) {
+            __extends(ServiceDataContract, _super);
+            function ServiceDataContract(data) {
+                _super.call(this, data);
+            }
+            return ServiceDataContract;
+        }(GaiaEntity));
+        Domain.ServiceDataContract = ServiceDataContract;
+        var ShoppingCartItem = (function (_super) {
+            __extends(ShoppingCartItem, _super);
+            function ShoppingCartItem(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
+                }
+            }
+            return ShoppingCartItem;
+        }(GaiaEntity));
+        Domain.ShoppingCartItem = ShoppingCartItem;
+        var ShoppingListItem = (function (_super) {
+            __extends(ShoppingListItem, _super);
+            function ShoppingListItem(data) {
+                _super.call(this, data);
+                if (!Object.isNullOrUndefined(data)) {
+                    this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
+                }
+            }
+            return ShoppingListItem;
+        }(GaiaEntity));
+        Domain.ShoppingListItem = ShoppingListItem;
     })(Domain = Gaia.Domain || (Gaia.Domain = {}));
 })(Gaia || (Gaia = {}));
 //# sourceMappingURL=gaia-domain.js.map

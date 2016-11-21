@@ -442,131 +442,6 @@ var Gaia;
                 return BusinessAccountViewModel;
             }());
             Dashboard.BusinessAccountViewModel = BusinessAccountViewModel;
-            var ServiceAccountViewModel = (function () {
-                function ServiceAccountViewModel(accountService, domModel, notifyService, counter) {
-                    this.accountService = accountService;
-                    this.domModel = domModel;
-                    this.notifyService = notifyService;
-                    this.user = null;
-                    this.serviceList = [];
-                    this.currentService = null;
-                    this.serviceCategories = [];
-                    this.isListingServices = true;
-                    this.isEditingService = false;
-                    this.isPersistingService = false;
-                    this.isDetailingService = false;
-                    this.hasServicePersistenceError = false;
-                    counter.serviceVm = this;
-                    this.refreshServices();
-                    this.user = new Axis.Pollux.Domain.User({
-                        UserId: domModel.simpleModel.UserId,
-                        EntityId: domModel.simpleModel.UserId,
-                        Stataus: 1
-                    });
-                    this.serviceCategories = Object
-                        .keys(Gaia.Domain.ServiceType)
-                        .map(function (k) { return Gaia.Domain.ServiceType[k]; })
-                        .filter(function (v) { return typeof v === "string"; });
-                }
-                Object.defineProperty(ServiceAccountViewModel.prototype, "selectedServiceCategory", {
-                    get: function () {
-                        if (this.currentService && !Object.isNullOrUndefined(this.currentService.ServiceType))
-                            return Gaia.Domain.ServiceType[this.currentService.ServiceType];
-                        else
-                            return 'Not Selected';
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                ServiceAccountViewModel.prototype.clearUI = function () {
-                    this.isListingServices = this.isEditingService = this.isPersistingService = this.hasServicePersistenceError = false;
-                };
-                ServiceAccountViewModel.prototype.backToListingServices = function () {
-                    if (this.currentService['$nascent']) {
-                        this.serviceList.remove(this.currentService);
-                        this.currentService = null;
-                    }
-                    this.clearUI();
-                    this.isListingServices = true;
-                };
-                ServiceAccountViewModel.prototype.serviceCategory = function (service) {
-                    if (!Object.isNullOrUndefined(service) && !Object.isNullOrUndefined(service.ServiceType))
-                        return Gaia.Domain.ServiceType[service.ServiceType];
-                    else
-                        return '';
-                };
-                ServiceAccountViewModel.prototype.selectCategory = function (type) {
-                    if (this.currentService) {
-                        this.currentService.ServiceType = Gaia.Domain.ServiceType[type];
-                    }
-                };
-                ServiceAccountViewModel.prototype.addService = function () {
-                    var newobj = new Gaia.Domain.ServiceAccount({ OwnerId: this.user.EntityId });
-                    newobj.$nascent = true;
-                    this.serviceList = [newobj].concat(this.serviceList);
-                    return newobj;
-                };
-                ServiceAccountViewModel.prototype.addAndEditService = function () {
-                    this.editService(this.addService());
-                };
-                ServiceAccountViewModel.prototype.editService = function (s) {
-                    if (s) {
-                        this.currentService = s;
-                        this.clearUI();
-                        this.isEditingService = true;
-                        $('#services-richtext-editor').summernote('code', this.currentService.Description || '');
-                    }
-                };
-                ServiceAccountViewModel.prototype.showServiceDetails = function (s) {
-                    if (!Object.isNullOrUndefined(s)) {
-                        this.currentService = s;
-                        this.clearUI();
-                        this.isDetailingService = true;
-                    }
-                };
-                ServiceAccountViewModel.prototype.getServiceDescription = function (s) {
-                    if (!Object.isNullOrUndefined(s)) {
-                        if (s.Description && s.Description.length > 200)
-                            return s.Description.substr(0, 200) + '...';
-                        else if (s.Description)
-                            return s.Description;
-                        else
-                            return '';
-                    }
-                    else
-                        return '';
-                };
-                ServiceAccountViewModel.prototype.persistCurrentService = function () {
-                    if (this.currentService) {
-                        this.currentService.Description = $('#services-richtext-editor').summernote('code');
-                        this.persistService(this.currentService);
-                    }
-                };
-                ServiceAccountViewModel.prototype.persistService = function (service) {
-                    var _this = this;
-                    if (this.isPersistingService)
-                        return;
-                    this.isPersistingService = true;
-                    this.accountService.persistServiceAccount(service)
-                        .then(function (oprc) {
-                        delete service.$nascent;
-                        _this.notifyService.success('Your service account information was saved successfully', 'Alert');
-                        _this.isPersistingService = false;
-                    }, function (e) {
-                        _this.notifyService.error('Something went wrong while saving your service account information...', 'Oops!');
-                        _this.isPersistingService = false;
-                    });
-                };
-                ServiceAccountViewModel.prototype.refreshServices = function () {
-                    var _this = this;
-                    this.accountService.getServiceAccounts().then(function (oprc) {
-                        _this.serviceList = oprc.Result || [];
-                    });
-                };
-                ServiceAccountViewModel.$inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
-                return ServiceAccountViewModel;
-            }());
-            Dashboard.ServiceAccountViewModel = ServiceAccountViewModel;
             var FarmAccountViewModel = (function () {
                 function FarmAccountViewModel(accountFarm, domModel, notifyFarm, counter) {
                     this.accountFarm = accountFarm;
@@ -626,7 +501,7 @@ var Gaia;
                     }
                 };
                 FarmAccountViewModel.prototype.addFarm = function () {
-                    var newobj = new Gaia.Domain.FarmAccount({ OwnerId: this.user.EntityId });
+                    var newobj = new Gaia.Domain.Farm({ OwnerId: this.user.EntityId });
                     newobj.$nascent = true;
                     this.farmList = [newobj].concat(this.farmList);
                     return newobj;
@@ -672,7 +547,7 @@ var Gaia;
                     if (this.isPersistingFarm)
                         return;
                     this.isPersistingFarm = true;
-                    this.accountFarm.persistFarmAccount(farm)
+                    this.accountFarm.persistFarm(farm)
                         .then(function (oprc) {
                         delete farm.$nascent;
                         _this.notifyFarm.success('Your farm account information was saved successfully', 'Alert');
@@ -704,7 +579,6 @@ var Gaia;
             var AccountCounter = (function () {
                 function AccountCounter() {
                     this.farmVm = null;
-                    this.serviceVm = null;
                     this.businessVm = null;
                 }
                 AccountCounter.$inject = [];

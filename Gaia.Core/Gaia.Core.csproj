@@ -59,14 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainConstants.cs" />
-    <Compile Include="Domain\Accounts\Farm.cs" />
-    <Compile Include="Domain\Accounts\Service.cs" />
+    <Compile Include="Domain\Farm.cs" />
     <Compile Include="Domain\Advert.cs" />
     <Compile Include="Domain\AdvertHit.cs" />
     <Compile Include="Domain\Blob.cs" />
     <Compile Include="Domain\ForumThreadWatch.cs" />
     <Compile Include="Domain\IBaseHash.cs" />
-    <Compile Include="Domain\MarketPlace\AggregateOrder.cs" />
+    <Compile Include="Domain\MarketPlace\OrderAggregate.cs" />
     <Compile Include="Domain\MarketPlace\ItemType.cs" />
     <Compile Include="Domain\MarketPlace\ISearchableItem.cs" />
     <Compile Include="Domain\MarketPlace\Order.cs" />
@@ -105,7 +104,6 @@
     <Compile Include="Services\IMarketPlaceService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ICommentService.cs" />
-    <Compile Include="Services\IUserAccountsService.cs" />
     <Compile Include="Services\IUserContextService.cs" />
     <Compile Include="Services\IForumService.cs" />
     <Compile Include="Services\IIncidentManagementService.cs" />

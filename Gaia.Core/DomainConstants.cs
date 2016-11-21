@@ -10,7 +10,7 @@ namespace Gaia.Core
         public static readonly string DefaultPolicyAdminAccessProfile = "system.[Policy-Admin Profile]";
         public static readonly string DefaultServiceProviderAccessProfile = "system.[Service-Provider Profile]";
         public static readonly string DefaultFarmerAccessProfile = "system.[Farmer Profile]";
-        public static readonly string DefaultClientAccessProfile = "system.[Client Profile]";
+        public static readonly string DefaultUserAccessProfile = "system.[Default-User Profile]";
         public static readonly string DefaultSystemAdminAccessProfile = "system.[Root Profile]";
         public static readonly string GuestAccessProfile = "system.[Guest Profile]";
 

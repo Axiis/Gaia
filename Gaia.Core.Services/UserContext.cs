@@ -53,7 +53,7 @@ namespace Gaia.Core.Services
                        on uap.AccessProfileCode equals fap.AccessCode
                        where uap.OwnerId == uid
                        select fap)
-                       .ToList()
+                       //.ToList() //<-- why did i ToList it??
                        .UsingEach(_fap =>
                        {
                            _context.Store<FeatureAccessDescriptor>().Query

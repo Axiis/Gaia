@@ -6,6 +6,7 @@ using Gaia.Core.Domain;
 using Gaia.Core.Domain.Meta;
 using Gaia.Core.OAModule.Mappings;
 using Gaia.Core.OAModule.Mappings.Accounts;
+using Gaia.Core.OAModule.Mappings.MarketPlace;
 using Gaia.Core.OAModule.Mappings.Meta;
 using Gaia.Core.Services;
 using Gaia.Core.Utils;
@@ -24,11 +25,15 @@ namespace Gaia.Core.OAModule
         {
             //Configuration
             var asm = typeof(GaiaDomainModuleConfig).Assembly;
-            string ns = typeof(AdvertMapping).Namespace,
-                   ns2 = typeof(ServiceCategoryMapping).Namespace,
-                   ns3 = typeof(FarmMapping).Namespace;
+            var nsar = new string[]
+            {
+                typeof(AdvertMapping).Namespace,
+                typeof(ServiceCategoryMapping).Namespace,
+                typeof(FarmMapping).Namespace,
+                typeof(OrderAggregateMap).Namespace
+            };
             asm.GetTypes()
-               .Where(t => t.Namespace == ns || t.Namespace == ns2 || t.Namespace == ns3)
+               .Where(t => nsar.Contains(t.Namespace))
                .Where(t => t.IsEntityMap())
                .ForAll((cnt, t) => this.UsingConfiguration(Activator.CreateInstance(t).AsDynamic()));
 
@@ -70,7 +75,7 @@ namespace Gaia.Core.OAModule
                 var store = context.Store<FeatureURI>();
                 if (!store.Query.Any(_f => _f.URI == "system/User/Advert/@create"))
                 {
-                    ns = typeof(IAdvertService).Namespace;
+                    var ns = typeof(IAdvertService).Namespace;
                     asm.GetTypes()
                        .Where(t => t.Namespace == ns)
                        .Where(t => t.IsInterface)
@@ -280,7 +285,7 @@ namespace Gaia.Core.OAModule
             });
             #endregion
 
-            #region 2.4 Service-Provider profile
+            #region 2.4 Service-Provider/Merchant profile
             //the profile object
             this.UsingContext(context =>
             {
@@ -304,34 +309,21 @@ namespace Gaia.Core.OAModule
                 if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultServiceProviderAccessProfile))
                     new[]
                     {
-                        "system/Profiles/UserData/@remove",
-                        "system/Profiles/UserData/@add",
-                        "system/Profiles/UserData/@get",
+                        "system/UserAccounts/Services/@add",
+                        "system/UserAccounts/Services/@remove",
+                        "system/UserAccounts/Services/@modify",
+                        "system/UserAccounts/Services/@get",
 
-                        "system/Profiles/BioData/@modify",
-                        "system/Profiles/BioData/@get",
+                        ///Marketplace
+                        "system/MarketPlace/Merchant/ProductCategories/@get",
+                        "system/MarketPlace/Merchant/ServiceCategories/@get",
+                        "system/MarketPlace/Merchant/Orders/@get",
+                        "system/MarketPlace/Merchant/Orders/@update",
+                        "system/MarketPlace/Merchant/Orders/@fulfill",
+                        "system/MarketPlace/Merchant/Services/@add",
+                        "system/MarketPlace/Merchant/ServiceInterface/@add",
+                        "system/MarketPlace/Merchant/Products/@add"
 
-                        "system/Profiles/ContactData/@modify",
-                        "system/Profiles/ContactData/@get",
-                        "system/Profiles/ContactData/@remove",
-
-                        "system/Profiles/CorporateData/@modify",
-                        "system/Profiles/CorporateData/@get",
-                        "system/Profiles/CorporateData/@remove",
-
-                        "system/Profiles/@discover",
-
-                        "system/ActivityFeeds/*",
-
-                        "system/Adverts/@hit",
-                        "system/Adverts/@next",
-
-                        "system/Comments/*",
-                        "system/Forums/Threads/*",
-
-                        "system/ContextVerifications/*",
-
-                        "system/Notifications/*"
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -348,6 +340,7 @@ namespace Gaia.Core.OAModule
             #endregion
 
             #region 2.5 Farmer profile
+            //Note: a Farmer is first and foremost, a Service-Provider
             //the profile object
             this.UsingContext(context =>
             {
@@ -371,34 +364,10 @@ namespace Gaia.Core.OAModule
                 if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultFarmerAccessProfile))
                     new[]
                     {
-                        "system/Profiles/UserData/@remove",
-                        "system/Profiles/UserData/@add",
-                        "system/Profiles/UserData/@get",
-
-                        "system/Profiles/BioData/@modify",
-                        "system/Profiles/BioData/@get",
-
-                        "system/Profiles/ContactData/@modify",
-                        "system/Profiles/ContactData/@get",
-                        "system/Profiles/ContactData/@remove",
-
-                        "system/Profiles/CorporateData/@modify",
-                        "system/Profiles/CorporateData/@get",
-                        "system/Profiles/CorporateData/@remove",
-
-                        "system/Profiles/@discover",
-
-                        "system/ActivityFeeds/*",
-
-                        "system/Adverts/@hit",
-                        "system/Adverts/@next",
-
-                        "system/Comments/*",
-                        "system/Forums/Threads/*",
-
-                        "system/ContextVerifications/*",
-
-                        "system/Notifications/*"
+                        "system/Profiles/Farms/@add",
+                        "system/Profiles/Farms/@remove",
+                        "system/Profiles/Farms/@modify",
+                        "system/Profiles/Farms/@get",
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -414,17 +383,17 @@ namespace Gaia.Core.OAModule
             });
             #endregion
 
-            #region 2.6 Client profile
+            #region 2.6 Default User profile
             //the profile object
             this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessProfile>();
-                if (!store.Query.Any(_u => _u.AccessCode == DomainConstants.DefaultClientAccessProfile))
+                if (!store.Query.Any(_u => _u.AccessCode == DomainConstants.DefaultUserAccessProfile))
                     store.Add(new FeatureAccessProfile
                     {
-                        AccessCode = DomainConstants.DefaultClientAccessProfile,
-                        Title = "Default Client Access Profile",
-                        Description = "Defines access privileges for a Client",
+                        AccessCode = DomainConstants.DefaultUserAccessProfile,
+                        Title = "Default User Access Profile",
+                        Description = "Defines access privileges for a User",
                         CreatedBy = DomainConstants.RootAccount,
                         Status = FeatureAccessProfileStatus.Active
                     })
@@ -435,19 +404,10 @@ namespace Gaia.Core.OAModule
             this.UsingContext(context =>
             {
                 var store = context.Store<FeatureAccessDescriptor>();
-                if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultClientAccessProfile))
+                if (!store.Query.Any(_u => _u.AccessProfileCode == DomainConstants.DefaultUserAccessProfile))
                     new[]
                     {
-                        "system/UserAccounts/Farms/@add",
-                        "system/UserAccounts/Farms/@remove",
-                        "system/UserAccounts/Farms/@modify",
-                        "system/UserAccounts/Farms/@get",
-
-                        "system/UserAccounts/Services/@add",
-                        "system/UserAccounts/Services/@remove",
-                        "system/UserAccounts/Services/@modify",
-                        "system/UserAccounts/Services/@get",
-
+                        ///profiles
                         "system/Profiles/UserData/@remove",
                         "system/Profiles/UserData/@add",
                         "system/Profiles/UserData/@get",
@@ -465,14 +425,24 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/CorporateData/@get",
                         "system/Profiles/CorporateData/@remove",
 
+                        ///marketplace
+                        "system/MarketPlace/Customer/Product/@search",
+                        "system/MarketPlace/Customer/Service/@search",
+                        "system/MarketPlace/Customer/Lists/@get",
+                        "system/MarketPlace/Customer/List/@remove",
+                        "system/MarketPlace/Customer/List/@add",
+                        "system/MarketPlace/Customer/Cart/@add",
+                        "system/MarketPlace/Customer/Cart/@remove",
+                        "system/MarketPlace/Customer/Cart/@pay",
+                        "system/MarketPlace/Customer/Orders/@get",
+
+                        ///misc
                         "system/Profiles/@discover",
 
                         "system/ActivityFeeds/*",
 
                         "system/Adverts/@hit",
                         "system/Adverts/@next",
-
-
 
                         "system/Comments/*",
                         "system/Forums/Threads/*",
@@ -488,7 +458,7 @@ namespace Gaia.Core.OAModule
                         store.Add(new FeatureAccessDescriptor
                         {
                             AccessDescriptor = next,
-                            AccessProfileCode = DomainConstants.DefaultClientAccessProfile,
+                            AccessProfileCode = DomainConstants.DefaultUserAccessProfile,
                             CreatedBy = DomainConstants.RootAccount,
                             Permission = AccessPermission.Grant
                         });

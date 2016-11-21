@@ -102,7 +102,7 @@ namespace Gaia.Core.Services
 
                     //apply the necessary access profile
                     AccessManager.ApplyAccessProfile(userId,
-                                                     DefaultClientAccessProfile,
+                                                     DefaultUserAccessProfile,
                                                      null) //<-- null means this profile will never expire
                                  .Then(opr => CreateRegistrationVerification(userId)) //<-- verification
                                  .Then(opr =>
@@ -431,6 +431,67 @@ namespace Gaia.Core.Services
                     .UsingEach(_ud => _ud.Owner = null);
             });
         #endregion
+
+
+        #region Farm Accounts
+        public Operation<long> AddFarmAccount(Farm data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                data.OwnerId = _user.UserId;
+
+                //validate the biodata
+
+                //persist the contact data
+                DataContext.Store<Farm>()
+                    .Add(data).Context
+                    .CommitChanges();
+
+                return data.EntityId;
+            });
+
+        public Operation ModifyFarmAccount(Farm data)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var _user = UserContext.CurrentUser;
+                var store = DataContext.Store<Farm>();
+
+                var persisted = store.Query
+                    .Where(_ud => _ud.OwnerId == _user.EntityId)
+                    .Where(_ud => _ud.EntityId == data.EntityId)
+                    .FirstOrDefault()
+                    .ThrowIfNull("data not found");
+
+                data.CopyTo(persisted, nameof(Farm.Owner));
+                store.Modify(persisted, true);
+            });
+
+        public Operation<IEnumerable<Farm>> GetFarmAccounts()
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<Farm>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .UsingEach(_ud => _ud.Owner = null);
+            });
+
+        public Operation RemoveFarmAccount(long[] ids)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var user = UserContext.CurrentUser;
+                var contactStore = DataContext.Store<Farm>();
+                ids.Batch(200).ForAll((cnt, _batch) =>
+                {
+                    var nar = _batch.ToArray();
+                    contactStore.Query
+                                .Where(_ => _.OwnerId == user.EntityId)
+                                .Where(_ => nar.Contains(_.EntityId))
+                                .Pipe(_ => contactStore.Delete(_.AsEnumerable()));
+                });
+
+                contactStore.Context.CommitChanges();
+            });
+        #endregion
+
 
 
         internal class DataNameComparer : IEqualityComparer<UserData>

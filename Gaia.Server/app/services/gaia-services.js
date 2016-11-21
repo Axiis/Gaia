@@ -135,32 +135,9 @@ var Gaia;
             function UserAccountService(transport) {
                 this.transport = transport;
             }
-            UserAccountService.prototype.getServiceAccounts = function (config) {
-                return this.transport.get('/api/profiles/service-account', null, config).then(function (oprc) {
-                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Gaia.Domain.ServiceAccount(_cd); }) : null;
-                    return oprc.data;
-                });
-            };
-            UserAccountService.prototype.addServiceAccount = function (serviceAccount, config) {
-                return this.transport.post('/api/profiles/service-account', serviceAccount, config).then(function (oprc) {
-                    serviceAccount.EntityId = oprc.data.Result;
-                });
-            };
-            UserAccountService.prototype.modifyServiceAccount = function (serviceAccount, config) {
-                return this.transport.put('/api/profiles/service-account', serviceAccount, config).then(function (oprc) { });
-            };
-            UserAccountService.prototype.persistServiceAccount = function (data) {
-                if (!data.EntityId || data.EntityId <= 0)
-                    return this.addServiceAccount(data);
-                else
-                    return this.modifyServiceAccount(data);
-            };
-            UserAccountService.prototype.removeServiceAccount = function (ids, config) {
-                return this.transport.delete('/api/profiles/service-account/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
-            };
             UserAccountService.prototype.getFarmAccounts = function (config) {
                 return this.transport.get('/api/profiles/farm-account', null, config).then(function (oprc) {
-                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Gaia.Domain.FarmAccount(_cd); }) : null;
+                    oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_cd) { return new Gaia.Domain.Farm(_cd); }) : null;
                     return oprc.data;
                 });
             };
@@ -172,13 +149,13 @@ var Gaia;
             UserAccountService.prototype.modifyFarmAccount = function (FarmAccount, config) {
                 return this.transport.put('/api/profiles/farm-account', FarmAccount, config).then(function (oprc) { });
             };
-            UserAccountService.prototype.persistFarmAccount = function (data) {
+            UserAccountService.prototype.persistFarm = function (data) {
                 if (!data.EntityId || data.EntityId <= 0)
                     return this.addFarmAccount(data);
                 else
                     return this.modifyFarmAccount(data);
             };
-            UserAccountService.prototype.removeFarmAccount = function (ids, config) {
+            UserAccountService.prototype.removeFarm = function (ids, config) {
                 return this.transport.delete('/api/profiles/farm-account/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
             UserAccountService.$inject = ["#gaia.utils.domainTransport"];

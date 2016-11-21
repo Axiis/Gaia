@@ -116,7 +116,18 @@ namespace Gaia.Core.Services
                     .Pipe(_p => new SequencePage<ISearchableItem>(_p.ToArray(), pageIndex, pageSize, _p.Count()));
             });
 
-    public Operation<long> AddToBasket(long itemId, ItemType type = ItemType.Product)
+        public Operation<IEnumerable<string>> GetShoppingLists()
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<ShoppingListItem>()
+                    .QueryWith(_li => _li.Owner)
+                    .Where(_li => _li.Owner.EntityId == UserContext.CurrentUser.UserId)
+                    .Select(_li => _li.ListName)
+                    .Distinct()
+                    .AsEnumerable();
+            });
+
+        public Operation<long> AddToBasket(long itemId, ItemType type = ItemType.Product)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var cartStore = DataContext.Store<ShoppingCartItem>();
@@ -167,10 +178,10 @@ namespace Gaia.Core.Services
             });
 
 
-        public Operation Pay(long[] basketItemIds)
+        public Operation Pay(OrderAggregate[] aggregates)
             => FeatureAccess.Guard(UserContext, () =>
             {
-
+                //validate the order-aggregates
             });
 
 

@@ -1,4 +1,4 @@
-﻿using Gaia.Core.Domain.Accounts;
+﻿using Gaia.Core.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
