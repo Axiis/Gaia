@@ -10,12 +10,18 @@ using Axis.Luna;
 using Newtonsoft.Json;
 using Gaia.Core.Services;
 using Gaia.Server.Utils;
+using Axis.Jupiter;
 
 namespace Gaia.Server.Controllers.MVC
 {
     public class AccountController : Controller
     {
-        private MVCUserLocator _userLocator = new MVCUserLocator();
+        private MVCUserLocator _userLocator = null;
+
+        public AccountController(IDataContext context)
+        {
+            this._userLocator = new MVCUserLocator(context);
+        }
 
 
         [HttpPost, Route("auth/login"), ValidateAntiForgeryToken]

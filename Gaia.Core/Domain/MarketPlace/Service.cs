@@ -1,4 +1,5 @@
-﻿using Gaia.Core.Utils;
+﻿using Axis.Pollux.Identity.Principal;
+using Gaia.Core.Utils;
 using System.Collections.Generic;
 
 namespace Gaia.Core.Domain.MarketPlace
@@ -19,6 +20,11 @@ namespace Gaia.Core.Domain.MarketPlace
         public ItemType ItemType => ItemType.Service; //ignore in db
 
         //public PaymentChannel PaymentChannel { get; set; }
+
+        /// <summary>
+        /// Represents the merchant that owns the product
+        /// </summary>
+        public User Owner { get; set; }
 
         public ICollection<ServiceInterface> Inputs { get; set; }  = new HashSet<ServiceInterface>();
         public ICollection<ServiceInterface> Outputs { get; set; } = new HashSet<ServiceInterface>();

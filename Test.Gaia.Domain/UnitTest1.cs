@@ -10,9 +10,6 @@ using Axis.Pollux.Identity.OAModule;
 using Axis.Pollux.Authentication.OAModule;
 using Axis.Pollux.RBAC.OAModule;
 using Gaia.Core.OAModule;
-using System.Data.Entity;
-using Gaia.Core.Domain.Accounts;
-using Gaia.Core.Domain.MarketPlace;
 using Marketplace = Gaia.Core.Domain.MarketPlace;
 
 namespace Test.Gaia.Domain

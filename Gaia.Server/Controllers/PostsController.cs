@@ -21,9 +21,9 @@ namespace Gaia.Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/posts/@{title}")]
-        public IHttpActionResult CreatePost(string title)
-            => _postService.CreatePost(title)
+        [Route("api/posts")]
+        public IHttpActionResult CreatePost([FromBody]PostModels.Post post)
+            => _postService.CreatePost(post.Title)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -39,18 +39,18 @@ namespace Gaia.Server.Controllers
 
 
         [HttpPut]
-        [Route("api/posts/published/@{postId}")]
-        public IHttpActionResult Publish(long postId)
-            => _postService.Publish(postId)
+        [Route("api/posts/published")]
+        public IHttpActionResult Publish([FromBody]PostModels.Post post)
+            => _postService.Publish(post.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
         [HttpPut]
-        [Route("api/posts/archived/@{postId}")]
-        public IHttpActionResult Archive(long postId)
-            => _postService.Archive(postId)
+        [Route("api/posts/archived")]
+        public IHttpActionResult Archive([FromBody]PostModels.Post post)
+            => _postService.Archive(post.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;

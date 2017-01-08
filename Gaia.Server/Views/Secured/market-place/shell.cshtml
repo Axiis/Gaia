@@ -1,4 +1,5 @@
-﻿@model Gaia.Server.Controllers.MVC.Models.ShellModel
+﻿@using Axis.Luna.Extensions;
+@model Gaia.Server.Controllers.MVC.Models.ShellModel
 @{
     Layout = null;
 }
@@ -32,37 +33,12 @@
     <script type="text/javascript" src="~/scripts/toastr.min.js"></script>
     <script type="text/javascript" src="~/scripts/summernote/summernote.min.js"></script>
 
-    @*
-    <script type="text/javascript" src="/themes/londinium/js/plugins/charts/sparkline.min.js"></script>
     <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uniform.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/select2.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/inputmask.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/autosize.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/inputlimit.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/listbox.js"></script>
     <script type="text/javascript" src="/themes/londinium/js/plugins/forms/multiselect.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/validate.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/daterangepicker.js"></script>
+    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/moment.js"></script>
     <script type="text/javascript" src="/themes/londinium/js/plugins/forms/tags.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/switch.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uploader/plupload.full.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uploader/plupload.queue.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/wysihtml5/wysihtml5.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/wysihtml5/toolbar.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/daterangepicker.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/fancybox.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/moment.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/jgrowl.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/datatables.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/colorpicker.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/fullcalendar.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/timepicker.min.js"></script>
-    *@
-
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/uniform.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/forms/multiselect.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/jgrowl.min.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/daterangepicker.js"></script>
-    <script type="text/javascript" src="/themes/londinium/js/plugins/interface/moment.js"></script>
 
     <script type="text/javascript" src="~/themes/londinium/js/application_blank.js"></script>
     <script type="text/javascript" src="/themes/londinium/js/bootstrap.min.js"></script>
@@ -86,14 +62,14 @@
                 <img src="~/Content/images/GaiaLogo.svg" style="height:50px; width:40px;" alt="Gaia">
                 <span style="display:inline-block;margin-bottom:5px; vertical-align:bottom; font-family:jura; font-size:x-large">Gaia</span>
             </a>
-            <a class="sidebar-toggle"><i class="icon-paragraph-justify2"></i></a>
+            <a class="sidebar-toggle"><i class="icon-menu2"></i></a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-icons">
                 <span class="sr-only">Toggle navbar</span>
                 <i class="icon-grid3"></i>
             </button>
             <button type="button" class="navbar-toggle offcanvas">
                 <span class="sr-only">Toggle navigation</span>
-                <i class="icon-paragraph-justify2"></i>
+                <i class="icon-menu2"></i>
             </button>
         </div>
 
@@ -223,23 +199,23 @@
 
             <div class="tabbable page-tabs">
                 <ul class="nav nav-tabs">
-                    <li class="" ng-class="{active: vm.currentState() == 'customer'}">
+                    <li class="" ng-class="{active: vm.isCustomerActive()}">
                         <a ui-sref="customer" style="line-height:22px;">
                             <i class="icon-basket" style="font-size:20px;"></i> Buy
                         </a>
                     </li>
-                    <li class="" ng-class="{active: vm.currentState() == 'merchant'}">
+                    <li class="" ng-class="{active: vm.isMerchantActive()}" ng-show="vm.isMerchantAccount">
                         <a ui-sref="merchant" style="line-height:22px;">
-                            <i style="background-image:url('/Content/images/merchant.svg'); width:22px; height:22px;" class="svg-icon"></i> Sell
+                            <i style="width:22px; height:22px; line-height:22px" class="fa fa-money fa-2x"></i>&nbsp; Sell
                         </a>
                     </li>
-                    <li class="pull-right" ng-class="{active: vm.currentState() == 'configure'}">
+                    <li class="pull-right" ng-class="{active: vm.isPreferencesActive()}">
                         <a ui-sref="configure" style="line-height:22px;">
                             <i class="icon-heart2" style="font-size:18px;"></i> My Preferences
                         </a>
                     </li>
                 </ul>
-                <div class="tab-content" style="overflow:visible;">
+                <div class="tab-content clearfix">
                     <div class="tab-pane active gaia-fade-in gaia-slide-in-left" ui-view></div>
                 </div>
             </div>
@@ -263,7 +239,7 @@
 
     <div class="hidden" 
          id="local-models"
-         simple-models="UserId:@Model.UserId;"></div>
+         simple-models="UserId:@Model.UserId;AccessProfiles:@Model.AccessProfiles.JoinUsing(",")"></div>
 
 
     <script type="text/javascript" src="~/app/utils/extensions.js"></script>
@@ -281,6 +257,6 @@
     <script type="text/javascript" src="~/app/services/context-toolbar.js"></script>
     <script type="text/javascript" src="~/app/view-models/marketplace-viewmodels.js"></script>
     <script type="text/javascript" src="~/app/view-models/shared-viewmodels.js"></script>
-    <script type="text/javascript" src="~/app/marketplace-app.js"></script>
+    <script type="text/javascript" src="~/app/modules/marketplace-app.js"></script>
 </body>
 </html>

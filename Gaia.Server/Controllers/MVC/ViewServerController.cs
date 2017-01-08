@@ -1,4 +1,5 @@
-﻿using Axis.Luna;
+﻿using Axis.Jupiter;
+using Axis.Luna;
 using Axis.Luna.Extensions;
 using Gaia.Core;
 using Gaia.Core.Services;
@@ -19,10 +20,13 @@ namespace Gaia.Server.Controllers.MVC
     {
         public static readonly Regex FilePart = new Regex(@"^[^\#\?]+(?=([\?\#]|$))");
 
-        private IUserLocator _userLocator = new MVCUserLocator();
+        private IUserLocator _userLocator = null;
 
-        public ViewServerController()
+        public ViewServerController(IDataContext context)
         {
+            ThrowNullArguments(() => context);
+
+            this._userLocator = new MVCUserLocator(context);
         }
 
 
@@ -68,7 +72,8 @@ namespace Gaia.Server.Controllers.MVC
         private ActionResult Razor(string viewPath)
             => View($"{viewPath}{(viewPath.ToLower().EndsWith(".cshtml") ? "" : ".cshtml")}", new Models.ShellModel
             {
-                UserId = _userLocator.CurrentUser()
+                UserId = _userLocator.CurrentUser(),
+                AccessProfiles = _userLocator.UserAccessProfiles()
             });
     }
 
@@ -78,6 +83,7 @@ namespace Gaia.Server.Controllers.MVC
         public class ShellModel
         {
             public string UserId { get; set; }
+            public string[] AccessProfiles { get; set; }
         }
 
     }

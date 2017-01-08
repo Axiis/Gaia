@@ -9,6 +9,7 @@ module Gaia.App.Dashboard {
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);
     module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
+    module.service('#gaia.accessProfileService', Gaia.Services.AccessProfileService);
 
     ///Pollux Services
     module.service('#pollux.authentication', Pollux.Services.Authentication);
@@ -28,6 +29,7 @@ module Gaia.App.Dashboard {
     module.controller('FarmAccountViewModel', Gaia.ViewModels.Dashboard.FarmAccountViewModel);
     module.controller('AccountTabsViewModel', Gaia.ViewModels.Dashboard.AccountTabsViewModel);
     module.controller('ProfileViewModel', Gaia.ViewModels.Dashboard.ProfileViewModel);
+    module.controller('UserAccountViewModel', Gaia.ViewModels.Dashboard.UserAccountViewModel);
 
 
     //configure states

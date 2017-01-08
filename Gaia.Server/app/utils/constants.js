@@ -589,6 +589,9 @@ var Gaia;
         Utils.BusinessStatus_Verifying = 1;
         Utils.BusinessStatus_Rejected = 2;
         Utils.BusinessStatus_Verified = 3;
+        Utils.ConsumerAccountProfile = 'system.[Default-User Profile]';
+        Utils.ServiceProvierAccountProfile = 'system.[Service-Provider Profile]';
+        Utils.FarmerAccountProfile = 'system.[Farmer Profile]';
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
 //# sourceMappingURL=constants.js.map

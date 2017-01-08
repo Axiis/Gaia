@@ -5,7 +5,8 @@ module Gaia.Utils.Services {
 
         http: angular.IHttpService = null;
 
-        constructor(private $http: angular.IHttpService) {
+        static inject = ['$http', '$q'];
+        constructor(private $http: angular.IHttpService, private $q: angular.IQService) {
             var oauthtoken = window.localStorage.getItem(Gaia.Utils.OAuthTokenKey);
             this.$http.defaults.headers.common.Authorization = 'Bearer ' + (oauthtoken ? JSON.parse(oauthtoken).access_token : '');
             this.http = $http;
@@ -19,7 +20,7 @@ module Gaia.Utils.Services {
         get<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {    
             if (data) {
                 config = config || {};
-                config.data = data;
+                config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
             }         
             return this.http.get<T>(url, config)
                 .error(r => {
@@ -30,7 +31,7 @@ module Gaia.Utils.Services {
         delete<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             if (data) {
                 config = config || {};
-                config.data = data;
+                config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
             }         
             return this.http.delete(url, config)
                 .error(r => {

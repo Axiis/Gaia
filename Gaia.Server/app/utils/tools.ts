@@ -13,6 +13,79 @@ module Gaia.Utils {
                lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
     }
 
+    //http://stackoverflow.com/a/18729931
+    export function ToUTF8EncodedArray(str: string): number[] {
+        var utf8: number[] = [];
+        for (var i = 0; i < str.length; i++) {
+            var charcode = str.charCodeAt(i);
+            if (charcode < 0x80) utf8.push(charcode);
+            else if (charcode < 0x800) {
+                utf8.push(0xc0 | (charcode >> 6),
+                    0x80 | (charcode & 0x3f));
+            }
+            else if (charcode < 0xd800 || charcode >= 0xe000) {
+                utf8.push(0xe0 | (charcode >> 12),
+                    0x80 | ((charcode >> 6) & 0x3f),
+                    0x80 | (charcode & 0x3f));
+            }
+            else {
+                i++;
+                charcode = 0x10000 + (((charcode & 0x3ff) << 10) | (str.charCodeAt(i) & 0x3ff));
+                utf8.push(0xf0 | (charcode >> 18),
+                    0x80 | ((charcode >> 12) & 0x3f),
+                    0x80 | ((charcode >> 6) & 0x3f),
+                    0x80 | (charcode & 0x3f));
+            }
+        }
+        return utf8;
+    }
+
+    //https://gist.github.com/jonleighton/958841
+    const _b64Encodings: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+    export function ToBase64String(arrayBuffer: number[]): string {
+        var base64 = ''
+
+        var bytes = new Uint8Array(arrayBuffer)
+        var byteLength = bytes.byteLength
+        var byteRemainder = byteLength % 3
+        var mainLength = byteLength - byteRemainder
+
+        var a, b, c, d
+        var chunk
+        
+        for (var i = 0; i < mainLength; i = i + 3) {
+            // Combine the three bytes into a single integer
+            chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
+            
+            a = (chunk & 16515072) >> 18 // 16515072 = (2^6 - 1) << 18
+            b = (chunk & 258048) >> 12 // 258048   = (2^6 - 1) << 12
+            c = (chunk & 4032) >> 6 // 4032     = (2^6 - 1) << 6
+            d = chunk & 63               // 63       = 2^6 - 1
+            
+            base64 += _b64Encodings[a] + _b64Encodings[b] + _b64Encodings[c] + _b64Encodings[d]
+        }
+        
+        if (byteRemainder == 1) {
+            chunk = bytes[mainLength]
+
+            a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2            
+            b = (chunk & 3) << 4 // 3   = 2^2 - 1
+
+            base64 += _b64Encodings[a] + _b64Encodings[b] + '=='
+        } else if (byteRemainder == 2) {
+            chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1]
+
+            a = (chunk & 64512) >> 10 // 64512 = (2^6 - 1) << 10
+            b = (chunk & 1008) >> 4 // 1008  = (2^6 - 1) << 4
+            
+            c = (chunk & 15) << 2 // 15    = 2^4 - 1
+
+            base64 += _b64Encodings[a] + _b64Encodings[b] + _b64Encodings[c] + '='
+        }
+
+        return base64
+    }
+
     //Class that implements pagination
     export class SequencePage<Data>{
 
@@ -23,14 +96,14 @@ module Gaia.Utils {
 
         Page: Data[] = [];
 
-        constructor(page: Data[], pageIndex: number, pageSize: number, sequenceLength: number) {
+        constructor(page: Data[], sequenceLength: number, pageSize?: number, pageIndex?: number) {
 
             if (page == null || pageIndex < 0 || sequenceLength < 0) throw "invalid page";
-            this.PageIndex = pageIndex;
+            this.PageIndex = pageIndex || 0;
             this.SequenceLength = sequenceLength;
             this.Page = page;
-            this.PageSize = pageSize;
-            this.PageCount = this.SequenceLength / this.PageSize + (this.SequenceLength % this.PageSize > 0 ? 1 : 0);
+            this.PageSize = pageSize || page.length;
+            this.PageCount = Math.floor(this.SequenceLength / this.PageSize) + (this.SequenceLength % this.PageSize > 0 ? 1 : 0);
         }
 
         /// <summary>
@@ -61,7 +134,5 @@ module Gaia.Utils {
 
             return pages;
         }
-
-    }
-    
+    }    
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Gaia.Core.OAModule.Mappings
 {
-    public class BlobMapping: GaiaMap<Blob, long>
+    public class BlobMapping: GaiaMap<BlobAttachment, long>
     {
         public BlobMapping()
         {

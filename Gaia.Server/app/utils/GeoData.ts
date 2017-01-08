@@ -21,7 +21,7 @@ module Gaia.Utils {
         set Arc(value: Arc) {
             if (value) {
                 this._arc = value;
-                if (this._arc == Arc.Degrees) {
+                if (this._arc as Arc == Arc.Degrees) {
                     //convert from radians to degree
                     this.Latitude = GeoLocation.RadianToDegree(this.Latitude);
                     this.Longitude = GeoLocation.RadianToDegree(this.Longitude);
@@ -102,8 +102,8 @@ module Gaia.Utils {
         }
     }
 
-    export class GeoArea
-    {
+    export class GeoArea{
+
         GeoLocations: GeoLocation[] = [];
 
         get PointCount() {

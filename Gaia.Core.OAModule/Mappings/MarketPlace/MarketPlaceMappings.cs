@@ -36,6 +36,9 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
             this.Property(e => e.Description)
                 .HasColumnType("nText");
 
+            this.HasRequired(e => e.Owner)
+                .WithMany();
+
             this.Ignore(e => e.ItemType);
             this.Ignore(e => e.Images);
             this.Ignore(e => e.Videos);
@@ -48,6 +51,9 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
         {
             this.Property(e => e.TransactionId)
                 .HasMaxLength(17);
+
+            this.HasRequired(e => e.Owner)
+                .WithMany();
 
             this.Property(e => e.Description)
                 .HasColumnType("nText");

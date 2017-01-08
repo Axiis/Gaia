@@ -10,6 +10,7 @@ var Gaia;
             ///Gaia services
             MarketPlace.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             MarketPlace.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
+            MarketPlace.module.service('#gaia.marketPlaceService', Gaia.Services.MarketPlaceService);
             ///Pollux Services
             MarketPlace.module.service('#pollux.authentication', Pollux.Services.Authentication);
             ///Util Services
@@ -23,6 +24,9 @@ var Gaia;
             MarketPlace.module.controller('MarketPlaceViewModel', Gaia.ViewModels.MarketPlace.MarketPlaceViewModel);
             MarketPlace.module.controller('CustomerViewModel', Gaia.ViewModels.MarketPlace.CustomerViewModel);
             MarketPlace.module.controller('MerchantViewModel', Gaia.ViewModels.MarketPlace.MerchantViewModel);
+            MarketPlace.module.controller('ProductsViewModel', Gaia.ViewModels.MarketPlace.ProductsViewModel);
+            MarketPlace.module.controller('ServicesViewModel', Gaia.ViewModels.MarketPlace.ServicesViewModel);
+            MarketPlace.module.controller('OrdersViewModel', Gaia.ViewModels.MarketPlace.OrdersViewModel);
             MarketPlace.module.controller('ConfigureViewModel', Gaia.ViewModels.MarketPlace.ConfigureViewModel);
             //configure states
             MarketPlace.module.config(function ($stateProvider, $urlRouterProvider) {
@@ -40,6 +44,24 @@ var Gaia;
                     controller: 'MerchantViewModel',
                     controllerAs: 'vm'
                 })
+                    .state('merchant.products', {
+                    url: '/products',
+                    templateUrl: 'products',
+                    controller: 'ProductsViewModel',
+                    controllerAs: 'vm'
+                })
+                    .state('merchant.services', {
+                    url: '/services',
+                    templateUrl: 'services',
+                    controller: 'ServicesViewModel',
+                    controllerAs: 'vm'
+                })
+                    .state('merchant.orders', {
+                    url: '/orders',
+                    templateUrl: 'orders',
+                    controller: 'OrdersViewModel',
+                    controllerAs: 'vm'
+                })
                     .state('configure', {
                     url: '/configure',
                     templateUrl: 'configure',
@@ -50,4 +72,3 @@ var Gaia;
         })(MarketPlace = App.MarketPlace || (App.MarketPlace = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-app.js.map

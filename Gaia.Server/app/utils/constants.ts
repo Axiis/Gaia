@@ -592,4 +592,9 @@ module Gaia.Utils {
     export const BusinessStatus_Rejected = 2;
     export const BusinessStatus_Verified = 3;
 
+
+    export const ConsumerAccountProfile = 'system.[Default-User Profile]';
+    export const ServiceProvierAccountProfile = 'system.[Service-Provider Profile]';
+    export const FarmerAccountProfile = 'system.[Farmer Profile]';
+
 }

@@ -22,6 +22,12 @@ namespace Gaia.Core.Services
         [Feature("system/MarketPlace/Merchant/ServiceCategories/@get")]
         Operation<IEnumerable<ServiceCategory>> GetServiceCategories();
 
+        [Feature("system/MarketPlace/Merchant/Products/@search")]
+        Operation<SequencePage<ISearchableItem>> FindMerchantProducts(string searchString, int pageSize, long pageIndex = 0L);
+
+        [Feature("system/MarketPlace/Merchant/Services/@search")]
+        Operation<SequencePage<ISearchableItem>> FindMerchantServices(string searchString, int pageSize, long pageIndex = 0L);
+
         /// <summary>
         /// Retrieves a paginated slice of the Orders for the current merchant. By default, this method will return the entire list of orders. Varying the values
         /// of the parameters
@@ -43,6 +49,9 @@ namespace Gaia.Core.Services
         [Feature("system/MarketPlace/Merchant/Services/@add")]
         Operation<long> AddService(Service service);
 
+        [Feature("system/MarketPlace/Merchant/Services/@modify")]
+        Operation ModifyService(Service service);
+
 
         [Feature("system/MarketPlace/Merchant/ServiceInterface/@add")]
         Operation<long> AddServiceInterface(ServiceInterface @interface);
@@ -50,14 +59,17 @@ namespace Gaia.Core.Services
 
         [Feature("system/MarketPlace/Merchant/Products/@add")]
         Operation<long> AddProduct(Product product);
+
+        [Feature("system/MarketPlace/Merchant/Products/@modify")]
+        Operation ModifyProduct(Product product);
         #endregion
 
         #region Customer
-        [Feature("system/MarketPlace/Customer/Product/@search")]
-        Operation<SequencePage<ISearchableItem>> FindProduct(string searchString, int pageSize, long pageIndex = 0L);
+        [Feature("system/MarketPlace/Customer/Products/@search")]
+        Operation<SequencePage<ISearchableItem>> FindCustomerProducts(string searchString, int pageSize, long pageIndex = 0L);
 
-        [Feature("system/MarketPlace/Customer/Service/@search")]
-        Operation<SequencePage<ISearchableItem>> FindService(string searchString, int pageSize, long pageIndex = 0L);
+        [Feature("system/MarketPlace/Customer/Services/@search")]
+        Operation<SequencePage<ISearchableItem>> FindCustomerServices(string searchString, int pageSize, long pageIndex = 0L);
 
         [Feature("system/MarketPlace/Customer/Lists/@get")]
         Operation<IEnumerable<string>> GetShoppingLists();
@@ -80,7 +92,7 @@ namespace Gaia.Core.Services
 
 
         [Feature("system/MarketPlace/Customer/Cart/@pay")]
-        Operation Pay(OrderAggregate[] orders);
+        Operation Checkout();
 
 
 

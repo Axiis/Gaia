@@ -56,4 +56,20 @@
 
 2016/11/14 ====================================================================================
 
-1.	 Add permissions/access descriptors for the marketplace manager/service
+1.	 Add permissions/access descriptors for the marketplace manager/service [DONE]
+
+
+2016/11/22 ====================================================================================
+
+1.	 change all Webapi endpoint definitions to adhere to the following pattern:
+	 - No parameters will be appended to the url
+	 - all parameters will be passed along using objects gotten from the body of the request
+	 [DONE]
+
+
+2016/12/19 ====================================================================================
+
+1.    Modify all Api-endpoints that utilize the GET verb and also have "[FromBody]" parameter-attributes. HTTP spec does not specify
+	  behaviour for passing a body along with a GET request, and as such, all the network layers may respoond to such an even as they
+	  see fit: which includes stripping off the body of the request. Be that as it may, all such requests should rely on "query strings"
+	  to pass along parameters to the Api-Endpoint.

@@ -21,9 +21,9 @@ namespace Gaia.Server.Controllers
 
 
         [HttpDelete]
-        [Route("api/user-notifictions/@{notificationId}")]
-        public IHttpActionResult ClearNotification(long notificationId)
-            => _notificationService.ClearNotification(notificationId)
+        [Route("api/user-notifictions")]
+        public IHttpActionResult ClearNotification([FromBody]NotificationModels.NotificationInfo info)
+            => _notificationService.ClearNotification(info.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -38,9 +38,9 @@ namespace Gaia.Server.Controllers
 
 
         [HttpGet]
-        [Route("api/notifications/@{targetUser}")]
-        public IHttpActionResult NotificationsFor(string targetUser)
-            => _notificationService.NotificationsFor(targetUser)
+        [Route("api/notifications")]
+        public IHttpActionResult NotificationsFor([FromBody]NotificationModels.NotificationInfo info)
+            => _notificationService.NotificationsFor(info.TargetUser)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -52,5 +52,14 @@ namespace Gaia.Server.Controllers
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
+    }
+
+    namespace NotificationModels
+    {
+        public class NotificationInfo
+        {
+            public string TargetUser { get; set; }
+            public long Id { get; set; }
+        }
     }
 }

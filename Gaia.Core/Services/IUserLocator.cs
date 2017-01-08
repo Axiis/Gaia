@@ -12,5 +12,6 @@ namespace Gaia.Core.Services
         /// retrieves and returns the name of the currently authenticated user in the execution context (or request context)
         /// </summary>
         string CurrentUser();
+        string[] UserAccessProfiles();
     }
 }

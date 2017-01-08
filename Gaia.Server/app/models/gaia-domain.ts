@@ -284,24 +284,6 @@ module Gaia.Domain {
         }
     }
 
-    export class FarmInfo extends GaiaEntity<number>{
-        OwnerId: string;
-        Owner: Axis.Pollux.Domain.User;
-        BusinessName: string;
-        Produce: string;
-        Address: string;
-        GpsAreaPonumbers: string;
-        VideoLinks: string;
-        PhotoLinks: string;
-
-        constructor(data?: Object) {
-            super(data);
-            if (data) {
-                this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-            }
-        }
-    }
-
     export class FeatureAccessDescriptor extends GaiaEntity<number>{
         AccessDescriptor: string;
         AccessProfileCode: string;
@@ -469,24 +451,6 @@ module Gaia.Domain {
         }
     }
 
-    export class ServiceInfo extends GaiaEntity<number>{
-        OwnerId: string;
-        Owner: Axis.Pollux.Domain.User;
-        ServiceName: string;
-        Description: string;
-        VideoLinks: string;
-        PhotoLinks: string;
-        Category: ServiceCategory;
-
-        constructor(data?: Object) {
-            super(data);
-            if (data) {
-                this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-                this.Category = data['Category'] ? new Gaia.Domain.ServiceCategory(data['Category']) : null;
-            }
-        }
-    }
-
     export class SystemSetting extends GaiaEntity<number>{
 
         Data: string;
@@ -595,6 +559,8 @@ module Gaia.Domain {
         Tags: string;
         ItemType: ItemType;
 
+        Owner: Axis.Pollux.Domain.User;
+
         Inputs: ServiceInterface[];
         Outputs: ServiceInterface[];
 
@@ -618,6 +584,8 @@ module Gaia.Domain {
         Tags: string;
         ItemType: ItemType;
 
+        Owner: Axis.Pollux.Domain.User;
+
         Images: Axis.Luna.Domain.BinaryData[];
         Videos: Axis.Luna.Domain.BinaryData[];
 
@@ -628,6 +596,14 @@ module Gaia.Domain {
                 this.Videos = !Object.isNullOrUndefined(this.Videos) ? this.Videos.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
             }
         }
+    }
+
+    export interface ISearchableItem {
+        
+        Title: string;
+        Description: string;
+        Tags: string;
+        ItemType: ItemType;
     }
 
     export class ServiceInterface extends GaiaEntity<number>{

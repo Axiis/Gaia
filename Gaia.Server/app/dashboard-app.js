@@ -10,6 +10,7 @@ var Gaia;
             ///Gaia services
             Dashboard.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             Dashboard.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
+            Dashboard.module.service('#gaia.accessProfileService', Gaia.Services.AccessProfileService);
             ///Pollux Services
             Dashboard.module.service('#pollux.authentication', Pollux.Services.Authentication);
             ///Util Services
@@ -45,4 +46,3 @@ var Gaia;
         })(Dashboard = App.Dashboard || (App.Dashboard = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-app.js.map

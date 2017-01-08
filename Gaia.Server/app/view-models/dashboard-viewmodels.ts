@@ -3,8 +3,78 @@ module Gaia.ViewModels.Dashboard {
 
 
     export class DashboardViewModel {
+        accountCategory: string = null;
+        description: string = null;
+        hasBusinesses: boolean = false;
 
-        constructor() {
+        canUpgradeAccount: boolean = false;
+        hasUpgradeMessage: boolean = false;
+        upgradeMessageDescription: string = null;
+        hasUpgradeError: boolean = false;
+
+        get upgradeMessageClass(): any {
+            return {
+                'growl-error': this.hasUpgradeError,
+                'growl-success': !this.hasUpgradeError
+            }
+        }
+
+        get upgradeMessageTitle(): string {
+            if (this.hasUpgradeMessage) {
+                return this.hasUpgradeError ? 'Error!' : 'Success!';
+            }
+            else return '';
+        }
+
+        get accountClass(): any {
+            return {
+                'callout-warning': this.accountCategory.startsWith('Service'),
+                'callout-success': this.accountCategory.startsWith('Farmer'),
+                'callout-default': this.accountCategory.startsWith('Customer')
+            };
+        }
+
+        upgradeToMerchant() {
+            var userId = this.domModel.simpleModel.UserId;
+
+            this.accessProfile.applyAccessProfile(userId, 'system.[Service-Provider Profile]')
+                .then(opr => {
+                    this.hasUpgradeError = false;
+                    this.hasUpgradeMessage = true;
+                    this.upgradeMessageDescription = 'Your account was upgraded successfully';
+
+                    window.location.reload();
+                }, error => {
+                    this.hasUpgradeError = true;
+                    this.hasUpgradeMessage = true;
+                    this.upgradeMessageDescription = 'An error occured while upgrading your account';
+                });
+        }
+
+
+        static $inject = ['#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.accessProfileService'];
+        constructor(private domModel: Gaia.Utils.Services.DomModelService, private notifyFarm: Gaia.Utils.Services.NotifyService,
+            private accessProfile: Gaia.Services.AccessProfileService) {
+
+            var accessprofiles = (this.domModel.simpleModel.AccessProfiles as string).split(',');
+            if (accessprofiles.contains('system.[Farmer Profile]')) {
+                this.accountCategory = "Farmer Account";
+
+                this.description = "In addition to enlisting services to be sold in the market place, you may now also enlist farm-products as well.";
+            }
+
+            else if (accessprofiles.contains('system.[Service-Provider Profile]')) {
+                this.accountCategory = "Service-Provider Account";
+
+                this.description = "Enlist services that your potential customers can descover while searching, and pay for.";
+            }
+
+            else if (accessprofiles.contains('system.[Default-User Profile]')) {
+                this.accountCategory = "Customer Account";
+                this.canUpgradeAccount = true;
+
+                this.description = "Search the market place for all sorts of Goods and services to purchase.";
+            }
         }
     }
 
@@ -41,7 +111,7 @@ module Gaia.ViewModels.Dashboard {
         profileImageUrl(): string {
             if (this.profileImage && this.profileImage.IsDataEmbeded) return this.profileImage.EmbededDataUrl();
             else if (this.profileImage) this.profileImage.Data;
-            else return '/content/images/default-image-200.jpg';
+            else return '/content/images/default-image-200.png';
         }
 
         removeProfileImage() {
@@ -241,18 +311,83 @@ module Gaia.ViewModels.Dashboard {
         }
     }
 
+    export class UserAccountViewModel {
 
+        isSelectingAccountType: boolean = true;
+        isModifyingFarms: boolean = false;
+
+        isConsumerAccount(): boolean {
+            var accountProfiles: string = this.domModel.simpleModel.AccessProfiles;
+            return accountProfiles.contains(Utils.ConsumerAccountProfile);
+        }
+        activateConsumerAccount(activate: boolean) {
+            if (!this.isConsumerAccount() && activate) this.applyAccountProfile(Utils.ConsumerAccountProfile);
+            else if (this.isConsumerAccount() && !activate) this.revokeAccountProfile(Utils.ConsumerAccountProfile);
+        }
+
+        isServiceProviderAccount(): boolean {
+            var accountProfiles: string = this.domModel.simpleModel.AccessProfiles;
+            return accountProfiles.contains(Utils.ServiceProvierAccountProfile);
+        }
+        activateServiceProviderAccount(activate: boolean) {
+            if (!this.isServiceProviderAccount() && activate) this.applyAccountProfile(Utils.ServiceProvierAccountProfile);
+            else if (this.isServiceProviderAccount() && !activate) this.revokeAccountProfile(Utils.ServiceProvierAccountProfile);
+        }
+
+        isFarmerAccount(): boolean {
+            var accountProfiles: string = this.domModel.simpleModel.AccessProfiles;
+            return accountProfiles.contains(Utils.FarmerAccountProfile);
+        }
+        activateFarmerAccount(activate: boolean) {
+            if (!this.isFarmerAccount() && activate) this.applyAccountProfile(Utils.FarmerAccountProfile);
+            else if (this.isFarmerAccount() && !activate) this.revokeAccountProfile(Utils.FarmerAccountProfile);
+        }
+
+        private applyAccountProfile(profile: string) {
+            var userId = this.domModel.simpleModel.UserId;
+
+            this.accessProfile.applyAccessProfile(userId, profile)
+                .then(opr => {
+                    this.notify.success('Your account was upgraded successfully');
+
+                    window.location.reload();
+                }, error => {
+                    this.notify.error('An error occured while upgrading your account');
+                });
+        }
+        private revokeAccountProfile(profile: string) {
+            var userId = this.domModel.simpleModel.UserId;
+
+            this.accessProfile.revokeAccessProfile(userId, profile)
+                .then(opr => {
+                    this.notify.success('Your account was modified successfully');
+
+                    window.location.reload();
+                }, error => {
+                    this.notify.error('An error occured while modifying your account');
+                });
+        }
+
+
+        static $inject = ['#gaia.utils.domModel', '#gaia.accessProfileService', '#gaia.utils.notify'];
+        constructor(private domModel: Gaia.Utils.Services.DomModelService, private accessProfile: Gaia.Services.AccessProfileService,
+            private notify: Gaia.Utils.Services.NotifyService) {
+            
+        }
+    }
+
+    //Obsolete
     export class BusinessAccountViewModel {
 
         user: Axis.Pollux.Domain.User = null;
         
         businessList: Axis.Pollux.Domain.CorporateData[] = [];
-        currentBusinessData: Axis.Pollux.Domain.CorporateData = null;
         isListingBusinesses: boolean = true;
         isEditingBusiness: boolean = false;
         isPersistingBusiness: boolean = false;
         isDetailingBusiness: boolean = false;
         hasBusinessPersistenceError: boolean = false;
+        currentBusinessData: Axis.Pollux.Domain.CorporateData = null;
 
         private _incorporationDate: Date;
         set businessIncorporationDateBinding(value: Date) {
@@ -388,8 +523,14 @@ module Gaia.ViewModels.Dashboard {
         refreshBusinesss() {
             this.profileService.getCorporateData()
                 .then(oprc => {
-                    this.currentBusinessData = null;
+                    //this.currentBusinessData = null;
                     this.businessList = oprc.Result || [];
+                    if (this.businessList.length > 0) {
+                        this.scope.$parent['vm'].hasBusinesses = true;
+                    }
+                    else {
+                        this.scope.$parent['vm'].hasBusinesses = false;
+                    }
                 }, e => {
                     this.notifyService.error('Something went wrong while retrieving your business data...', 'Oops!');
                 });
@@ -401,9 +542,9 @@ module Gaia.ViewModels.Dashboard {
         }
 
 
-        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
+        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter', '$scope'];
         constructor(private profileService: Gaia.Services.ProfileService, private domModel: Gaia.Utils.Services.DomModelService,
-            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
+            private notifyService: Gaia.Utils.Services.NotifyService, counter: AccountCounter, private scope: ng.IScope) {
 
             counter.businessVm = this;
             this.refreshBusinesss();
@@ -430,6 +571,8 @@ module Gaia.ViewModels.Dashboard {
         isPersistingFarm: boolean = false;
         isDetailingFarm: boolean = false;
         hasFarmPersistenceError: boolean = false;
+
+        hasFarmerAccessProfile: boolean = false;
 
         get selectedFarmCategory(): string {
             if (this.currentFarm && !Object.isNullOrUndefined(this.currentFarm.FarmType)) return Gaia.Domain.FarmType[this.currentFarm.FarmType] as string;
@@ -526,24 +669,35 @@ module Gaia.ViewModels.Dashboard {
         constructor(private accountFarm: Gaia.Services.UserAccountService, private domModel: Gaia.Utils.Services.DomModelService,
             private notifyFarm: Gaia.Utils.Services.NotifyService, counter: AccountCounter) {
 
-            counter.farmVm = this;
+            var accessprofiles = (this.domModel.simpleModel.AccessProfiles as string).split(',');
+            if (accessprofiles.contains('system.[Farmer Profile]')) {
 
-            this.refreshFarms();
-            this.user = new Axis.Pollux.Domain.User({
-                UserId: domModel.simpleModel.UserId,
-                EntityId: domModel.simpleModel.UserId,
-                Stataus: 1
-            });
+                this.hasFarmerAccessProfile = true;
 
-            this.farmCategories = Object
-                .keys(Gaia.Domain.FarmType)
-                .map(k => Gaia.Domain.FarmType[k] as string)
-                .filter(v => typeof v === "string");
+                counter.farmVm = this;
+
+                this.refreshFarms();
+
+                this.user = new Axis.Pollux.Domain.User({
+                    UserId: domModel.simpleModel.UserId,
+                    EntityId: domModel.simpleModel.UserId,
+                    Stataus: 1
+                });
+
+                this.farmCategories = Object
+                    .keys(Gaia.Domain.FarmType)
+                    .map(k => Gaia.Domain.FarmType[k] as string)
+                    .filter(v => typeof v === "string");
+            }
         }
     }
 
 
     export class AccountTabsViewModel {
+
+        get hasBusinesses(): boolean {
+            return this.counter.businessVm.businessList.length > 0;
+        }
 
         static $inject = ['#gaia.dashboard.localServices.AccountCounter']
         constructor(public counter: AccountCounter) {

@@ -1,4 +1,5 @@
-﻿using Gaia.Core.Utils;
+﻿using Axis.Pollux.Identity.Principal;
+using Gaia.Core.Utils;
 using System.Collections.Generic;
 
 namespace Gaia.Core.Domain.MarketPlace
@@ -20,9 +21,14 @@ namespace Gaia.Core.Domain.MarketPlace
 
         public ItemType ItemType => ItemType.Product; //ignore in db
 
+        /// <summary>
+        /// Represents the merchant that owns the product
+        /// </summary>
+        public User Owner { get; set; }
 
-        public ICollection<Blob> Images { get; set; } = new HashSet<Blob>(); //ignore
-        public ICollection<Blob> Videos { get; set; } = new HashSet<Blob>(); //ignore
+
+        public ICollection<BlobAttachment> Images { get; set; } = new HashSet<BlobAttachment>(); //ignore
+        public ICollection<BlobAttachment> Videos { get; set; } = new HashSet<BlobAttachment>(); //ignore
     }
 
     public enum ProductStatus

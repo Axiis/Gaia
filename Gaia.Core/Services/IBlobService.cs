@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Axis.Luna;
+using System;
 
 namespace Gaia.Core.Services
 {
     public interface IBlobService : IGaiaService, IUserContextService
     {
+        Operation<Uri> Persist(EncodedBinaryData blob);
+        Operation Delete(Uri blobUri);
+        Operation<EncodedBinaryData> GetBlob(Uri blobUri);
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Gaia.Server.Controllers.ActivityFeedModels;
 
 namespace Gaia.Server.Controllers
 {
@@ -25,57 +26,70 @@ namespace Gaia.Server.Controllers
 
 
         [HttpGet]
-        [Route("api/activity-feeds/@{count}/@{from}")]
-        public IHttpActionResult LoadPastFeeds(int count, DateTime? from)
-            => _activityFeed.LoadPastFeeds(count, from)
+        [Route("api/activity-feeds")]
+        public IHttpActionResult LoadPastFeeds([FromBody] LoadEntryInfo info)
+            => _activityFeed.LoadPastFeeds(info.Count, info.From)
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
         [HttpGet]
-        [Route("api/activity-feeds/recent/@{count}/@{from}")]
-        public IHttpActionResult LoadRecentFeeds(int count, DateTime from)
-            => _activityFeed.LoadRecentFeeds(count, from)
+        [Route("api/activity-feeds/recent")]
+        public IHttpActionResult LoadRecentFeeds([FromBody] LoadEntryInfo info)
+            => _activityFeed.LoadRecentFeeds(info.Count, info.From.Value)
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
         [HttpPost]
-        [Route("api/activity-feeds/pinned-entries/@{postId}/@{postType}")]
-        public IHttpActionResult PinEntry(long postId, string postType)
-            => _activityFeed.PinEntry(postId, postType)
+        [Route("api/activity-feeds/pinned-entries")]
+        public IHttpActionResult PinEntry([FromBody] PostInfo info)
+            => _activityFeed.PinEntry(info.PostId, info.PostContext)
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
         [HttpDelete]
-        [Route("api/activity-feeds/pinned-entries/@{pinId}")]
-        public IHttpActionResult UnpinEntry(long pinId)
-            => _activityFeed.UnpinEntry(pinId)
-                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                .Result;
-
-
-        [HttpDelete]
-        [Route("api/activity-feeds/pinned-entries/@{pinContextId}/@{pinContextType}")]
-        public IHttpActionResult UnpinEntry(long pinContextId, string pinContextType)
-            => _activityFeed.UnpinEntry(pinContextId, pinContextType)
+        [Route("api/activity-feeds/pinned-entries")]
+        public IHttpActionResult UnpinEntry([FromBody] PinnedPostInfo info)
+            => _activityFeed.UnpinEntry(info.PinId)
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
 
         [HttpGet]
-        [Route("api/activity-feeds/pinned-entries/@{count}/@{from}")]
-        public IHttpActionResult LoadPinnedFeeds(int count, DateTime? from)
-            => _activityFeed.LoadPinnedFeeds(count, from)
+        [Route("api/activity-feeds/pinned-entries")]
+        public IHttpActionResult LoadPinnedFeeds([FromBody] LoadEntryInfo info)
+            => _activityFeed.LoadPinnedFeeds(info.Count, info.From)
                 .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
+    }
+
+    namespace ActivityFeedModels
+    {
+        public class LoadEntryInfo
+        {
+            public int Count { get; set; }
+            public DateTime? From { get; set; }
+        }
+
+        public class PostInfo
+        {
+            public long PostId { get; set; }
+            public string PostContext { get; set; }
+        }
+
+        public class PinnedPostInfo
+        {
+            public long PinId { get; set; }
+            public long PinContextId { get; set; }
+            public string PinContext { get; set; }
+        }
     }
 }

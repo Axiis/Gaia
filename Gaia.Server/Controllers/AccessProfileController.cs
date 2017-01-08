@@ -9,6 +9,9 @@ using Axis.Luna.Extensions;
 using Gaia.Core.Domain;
 using Gaia.Server.Controllers.AccessProfileModel;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Text;
+using Gaia.Server.Utils;
 
 namespace Gaia.Server.Controllers
 {
@@ -26,9 +29,9 @@ namespace Gaia.Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/access-profiles/@{profileCode}/@{title}")]
-        public IHttpActionResult CreateFeatureAccessProfile(string profileCode, string title)
-            => _accessProfile.CreateFeatureAccessProfile(profileCode, title)
+        [Route("api/access-profiles")]
+        public IHttpActionResult CreateFeatureAccessProfile([FromBody]AccessProfileCreationInfo info)
+            => _accessProfile.CreateFeatureAccessProfile(info.Code, info.Title)
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                   .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
@@ -43,9 +46,9 @@ namespace Gaia.Server.Controllers
 
 
         [HttpPut]
-        [Route("api/access-profiles/archives/@{profileId}")]
-        public IHttpActionResult ArchiveAccessProfile(long profileId)
-            => _accessProfile.ArchiveAccessProfile(profileId)
+        [Route("api/access-profiles/archives")]
+        public IHttpActionResult ArchiveAccessProfile([FromBody] AccessProfileArchiveInfo info)
+            => _accessProfile.ArchiveAccessProfile(info.Id)
                   .Then(opr => this.Ok(opr).As<IHttpActionResult>())
                   .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
@@ -61,12 +64,12 @@ namespace Gaia.Server.Controllers
 
 
         [HttpDelete]
-        [Route("api/access-profiles/@{userId}/@{accessProfileCode}")]
-        public IHttpActionResult RevokeAccessProfile(string userId, string accessProfileCode)
-            => _accessProfile.RevokeAccessProfile(userId, accessProfileCode)
-                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                  .Result;
+        [Route("api/access-profiles")]
+        public IHttpActionResult RevokeAccessProfile(string data)
+            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<AccessProfileRevokeInfo>(_json))
+                .Pipe(info => _accessProfile.RevokeAccessProfile(info.UserId, info.Code))
+                .Pipe(_op => _op.OperationResult(Request));
 
 
         [HttpPut]
@@ -79,12 +82,12 @@ namespace Gaia.Server.Controllers
 
 
         [HttpGet]
-        [Route("api/access-profiles/@{userId}")]
-        public IHttpActionResult ActiveUserAccessProfiles(string userId)
-            => _accessProfile.ActiveUserAccessProfiles(userId)
-                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                  .Result;
+        [Route("api/access-profiles/active")]
+        public IHttpActionResult ActiveUserAccessProfiles(string data)
+            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<AccessProfileOwnerInfo>(_json))
+                .Pipe(info => _accessProfile.ActiveUserAccessProfiles(info.UserId))
+                .Pipe(_op => _op.OperationResult(Request));
     }
 
 
@@ -111,6 +114,28 @@ namespace Gaia.Server.Controllers
             public string OldAccessProfileCode { get; set; }
             public string NewAccessProfileCode { get; set; }
             public DateTime? NewExpiry { get; set; }
+        }
+
+        public class AccessProfileCreationInfo
+        {
+            public string Code { get; set; }
+            public string Title { get; set; }
+        }
+
+        public class AccessProfileArchiveInfo
+        {
+            public long Id { get; set; }
+        }
+
+        public class AccessProfileRevokeInfo
+        {
+            public string UserId { get; set; }
+            public string Code { get; set; }
+        }
+
+        public class AccessProfileOwnerInfo
+        {
+            public string UserId { get; set; }
         }
     }
 }

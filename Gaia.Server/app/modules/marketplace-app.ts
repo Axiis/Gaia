@@ -9,6 +9,7 @@ module Gaia.App.MarketPlace {
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);
     module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
+    module.service('#gaia.marketPlaceService', Gaia.Services.MarketPlaceService);
 
     ///Pollux Services
     module.service('#pollux.authentication', Pollux.Services.Authentication);
@@ -27,6 +28,9 @@ module Gaia.App.MarketPlace {
     module.controller('MarketPlaceViewModel', Gaia.ViewModels.MarketPlace.MarketPlaceViewModel);
     module.controller('CustomerViewModel', Gaia.ViewModels.MarketPlace.CustomerViewModel);
     module.controller('MerchantViewModel', Gaia.ViewModels.MarketPlace.MerchantViewModel);
+    module.controller('MerchantProductsViewModel', Gaia.ViewModels.MarketPlace.MerchantProductsViewModel);
+    module.controller('MerchantServicesViewModel', Gaia.ViewModels.MarketPlace.MerchantServicesViewModel);
+    module.controller('MerchantOrdersViewModel', Gaia.ViewModels.MarketPlace.MerchantOrdersViewModel);
     module.controller('ConfigureViewModel', Gaia.ViewModels.MarketPlace.ConfigureViewModel);
 
 
@@ -45,6 +49,24 @@ module Gaia.App.MarketPlace {
                 url: '/merchant',
                 templateUrl: 'merchant', //<-- /view-server/secured/market-place/merchant
                 controller: 'MerchantViewModel',
+                controllerAs: 'vm'
+            })
+            .state('merchant.products', {
+                url: '/products',
+                templateUrl: 'products', //<-- /view-server/secured/market-place/products
+                controller: 'MerchantProductsViewModel',
+                controllerAs: 'vm'
+            })
+            .state('merchant.services', {
+                url: '/services',
+                templateUrl: 'services', //<-- /view-server/secured/market-place/services
+                controller: 'MerchantServicesViewModel',
+                controllerAs: 'vm'
+            })
+            .state('merchant.orders', {
+                url: '/orders',
+                templateUrl: 'orders', //<-- /view-server/secured/market-place/orders
+                controller: 'MerchantOrdersViewModel',
                 controllerAs: 'vm'
             })
             .state('configure', {

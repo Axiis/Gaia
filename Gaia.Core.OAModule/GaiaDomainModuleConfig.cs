@@ -191,7 +191,6 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/@create-registration-verification",
                         "system/Profiles/@verify-registration-verification",
                         "system/AccessProfiles/@apply",
-                        "system/ContextVerifications/@create-default",
                         "system/ContextVerifications/@create",
                         "system/ContextVerifications/@verify"
                     }
@@ -317,12 +316,16 @@ namespace Gaia.Core.OAModule
                         ///Marketplace
                         "system/MarketPlace/Merchant/ProductCategories/@get",
                         "system/MarketPlace/Merchant/ServiceCategories/@get",
+                        "system/MarketPlace/Merchant/Products/@search",
+                        "system/MarketPlace/Merchant/Services/@search",
                         "system/MarketPlace/Merchant/Orders/@get",
                         "system/MarketPlace/Merchant/Orders/@update",
                         "system/MarketPlace/Merchant/Orders/@fulfill",
                         "system/MarketPlace/Merchant/Services/@add",
+                        "system/MarketPlace/Merchant/Services/@modify",
                         "system/MarketPlace/Merchant/ServiceInterface/@add",
-                        "system/MarketPlace/Merchant/Products/@add"
+                        "system/MarketPlace/Merchant/Products/@add",
+                        "system/MarketPlace/Merchant/Products/@modify"
 
                     }
                     .ForAll((cnt, next) =>
@@ -426,8 +429,8 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/CorporateData/@remove",
 
                         ///marketplace
-                        "system/MarketPlace/Customer/Product/@search",
-                        "system/MarketPlace/Customer/Service/@search",
+                        "system/MarketPlace/Customer/Products/@search",
+                        "system/MarketPlace/Customer/Services/@search",
                         "system/MarketPlace/Customer/Lists/@get",
                         "system/MarketPlace/Customer/List/@remove",
                         "system/MarketPlace/Customer/List/@add",

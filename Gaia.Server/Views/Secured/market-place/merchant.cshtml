@@ -3,4 +3,22 @@
 }
 
 
-<div style="background: gray; height:100px;"></div>
+<div class="">
+
+    <div style="padding-right:0px;"
+         class="col-md-2 col-xs-12 col-sm-2">
+
+        <ul class="gaia-vertical-menu-list" style="font-size:13px;">
+            <li ng-class="{active:vm.isServicesActive()}"><a ui-sref="merchant.services">Services</a></li>
+            <li ng-class="{active:vm.isProductsActive()}" ng-show="vm.isFarmerAccount()"><a ui-sref="merchant.products">Products</a></li>
+            <li>&nbsp;</li>
+            <li ng-class="{active:vm.isOrdersActive()}"><a ui-sref="merchant.orders">Orders</a></li>
+        </ul>
+    </div>
+
+    <div style="min-height:150px; border-left:1px solid #ccc; "
+         class="col-md-10 col-xs-12 col-sm-10">
+        <div ui-view></div>
+    </div>
+
+</div>

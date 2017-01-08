@@ -1,0 +1,158 @@
+﻿@{
+    Layout = null;
+}
+
+<div ng-show="vm.isListingServices">
+    <div class="clearfix"><!--Tool Bar-->
+        <div style="display:inline-block;" class="pull-right">
+            <div class="form-horizontal">
+                <div class="form-group" style="margin:0px;">
+                    <div class="has-feedback" style="display: inline-block;">
+                        <input type="text" class="form-control" placeholder="Search" style="min-width:250px;" ng-model="vm.searchString">
+                        <i class="icon-search3 form-control-feedback" style="right:0; cursor:pointer;"
+                           ng-click="vm.search()"></i>
+                    </div>
+
+                    <button class="btn btn-icon"
+                            style="margin-bottom:1px; background:white; border:1px solid #ccc; border-radius:1px; color:#999;"
+                            href
+                            data-toggle="tooltip"
+                            title="Add new service"
+                            ng-click="vm.addAndModify()">
+                        <i class="icon-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="pull-left">
+            <ul class="pagination">
+                <li ng-show="vm.services.PageCount > 1">
+                    <a href
+                       ng-click="vm.listServices(0, vm.searchString)">
+                        <i class="icon-arrow-left2"></i>
+                    </a>
+                </li>
+
+                <li ng-class="{active: (pindex == vm.services.PageIndex)}"
+                    ng-repeat="pindex in vm.services.AdjacentIndexes(4)">
+                    <a href 
+                       ng-click="vm.listServices(pindex, vm.searchString)">
+                        {{pindex + 1}}
+                    </a>
+                </li>
+
+                <li ng-show="vm.services.PageCount > 1">
+                    <a href
+                       ng-click="vm.listServices(vm.services.PageCount-1, vm.searchString)">
+                        <i class="icon-arrow-right3"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="margin-top:10px;"><!--Item List-->
+        <div class="clearfix gaia-service-item"
+             ng-repeat="data in vm.services.Page">
+            <div class="row"
+                 ng-click="vm.modifyService(data)">
+                <div class="col-sm-10 col-xs-8">
+                    <h5 style="text-overflow:ellipsis; white-space:nowrap;">{{data.Title}}</h5>
+                    <p style="text-overflow:ellipsis; white-space:nowrap;">{{data.Description}}</p>
+                </div>
+                <div class="col-sm-2 col-xs-4" style="text-align:right;">
+                    <h6 class="text-danger">&#8358; {{data.Cost}}</h6>
+                    <span class="label" ng-class="{'label-success': vm.isAvailable(data), 'label-warning': vm.isSuspended(data), 'label-danger': vm.isUnavailable(data)}">{{vm.statusString(data)}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div ng-show="vm.isModifyingService">
+    <div class="form">
+
+        <div class="clearfix">
+            <div class="pull-right btn-group">
+                <button ng-click="vm.switchState({isListingServices: true, currentState: null})"
+                        type="button"
+                        class="btn btn-xs btn-default">
+                    <i class="icon-arrow-left4"></i>&nbsp;Back
+                </button>
+                <button ng-click="vm.persistCurrentService()"
+                        type="button"
+                        class="btn btn-xs btn-success">
+                    <i class="icon-thumbs-up3" ng-hide="vm.isPersistingService"></i>
+                    <div id="service-ring-loader" ng-show="vm.isPersistingService"></div>
+
+                    &nbsp;Ok
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Service Title</label>
+            <input type="text" ng-model="vm.currentService.Title" class="form-control" placeholder="Title">
+            <span class="label label-danger"
+                  ng-hide="!Object.isNullOrUndefined(vm.currentService.Title) && (!vm.currentService.Title.trim() == '')">Required</span>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div style="margin-bottom:10px;">
+                        <label>Price (&#8358;)</label>
+                        <input type="text" class="form-control" value="1000" id="spinner-service-price" ng-model="vm.currentService.Cost">
+                    </div>
+                    <div>
+                        <label style="display: block; width:100%;">Status</label>
+                        <select class="multi-select service-status" ng-model="vm.currentService.Status">
+                            <option value="0">Available</option>
+                            <option value="1">Unavailable</option>
+                            <option value="2">Suspended</option>
+                        </select>
+                        <script type="text/javascript">
+                            //$('.multi-select.service-status').multiselect({
+                            //    buttonClass: 'btn btn-default',
+                            //    onChange: function (element, checked) {
+                            //        $.uniform.update();
+                            //    }
+                            //});
+                        </script>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label>Description</label>
+                    <textarea rows="5" cols="5" class="form-control" placeholder="Description" ng-model="vm.currentService.Description"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12"
+                     data-toggle="tooltip" title="Enter keywords that help to describe/identify this service for easy searching">
+                    <label>Search Tags</label>
+                    <input type="text" id="searchTags" class="tags" style="display: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script type="text/javascript">
+        $(function () {
+            ringLoader($('#service-ring-loader'), '14px', 'white');
+
+            $('#searchTags').tagsInput({ width: '100%' });
+            $('#spinner-service-price').spinner({
+                min: 0,
+                step: 100,
+                start: 1000,
+                numberFormat: "C"
+            });
+        });
+    </script>

@@ -35,7 +35,7 @@
                         <div class="block">
                             <div class="thumbnail">
                                 <div class="thumb">
-                                    <img alt="" ng-src="{{vm.profileImageUrl()}}" style="width:200px; height:200px;" id="profile-image"/>
+                                    <img alt="" ng-src="{{vm.profileImageUrl()}}" style="max-width:200px; max-height:200px;" id="profile-image"/>
                                     <div class="thumb-options">
                                         <span>
                                             <label class="btn btn-icon btn-success"
@@ -319,31 +319,179 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade in" id="accounts">
+            <div class="tab-pane fade in" id="accounts"
+                 ng-controller="UserAccountViewModel as vm">
                 <div class="row">
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-12" ng-show="vm.isSelectingAccountType">
+
+                        <div class="callout fade in" style="padding:10px !important;">
+                            <h6>Choose the account(s) that best describe(s) you</h6>
+                        </div>
+
+                        <div class="col-sm-4" style="text-align:right;">
+                            <div style="min-height:400px;"
+                                 class="gaia-card-shadow">
+                                <div style="text-align:center; background:olivedrab; margin:0px; padding:10px;">
+                                    <div class="btn-group btn-group-xs">
+                                        <button disabled class="btn btn-default"  
+                                                ng-class="{'btn-default':vm.isConsumerAccount(), 'btn-danger':!vm.isConsumerAccount()}">
+                                            {{vm.isConsumerAccount()? 'Yes':'No'}}
+                                        </button>
+                                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret caret-split"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li ng-click="vm.activateConsumerAccount(true)" ng-class="{'active':vm.isConsumerAccount()}"><a href><i class="icon-thumbs-up"></i> Yes</a></li>
+                                            <li ng-hide="vm.isConsumerAccount()"
+                                                ng-click="vm.activateConsumerAccount(false)" 
+                                                ng-class="{'active':!vm.isConsumerAccount()}">
+                                                <a href><i class="icon-thumbs-down"></i> No</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <strong>, I'm{{!vm.isConsumerAccount()? ' not':''}} a</strong>
+                                </div>
+                                <div style="height:200px; background: url('/Content/images/consumer.svg') no-repeat center border-box olivedrab;"></div>
+
+                                <h5 style="text-align:center; margin-top:15px;">Consumer</h5>
+
+                                <p style="text-align:justify; margin:0 10px;">
+                                    <strong>
+                                        As a <span class="text-muted">consumer</span>, you will enjoy the richly featured, and highly satisfying experience of finding and purchasing Products and Services that fit you needs.
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4" style="text-align:right;">
+                            <div style="min-height:400px;"
+                                 class="gaia-card-shadow">
+                                <div style="text-align:center; background:orange; margin:0px; padding:10px;">
+                                    <div class="btn-group btn-group-xs">
+                                        <button disabled class="btn" 
+                                                ng-class="{'btn-info':vm.isServiceProviderAccount(), 'btn-danger':!vm.isServiceProviderAccount()}">
+                                            {{vm.isServiceProviderAccount()? 'Yes':'No'}}
+                                        </button>
+                                        <button class="btn dropdown-toggle" 
+                                                data-toggle="dropdown"
+                                                ng-class="{'btn-info':vm.isServiceProviderAccount(), 'btn-danger':!vm.isServiceProviderAccount()}">
+                                            <span class="caret caret-split"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li ng-click="vm.activateServiceProviderAccount(true)" ng-class="{'active':vm.isServiceProviderAccount()}"><a href><i class="icon-thumbs-up"></i> Yes</a></li>
+                                            <li ng-hide="vm.isServiceProviderAccount()" 
+                                                ng-click="vm.activateServiceProviderAccount(false)" 
+                                                ng-class="{'active':!vm.isServiceProviderAccount()}">
+                                                <a href><i class="icon-thumbs-down"></i> No</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <strong>, I'm{{!vm.isServiceProviderAccount()? ' not':''}} a</strong>
+                                </div>
+                                <div style="height:200px; background: url('/Content/images/service-provider.svg') no-repeat center border-box orange;">
+
+                                </div>
+
+                                <h5 style="text-align:center; margin-top:15px;">Service Provider</h5>
+
+                                <p style="text-align:justify; margin:0 10px;">
+                                    <strong>
+                                        As a <span class="text-info">Service Provider</span>, you will enjoy the richly featured, and highly satisfying experience of finding and purchasing Products and Services that fit you needs.
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4" style="text-align:left;">
+                             <div style="min-height:400px;"
+                                  class="gaia-card-shadow">
+                                 <div style="text-align:center; background:steelblue; margin:0px; padding:10px;">
+                                     <div class="btn-group btn-group-xs">
+                                         <button disabled class="btn" ng-class="{'btn-success':vm.isFarmerAccount(), 'btn-danger':!vm.isFarmerAccount()}">
+                                             {{vm.isFarmerAccount()? 'Yes':'No'}}
+                                         </button>
+                                         <button class="btn dropdown-toggle" 
+                                                 data-toggle="dropdown"
+                                                 ng-class="{'btn-success':vm.isFarmerAccount(), 'btn-danger':!vm.isFarmerAccount()}">
+                                            <span class="caret caret-split"></span>
+                                         </button>
+                                         <ul class="dropdown-menu">
+                                             <li ng-click="vm.activateFarmerAccount(true)"  ng-class="{'active':vm.isFarmerAccount()}"><a href><i class="icon-thumbs-up"></i> Yes</a></li>
+                                             <li ng-hide="vm.isFarmerAccount()" 
+                                                 ng-click="vm.activateFarmerAccount(false)" 
+                                                 ng-class="{'active':!vm.isFarmerAccount()}">
+                                                <a href><i class="icon-thumbs-down"></i> No</a>
+                                             </li>
+                                         </ul>
+                                     </div>
+                                     <strong>, I'm{{!vm.isFarmerAccount()? ' not':''}} a</strong>
+                                 </div>
+                                 <div style="height:200px; background: url('/Content/images/farmer.svg') no-repeat center border-box steelblue;">
+
+                                 </div>
+
+                                 <h5 style="text-align:center; margin-top:15px;">Farmer</h5>
+
+                                 <p style="text-align:justify; margin:0 10px;">
+                                     <strong>
+                                         As a <span class="text-success">consumer</span>, you will enjoy the richly featured, and highly satisfying experience of finding and purchasing Products and Services that fit you needs.
+                                     </strong>
+                                 </p>
+
+                                 <div style="border-top:1px solid #ccc; margin-top:15px; padding:10px; margin-left: 2px; margin-right:2px;"
+                                      class="clearfix"
+                                      ng-show="vm.isFarmerAccount()">
+                                     <h6 class="pull-left">
+                                         Farm Info
+                                     </h6>
+                                     <div class="btn-group pull-right">
+                                         <button type="button" class="btn btn-xs btn-info"
+                                                 data-toggle="tooltip" title="Edit Farm Info">
+                                             Edit
+                                         </button>
+                                     </div>
+                                 </div>
+                              </div>
+                        </div>
+                    </div>
+
+                    <!--Old stuff-->
+                    <div class="hidden">
+                        <div class="callout fade in">
+                            <h5>{{vm.accountCategory}}</h5>
+                            <p>{{vm.description}}</p>
+                        </div>
+
+                        <div style="margin-bottom:30px; font-size:17px; text-align:center;" ng-show="vm.canUpgradeAccount">
+                            <p>
+                                You can <a class="text-success" ng-click="vm.upgradeToMerchant()">Upgrade <i class="icon-arrow-up9"></i></a> your account to become a <strong>merchant</strong>.
+                            </p>
+                        </div>
+                        <div class="jgrowl-showcase" ng-show="vm.hasUpgradeMessage">
+                            <div class="jGrowl">
+                                <div class="jGrowl-notification" ng-class="vm.upgradeMessageClass">
+                                    <div class="jGrowl-close" ng-click="vm.hasUpgradeMessage = false">×</div>
+                                    <div class="jGrowl-header">{{vm.upgradeMessageTitle}}</div>
+                                    <div class="jGrowl-message">{{vm.upgradeMessageDescription}}</div>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <!-- Page tabs -->
-                        <div class="tabbable page-tabs">
+                        <div class="tabbable page-tabs" ng-hide="vm.canUpgradeAccount">
 
                             <ul class="nav nav-pills nav-justified"
                                 ng-controller="AccountTabsViewModel as vm">
                                 <li class="active">
                                     <a href="#businesses" data-toggle="tab">
                                         <i class="icon-briefcase"></i> Businesses
-                                        <span ng-show="vm.businessList.length>0" class="label label-primary">{{vm.businessVm.businessList.length}}</span>
+                                        <span ng-show="vm.counter.businessVm.businessList.length>0" class="label label-primary">{{vm.counter.businessVm.businessList.length}}</span>
                                     </a>
                                 </li>
-                                <li class="">
-                                    <a href="#services" data-toggle="tab">
-                                        <i class="icon-office"></i> Services 
-                                        <span ng-show="vm.serviceList.length>0" class="label label-primary">{{vm.serviceVm.serviceList.length}}</span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="#farms" data-toggle="tab"><i class="icon-clubs"></i> Farms 
-                                        <span ng-show="vm.farmList.length>0" class="label label-primary">{{vm.farmVm.farmList.length}}</span>
+                                <li class="" ng-show="vm.hasBusinesses">
+                                    <a href="#farms" data-toggle="tab">
+                                        <i class="icon-clubs"></i> Farms
+                                        <span ng-show="vm.counter.farmVm.farmList.length>0" class="label label-primary">{{vm.counter.farmVm.farmList.length}}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -478,7 +626,7 @@
                                                             <script type="text/javascript">
 
     $(function () {
-    
+
         $('#richtext-editor').summernote({
             toolbar: [['style', ['style']],
                       ['font', ['bold', 'italic', 'underline', 'clear', 'fontname']],
@@ -534,173 +682,6 @@
 
                                 </div>
                                 <!-- /first tab -->
-
-                                <!-- Second tab -->
-                                <div class="tab-pane fade" id="services"
-                                     ng-controller="ServiceAccountViewModel as vm">
-
-                                    <div ng-show="vm.isListingServices">
-
-                                        <div class="" style="text-align:right; margin-bottom:10px;">
-                                            <button type="button"
-                                                    ng-click="vm.addAndEditService()"
-                                                    class="btn btn-sm btn-info">
-                                                <i style="font-size:16px;" class="fa fa-plus"></i>&nbsp;&nbsp;Add
-                                            </button>
-                                            <hr style="margin-top:10px;" />
-                                        </div>
-
-                                        <div style="text-align:center;" ng-hide="vm.serviceList.length>0">
-                                            <h2 class="text-muted" style="text-align:center;">Oops!</h2>
-                                            <p class="text-muted" style="font-size:16px;">
-                                                You haven't added any <strong class="text-warning">Service accounts</strong> to your profile. Click the [ <i class="icon-plus" style="color:black; font-size:14px;"></i> ] button above to get started.
-                                            </p>
-                                        </div>
-
-                                        <div class="col-md-4 col-sm-6" 
-                                             style="padding-left:0px;"
-                                             ng-repeat="service in vm.serviceList">
-                                            <div class="block task task-high">
-                                                <div class="row with-padding">
-                                                    <div class="col-sm-9">
-                                                        <div class="task-description">
-                                                            <a class="text-warning" ng-click="vm.showServiceDetails(service)">{{'['+vm.serviceCategory(service)+'] Service' || '-Not Available-'}}</a>
-                                                            <span ng-bind-html="vm.getServiceDescription(service)"></span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-3">
-                                                        <div class="task-info">
-                                                            <span></span>
-
-                                                            <span></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel-footer">
-                                                    <div class="pull-right">
-                                                        <ul class="footer-icons-group">
-                                                            <li>
-                                                                <a ng-click="vm.editService(service)" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="icon-pencil"></i></a>
-                                                            </li>
-                                                            <li>
-                                                                <a ng-click=""
-                                                                   data-toggle="tooltip"
-                                                                   data-placement="bottom" title="Delete">
-                                                                    <i class="icon-remove3 text-danger"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div ng-show="vm.isEditingService">
-
-                                        <form action="#" class="block" role="form">
-
-                                            <h6 class="heading-hr clearfix">
-                                                <i class="icon-user"></i> Service information:
-
-                                                <span style="display:inline-block; float:right;" class="btn-group">
-                                                    <button ng-click="vm.backToListingServices()"
-                                                            type="button"
-                                                            class="btn btn-xs btn-default">
-                                                        <i class="icon-arrow-left4"></i>
-                                                        &nbsp;Back
-                                                    </button>
-                                                    <button ng-click="vm.persistCurrentService()"
-                                                            type="button"
-                                                            class="btn btn-xs btn-success">
-                                                        <i class="icon-thumbs-up3" ng-hide="vm.isPersistingService"></i>
-                                                        <div id="persist-service-ring-loader" ng-show="vm.isPersistingService"></div>
-                                                        &nbsp;Ok
-                                                    </button>
-                                                </span>
-                                            </h6>
-
-                                            <div class="block-inner">
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <label><strong>Service category</strong> &nbsp;&nbsp;</label>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                                    {{vm.selectedServiceCategory}}
-                                                                    <span class="caret"></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu dropdown-menu-right icons-right" style="">
-                                                                    <li ng-repeat="type in vm.serviceCategories" 
-                                                                        ng-class="{active:(vm.selectedServiceCategory == type)}">
-                                                                        <a ng-click="vm.selectCategory(type)">{{type}}</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label><strong>Service Description</strong></label>
-                                                            <div id="services-richtext-editor"></div>
-                                                            <script type="text/javascript">
-
-    $(function () {
-
-        $('#services-richtext-editor').summernote({
-            toolbar: [['style', ['style']],
-                      ['font', ['bold', 'italic', 'underline', 'clear', 'fontname']],
-                      ['fontsize', ['fontsize']],
-                      ['color', ['color']],
-                      ['para', ['ul', 'ol', 'paragraph', 'height']],
-                      ['insert', ['table', 'link', 'picture', 'hr']]],
-            height: 250
-        });
-    });
-                                                            </script>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jgrowl-showcase">
-                                                <div class="jGrowl" ng-show="vm.hasServicePersistenceError">
-                                                    <div class="jGrowl-notification growl-error">
-                                                        <div class="jGrowl-close" ng-click="vm.hasServicePersistenceError = false">×</div>
-                                                        <div class="jGrowl-header">Error!</div>
-                                                        <div class="jGrowl-message">Something went wrong while saving your changes</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-
-                                    <div ng-show="vm.isDetailingService">
-                                        <div class="clearfix">
-                                            <i class="icon-office pull-left" style="font-size:40px;"></i>
-                                            <button ng-click="vm.backToListingServices()"
-                                                    type="button"
-                                                    class="btn btn-xs btn-default pull-right">
-                                                <i class="icon-arrow-left4"></i>
-                                                &nbsp;Back
-                                            </button>
-                                        </div>
-                                        <hr style="margin-top:10px;" />
-                                        <h2>
-                                            {{vm.serviceCategory(vm.currentService)}}
-                                        </h2>
-                                        <hr />
-                                        <div style="margin-top:20px;" ng-bind-html="vm.currentService.Description"></div>
-                                    </div>
-
-                                </div>
-                                <!-- /second tab -->
-
                                 <!-- Third tab -->
                                 <div class="tab-pane fade" id="farms"
                                      ng-controller="FarmAccountViewModel as vm">
@@ -879,6 +860,10 @@
                             </div>
                         </div>
                         <!-- /page tabs -->
+                    </div>
+                    <!--/Old stuff-->
+
+                    <div class="col-lg-12" ng-show="vm.isModifyingFarms">
 
                     </div>
                 </div>

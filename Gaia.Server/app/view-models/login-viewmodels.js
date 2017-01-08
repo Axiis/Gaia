@@ -5,9 +5,10 @@ var Gaia;
         var Login;
         (function (Login) {
             var Signin = (function () {
-                function Signin($window, transport) {
+                function Signin($window, transport, $q) {
                     this.$window = $window;
                     this.transport = transport;
+                    this.$q = $q;
                     this.signinErrorMessage = null;
                     this.isBusy = false;
                 }
@@ -40,9 +41,10 @@ var Gaia;
                     }, function (e) {
                         _this.isBusy = false;
                         _this.signinErrorMessage = "There seems to be a problem: " + e.Message + "...";
+                        return _this.$q.reject();
                     });
                 };
-                Signin.$inject = ['$window', '#gaia.utils.domainTransport'];
+                Signin.$inject = ['$window', '#gaia.utils.domainTransport', '$q'];
                 return Signin;
             }());
             Login.Signin = Signin;

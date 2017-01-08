@@ -28,25 +28,22 @@ namespace Gaia.Core.Services
         }
 
         public Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext)
+            => FeatureAccess.Guard(UserContext, () => CreateVerificationObject(userId, verificationContext, null));
+
+        public Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext, DateTime? expiryDate)
             => FeatureAccess.Guard(UserContext, () =>
             {
                 var defaultExpiration = DataContext.Store<SystemSetting>().Query
                                                    .FirstOrDefault(_st => _st.Name == System.SystemSettings.DefaultContextVerificationExpiration.Key)
                                                    .ThrowIfNull("could not find system setting");
 
-                return CreateVerificationObject(userId, verificationContext, DateTime.Now + TimeSpan.Parse(defaultExpiration.Data));
-            });
-
-        public Operation<ContextVerification> CreateVerificationObject(string userId, string verificationContext, DateTime expiryDate)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
                 var cvstore = DataContext.Store<ContextVerification>();
                 if (!DataContext.Store<User>().Query.Any(_u => _u.EntityId == userId)) throw new Exception("could not find user");
                 return cvstore.NewObject().UsingValue(_cv =>
                 {
                     _cv.CreatedBy = UserContext.CurrentUser.UserId;
                     _cv.Context = verificationContext;
-                    _cv.ExpiresOn = expiryDate;
+                    _cv.ExpiresOn = expiryDate ?? (DateTime.Now + TimeSpan.Parse(defaultExpiration.Data));
                     _cv.UserId = userId;
                     _cv.VerificationToken = GenerateToken();
                     _cv.Verified = false;

@@ -147,6 +147,15 @@ var Gaia;
             configurable: false,
             enumerable: false
         });
+        Object.defineProperty(String.prototype, 'contains', {
+            value: function (str) {
+                var localString = this;
+                return localString.indexOf(str) >= 0;
+            },
+            writable: false,
+            configurable: false,
+            enumerable: false
+        });
         Object.defineProperty(String.prototype, 'startsWith', {
             value: function (str) {
                 return this.indexOf(str) == 0;
@@ -231,7 +240,7 @@ var Gaia;
         };
         Array.prototype.contains = function (value) {
             var arr = this;
-            return arr.indexOf(value) < 0;
+            return arr.indexOf(value) >= 0;
         };
     })(Extensions = Gaia.Extensions || (Gaia.Extensions = {}));
 })(Gaia || (Gaia = {}));

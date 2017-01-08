@@ -5,8 +5,9 @@ var Gaia;
         var Services;
         (function (Services) {
             var DomainTransport = (function () {
-                function DomainTransport($http) {
+                function DomainTransport($http, $q) {
                     this.$http = $http;
+                    this.$q = $q;
                     this.http = null;
                     var oauthtoken = window.localStorage.getItem(Gaia.Utils.OAuthTokenKey);
                     this.$http.defaults.headers.common.Authorization = 'Bearer ' + (oauthtoken ? JSON.parse(oauthtoken).access_token : '');
@@ -22,7 +23,7 @@ var Gaia;
                     var _this = this;
                     if (data) {
                         config = config || {};
-                        config.data = data;
+                        config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
                     }
                     return this.http.get(url, config)
                         .error(function (r) {
@@ -34,7 +35,7 @@ var Gaia;
                     var _this = this;
                     if (data) {
                         config = config || {};
-                        config.data = data;
+                        config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
                     }
                     return this.http.delete(url, config)
                         .error(function (r) {
@@ -86,6 +87,7 @@ var Gaia;
                             window.location.href = '/view-server/login/shell';
                     });
                 };
+                DomainTransport.inject = ['$http', '$q'];
                 return DomainTransport;
             }());
             Services.DomainTransport = DomainTransport;

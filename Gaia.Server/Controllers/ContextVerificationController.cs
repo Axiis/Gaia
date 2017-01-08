@@ -5,6 +5,7 @@ using static Axis.Luna.Extensions.ObjectExtensions;
 using Gaia.Core.Services;
 using System;
 using System.Web.Http;
+using Gaia.Server.Controllers.ContextVerificationModels;
 
 namespace Gaia.Server.Controllers
 {
@@ -20,27 +21,30 @@ namespace Gaia.Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/context-verification/@{userId}/@{verificationContext}")]
-        public IHttpActionResult CreateVerificationObject(string userId, string verificationContext)
-            => _contextVeirification.CreateVerificationObject(userId, verificationContext)
-                .Then(opr => Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                .Result;
-
-        [HttpPost]
-        [Route("api/context-verification/@{userId}/@{verificationContext}/@{expiryDate}")]
-        public IHttpActionResult CreateVerificationObject(string userId, string verificationContext, DateTime expiryDate)
-            => _contextVeirification.CreateVerificationObject(userId, verificationContext, expiryDate)
+        [Route("api/context-verification")]
+        public IHttpActionResult CreateVerificationObject([FromBody]VerificationInfo info)
+            => _contextVeirification.CreateVerificationObject(info.UserId, info.VerificationContext, info.ExpiryDate)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPut]
-        [Route("api/context-verification/@{userId}/@{verificationContext}/@{token}")]
-        public IHttpActionResult VerifyContext(string userId, string verificationContext, string token)
-            => _contextVeirification.VerifyContext(userId, verificationContext, token)
+        [Route("api/context-verification")]
+        public IHttpActionResult VerifyContext([FromBody]VerificationInfo info)
+            => _contextVeirification.VerifyContext(info.UserId, info.VerificationContext, info.Token)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
+    }
+
+    namespace ContextVerificationModels
+    {
+        public class VerificationInfo
+        {
+            public string UserId { get; set; }
+            public string VerificationContext { get; set; }
+            public string Token { get; set; }
+            public DateTime? ExpiryDate { get; set; }
+        }
     }
 }

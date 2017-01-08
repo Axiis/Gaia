@@ -247,17 +247,6 @@ var Gaia;
             return ContextVerification;
         }(GaiaEntity));
         Domain.ContextVerification = ContextVerification;
-        var FarmInfo = (function (_super) {
-            __extends(FarmInfo, _super);
-            function FarmInfo(data) {
-                _super.call(this, data);
-                if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-                }
-            }
-            return FarmInfo;
-        }(GaiaEntity));
-        Domain.FarmInfo = FarmInfo;
         var FeatureAccessDescriptor = (function (_super) {
             __extends(FeatureAccessDescriptor, _super);
             function FeatureAccessDescriptor(data) {
@@ -380,18 +369,6 @@ var Gaia;
             return Rating;
         }(GaiaEntity));
         Domain.Rating = Rating;
-        var ServiceInfo = (function (_super) {
-            __extends(ServiceInfo, _super);
-            function ServiceInfo(data) {
-                _super.call(this, data);
-                if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
-                    this.Category = data['Category'] ? new Gaia.Domain.ServiceCategory(data['Category']) : null;
-                }
-            }
-            return ServiceInfo;
-        }(GaiaEntity));
-        Domain.ServiceInfo = ServiceInfo;
         var SystemSetting = (function (_super) {
             __extends(SystemSetting, _super);
             function SystemSetting(data) {

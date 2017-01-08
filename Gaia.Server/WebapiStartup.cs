@@ -65,19 +65,7 @@ namespace Gaia.Server
                 config.Formatters.Clear();
                 config.Formatters.Add(new JsonMediaTypeFormatter
                 {
-                    SerializerSettings = new JsonSerializerSettings
-                    {
-                        Converters = Enumerate<JsonConverter>()
-                            .Append(new Axis.Apollo.Json.TimeSpanConverter())
-                            .Append(new Axis.Apollo.Json.DateTimeConverter())
-                            .ToList(),
-                        MissingMemberHandling = MissingMemberHandling.Ignore,
-                        NullValueHandling = NullValueHandling.Ignore,
-                        ObjectCreationHandling = ObjectCreationHandling.Auto,
-                        FloatFormatHandling = FloatFormatHandling.DefaultValue,
-                        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                        StringEscapeHandling = StringEscapeHandling.Default
-                    }
+                    SerializerSettings = Constants.DefaultJsonSerializerSettings
                 });
 
                 //conigure dependency injection

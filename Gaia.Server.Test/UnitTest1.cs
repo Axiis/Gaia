@@ -24,6 +24,11 @@ namespace Gaia.Server.Test
     public class XLocator : IUserLocator
     {
         public string CurrentUser() => "@root";
+
+        public string[] UserAccessProfiles()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

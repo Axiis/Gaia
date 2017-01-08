@@ -33,6 +33,7 @@ interface String {
 
     startsWith(str: string): boolean;
     endsWith(str: string): boolean;
+    contains(str: string): boolean;
 }
 
 
@@ -49,7 +50,7 @@ interface Array<T> {
 }
 
 module Gaia.Extensions {
-
+    
     ///object extension
 
     Object.defineProperty(Object.prototype, 'copyTo', {
@@ -197,6 +198,16 @@ module Gaia.Extensions {
         configurable: false,
         enumerable: false
     });
+    Object.defineProperty(String.prototype, 'contains', {
+        value: function (str: string): boolean {
+            
+            var localString = this as string;
+            return localString.indexOf(str) >= 0;
+        },
+        writable: false,
+        configurable: false,
+        enumerable: false
+    });
 
 
     Object.defineProperty(String.prototype, 'startsWith', {
@@ -299,7 +310,7 @@ module Gaia.Extensions {
 
     Array.prototype.contains = function <T>(value: T): boolean {
         var arr = this as Array<T>;
-        return arr.indexOf(value) < 0;
+        return arr.indexOf(value) >= 0;
     }
 
 }

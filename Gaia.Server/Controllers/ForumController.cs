@@ -21,9 +21,9 @@ namespace Gaia.Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/forums/topics/@{title}")]
-        public IHttpActionResult CreateTopic(string title)
-            => _forumService.CreateTopic(title)
+        [Route("api/forums/topics")]
+        public IHttpActionResult CreateTopic([FromBody]ForumModels.ForumInfo info)
+            => _forumService.CreateTopic(info.Title)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -38,17 +38,17 @@ namespace Gaia.Server.Controllers
                 .Result;
 
         [HttpPut]
-        [Route("api/forums/topics/flagged/@{topicId}")]
-        public IHttpActionResult FlagTopic(long topicId)
-            => _forumService.FlagTopic(topicId)
+        [Route("api/forums/topics/flagged")]
+        public IHttpActionResult FlagTopic([FromBody]ForumModels.ForumInfo info)
+            => _forumService.FlagTopic(info.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPost]
-        [Route("api/forums/topics/@{topic}/threads/@{title}")]
-        public IHttpActionResult CreateThread(string title, long topic)
-            => _forumService.CreateThread(title, topic)
+        [Route("api/forums/threads")]
+        public IHttpActionResult CreateThread([FromBody]ForumModels.ForumInfo info)
+            => _forumService.CreateThread(info.Title, info.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -63,17 +63,17 @@ namespace Gaia.Server.Controllers
                 .Result;
 
         [HttpPut]
-        [Route("api/forums/threads/@{threadId}")]
-        public IHttpActionResult FlagThread(long threadId)
-            => _forumService.FlagThread(threadId)
+        [Route("api/forums/threads/flagged")]
+        public IHttpActionResult FlagThread([FromBody]ForumModels.ForumInfo info)
+            => _forumService.FlagThread(info.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
 
         [HttpPost]
-        [Route("api/forums/threads/@{threadId}/watched")]
-        public IHttpActionResult WatchThread(long threadId)
-            => _forumService.WatchThread(threadId)
+        [Route("api/forums/threads/watched")]
+        public IHttpActionResult WatchThread([FromBody]ForumModels.ForumInfo info)
+            => _forumService.WatchThread(info.Id)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -121,6 +121,13 @@ namespace Gaia.Server.Controllers
                 OwnerId = Owner,
                 TopicId = TopicId
             };
+        }
+
+        public class ForumInfo
+        {
+            public string Title { get; set; }
+            public string Topic { get; set; }
+            public long Id { get; set; }
         }
     }
 }

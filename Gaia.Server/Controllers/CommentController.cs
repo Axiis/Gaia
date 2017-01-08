@@ -19,9 +19,9 @@ namespace Gaia.Server.Controllers
         }
         
         [HttpGet]
-        [Route("api/comments/@{contextName}/@{contextId}")]
-        public IHttpActionResult CommentsFor(string contextName, long contextId)
-            => _commentService.CommentsFor(contextName, contextId)
+        [Route("api/comments")]
+        public IHttpActionResult CommentsFor([FromBody]CommentInfo comment)
+            => _commentService.CommentsFor(comment.ContextName, comment.ContextId)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
                 .Result;
@@ -29,7 +29,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/comments")]
-        public IHttpActionResult CommentOn([FromBody]Comment comment)
+        public IHttpActionResult CommentOn([FromBody]CommentInfo comment)
             => _commentService.CommentOn(comment?.ContextName, comment?.ContextId ?? 0, comment?.CommentText)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
@@ -38,7 +38,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/comments/replies")]
-        public IHttpActionResult ReplyTo([FromBody]Comment comment)
+        public IHttpActionResult ReplyTo([FromBody]CommentInfo comment)
             => _commentService.ReplyTo(comment?.ContextId ?? 0, comment?.CommentText)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
@@ -47,7 +47,7 @@ namespace Gaia.Server.Controllers
 
         [HttpPost]
         [Route("api/reactions")]
-        public IHttpActionResult ReactTo([FromBody]Reaction reaction)
+        public IHttpActionResult ReactTo([FromBody]ReactionInfo reaction)
             => _commentService.ReactTo(reaction?.ContextName, reaction?.ContextId ?? 0, reaction?.ReactionCode)
                 .Then(opr => Ok(opr).As<IHttpActionResult>())
                 .Instead(opr => Content(System.Net.HttpStatusCode.InternalServerError, opr))
@@ -56,14 +56,14 @@ namespace Gaia.Server.Controllers
 
     namespace CommentModels
     {
-        public class Comment
+        public class CommentInfo
         {
             public string ContextName { get; set; }
             public long ContextId { get; set; }
             public string CommentText { get; set; }
         }
 
-        public class Reaction
+        public class ReactionInfo
         {
             public string ContextName { get; set; }
             public long ContextId { get; set; }

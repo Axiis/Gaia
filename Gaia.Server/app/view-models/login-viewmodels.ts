@@ -40,12 +40,14 @@ module Gaia.ViewModels.Login {
                 }, e => {//error
                     this.isBusy = false;
                     this.signinErrorMessage = "There seems to be a problem: " + e.Message + "...";
+
+                    return this.$q.reject();
                 });
         }
 
 
-        static $inject = ['$window', '#gaia.utils.domainTransport'];
-        constructor(private $window: angular.IWindowService, private transport: Gaia.Utils.Services.DomainTransport) {
+        static $inject = ['$window', '#gaia.utils.domainTransport', '$q'];
+        constructor(private $window: angular.IWindowService, private transport: Gaia.Utils.Services.DomainTransport, private $q: angular.IQService) {
         }
     }
 
