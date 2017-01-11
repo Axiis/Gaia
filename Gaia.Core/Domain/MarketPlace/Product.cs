@@ -33,8 +33,8 @@ namespace Gaia.Core.Domain.MarketPlace
 
     public enum ProductStatus
     {
-        Published,
-        Reviewing
+        Reviewing,
+        Published
     }
 
 }

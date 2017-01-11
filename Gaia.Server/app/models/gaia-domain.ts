@@ -75,14 +75,14 @@ module Gaia.Domain {
     }
 
     export enum ServiceStatus {
-        Available,
         Unavailable,
+        Available,
         Suspended
     }
 
     export enum ProductStatus {
-        Published,
-        Reviewing
+        Reviewing,
+        Published
     }
 
     export enum OrderStatus {
@@ -549,7 +549,15 @@ module Gaia.Domain {
         }
     }
 
-    export class Service extends GaiaEntity<number>{
+    export interface ISearchableItem {
+
+        Title: string;
+        Description: string;
+        Tags: string;
+        ItemType: ItemType;
+    }
+
+    export class Service extends GaiaEntity<number> implements ISearchableItem {
         TransactionId: string;
         Title: string;
         Description: string;
@@ -557,7 +565,7 @@ module Gaia.Domain {
         Cost: number;
         Product: Product;
         Tags: string;
-        ItemType: ItemType;
+        get ItemType(): ItemType { return ItemType.Service; }
 
         Owner: Axis.Pollux.Domain.User;
 
@@ -566,15 +574,19 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
+
             if (!Object.isNullOrUndefined(data)) {
                 this.Product = !Object.isNullOrUndefined(this.Product) ? new Product(this.Product) : null;
                 this.Inputs = !Object.isNullOrUndefined(this.Inputs) ? this.Inputs.map(r => new ServiceInterface(r)) : [];
                 this.Outputs = !Object.isNullOrUndefined(this.Outputs) ? this.Outputs.map(r => new ServiceInterface(r)) : [];
             }
+
+            if (Object.isNullOrUndefined(this.Status)) this.Status = ServiceStatus.Unavailable;
+            if (Object.isNullOrUndefined(this.Cost)) this.Cost = 0.0;
         }
     }
 
-    export class Product extends GaiaEntity<number>{
+    export class Product extends GaiaEntity<number> implements ISearchableItem{
         TransactionId: string;
         Title: string;
         Description: string;
@@ -582,7 +594,7 @@ module Gaia.Domain {
         Cost: number;
         StockCount: number;
         Tags: string;
-        ItemType: ItemType;
+        get ItemType(): ItemType { return ItemType.Product; }
 
         Owner: Axis.Pollux.Domain.User;
 
@@ -591,19 +603,15 @@ module Gaia.Domain {
 
         constructor(data?: Object) {
             super(data);
+            
             if (!Object.isNullOrUndefined(data)) {
                 this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
                 this.Videos = !Object.isNullOrUndefined(this.Videos) ? this.Videos.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
             }
-        }
-    }
 
-    export interface ISearchableItem {
-        
-        Title: string;
-        Description: string;
-        Tags: string;
-        ItemType: ItemType;
+            if (Object.isNullOrUndefined(this.Status)) this.Status = ProductStatus.Reviewing;
+            if (Object.isNullOrUndefined(this.Cost)) this.Cost = 0.0;
+        }
     }
 
     export class ServiceInterface extends GaiaEntity<number>{

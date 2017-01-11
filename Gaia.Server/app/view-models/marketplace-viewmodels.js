@@ -19,14 +19,14 @@ var Gaia;
                 });
                 Object.defineProperty(MarketPlaceViewModel.prototype, "isMerchantAccount", {
                     get: function () {
-                        return this.accessProfiles.contains('system.[Service-Provider Profile]');
+                        return this.accessProfiles.contains(Gaia.Utils.ServiceProvierAccountProfile);
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(MarketPlaceViewModel.prototype, "isFarmerAccount", {
                     get: function () {
-                        return this.accessProfiles.contains('system.[Farmer Profile]');
+                        return this.accessProfiles.contains(Gaia.Utils.FarmerAccountProfile);
                     },
                     enumerable: true,
                     configurable: true
@@ -40,9 +40,9 @@ var Gaia;
                 MarketPlaceViewModel.prototype.isCustomerActive = function () {
                     return this.state.current.name.startsWith('customer');
                 };
-                MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
                 return MarketPlaceViewModel;
             }());
+            MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
             MarketPlace.MarketPlaceViewModel = MarketPlaceViewModel;
             var CustomerViewModel = (function () {
                 function CustomerViewModel() {
@@ -51,11 +51,33 @@ var Gaia;
             }());
             MarketPlace.CustomerViewModel = CustomerViewModel;
             var MerchantViewModel = (function () {
-                function MerchantViewModel($state) {
+                function MerchantViewModel($state, domModels) {
                     this.$state = $state;
+                    this.domModels = domModels;
                     if (this.$state.current.name == 'merchant')
                         this.$state.go('merchant.services');
                 }
+                Object.defineProperty(MerchantViewModel.prototype, "accessProfiles", {
+                    get: function () {
+                        return this.domModels.simpleModel.AccessProfiles.split(',');
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(MerchantViewModel.prototype, "isMerchantAccount", {
+                    get: function () {
+                        return this.accessProfiles.contains(Gaia.Utils.ServiceProvierAccountProfile);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(MerchantViewModel.prototype, "isFarmerAccount", {
+                    get: function () {
+                        return this.accessProfiles.contains(Gaia.Utils.FarmerAccountProfile);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 MerchantViewModel.prototype.isServicesActive = function () {
                     return this.$state.current.name == 'merchant.services';
                 };
@@ -65,16 +87,128 @@ var Gaia;
                 MerchantViewModel.prototype.isProductsActive = function () {
                     return this.$state.current.name == 'merchant.products';
                 };
-                MerchantViewModel.$inject = ['$state'];
                 return MerchantViewModel;
             }());
+            MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
             MarketPlace.MerchantViewModel = MerchantViewModel;
             var MerchantProductsViewModel = (function () {
-                function MerchantProductsViewModel() {
+                function MerchantProductsViewModel(marketplace, $q, notify, domModel) {
+                    this.marketplace = marketplace;
+                    this.$q = $q;
+                    this.notify = notify;
+                    this.domModel = domModel;
+                    this.isSearching = false;
+                    this.isListingProducts = true;
+                    this.isModifyingProduct = false;
+                    this.isPersistingProduct = false;
+                    this.currentProduct = null;
+                    this.currentListingPage = 0;
+                    this.pageSize = 30;
+                    this.searchString = null;
+                    this.products = new Gaia.Utils.SequencePage([], 0, 1, 0);
+                    this.listProducts(0, null);
                 }
-                MerchantProductsViewModel.$inject = [];
+                MerchantProductsViewModel.prototype.switchState = function (state) {
+                    var _this = this;
+                    if (!Object.isNullOrUndefined(state)) {
+                        this.isSearching = this.isListingProducts = this.isModifyingProduct = this.isPersistingProduct = false;
+                        state.keyValuePairs().forEach(function (kvp) { return _this[kvp.Key] = kvp.Value; });
+                    }
+                };
+                MerchantProductsViewModel.prototype.isCurrentProductNascent = function () {
+                    if (Object.isNullOrUndefined(this.currentProduct))
+                        return false;
+                    else if (this.currentProduct['$nascent'] == true)
+                        return true;
+                    else
+                        return false;
+                };
+                MerchantProductsViewModel.prototype.refreshProducts = function () {
+                    this.currentListingPage = 0;
+                    this.searchString = null;
+                    this.listProducts(this.currentListingPage, this.searchString);
+                };
+                MerchantProductsViewModel.prototype.listProducts = function (pageIndex, search) {
+                    var _this = this;
+                    this.isSearching = true;
+                    this.marketplace.findMerchantProducts(search, this.pageSize, pageIndex)
+                        .then(function (opr) {
+                        _this.products = opr.Result;
+                        _this.isSearching = false;
+                        _this.currentListingPage = pageIndex;
+                    }, function (err) {
+                        _this.products = new Gaia.Utils.SequencePage([], 0, 1, 0);
+                        _this.isSearching = false;
+                        return _this.$q.defer().reject();
+                    });
+                };
+                MerchantProductsViewModel.prototype.newProduct = function (init) {
+                    var p = new Gaia.Domain.Product();
+                    if (!Object.isNullOrUndefined(init))
+                        init(p);
+                    return p;
+                };
+                MerchantProductsViewModel.prototype.addAndModify = function () {
+                    this.modifyProduct(this.newProduct(function (s) {
+                        s['$nascent'] = true;
+                    }));
+                };
+                MerchantProductsViewModel.prototype.modifyProduct = function (product) {
+                    this.isListingProducts = this.isSearching = false;
+                    this.isModifyingProduct = true;
+                    this.currentProduct = product;
+                };
+                MerchantProductsViewModel.prototype.search = function () {
+                    this.listProducts(0, this.searchString);
+                };
+                MerchantProductsViewModel.prototype.persistCurrentProduct = function () {
+                    var _this = this;
+                    if (!Object.isNullOrUndefined(this.currentProduct) && !this.isPersistingProduct) {
+                        this.isPersistingProduct = true;
+                        if (this.currentProduct['$nascent']) {
+                            this.marketplace
+                                .addProduct(this.currentProduct)
+                                .then(function (opr) {
+                                _this.currentProduct.EntityId = opr.Result;
+                                _this.currentProduct.CreatedBy = _this.domModel.simpleModel.UserId;
+                                _this.notify.success('the Product was persisted successfully!');
+                                _this.isPersistingProduct = false;
+                                delete _this.currentProduct['$nascent'];
+                                _this.products.Page.push(_this.currentProduct);
+                                _this.switchState({ isListingProducts: true, currentProduct: null });
+                            }, function (err) {
+                                _this.notify.error(err.data.Message, 'Error!');
+                                _this.isPersistingProduct = false;
+                                return _this.$q.reject(err);
+                            });
+                        }
+                        else {
+                            this.marketplace
+                                .modifyProduct(this.currentProduct)
+                                .then(function (opr) {
+                                _this.notify.success('the Product was persisted successfully!');
+                                _this.isPersistingProduct = false;
+                                _this.switchState({ isListingProducts: true, currentProduct: null });
+                            }, function (err) {
+                                _this.notify.error(err.data.Message, 'Error!');
+                                _this.isPersistingProduct = false;
+                                return _this.$q.reject(err);
+                            });
+                        }
+                    }
+                };
+                MerchantProductsViewModel.prototype.statusString = function (product) {
+                    return Gaia.Domain.ProductStatus[product.Status];
+                };
+                MerchantProductsViewModel.prototype.isPublished = function (product) {
+                    return product.Status == Gaia.Domain.ProductStatus.Published;
+                };
+                MerchantProductsViewModel.prototype.isReviewing = function (product) {
+                    return product.Status == Gaia.Domain.ProductStatus.Reviewing;
+                };
                 return MerchantProductsViewModel;
             }());
+            MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantProductsViewModel = MerchantProductsViewModel;
             var MerchantServicesViewModel = (function () {
                 function MerchantServicesViewModel(marketplace, $q, notify, domModel) {
@@ -194,16 +328,16 @@ var Gaia;
                 MerchantServicesViewModel.prototype.isAvailable = function (service) {
                     return service.Status == Gaia.Domain.ServiceStatus.Available;
                 };
-                MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantServicesViewModel;
             }());
+            MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantServicesViewModel = MerchantServicesViewModel;
             var MerchantOrdersViewModel = (function () {
                 function MerchantOrdersViewModel() {
                 }
-                MerchantOrdersViewModel.$inject = [];
                 return MerchantOrdersViewModel;
             }());
+            MerchantOrdersViewModel.$inject = [];
             MarketPlace.MerchantOrdersViewModel = MerchantOrdersViewModel;
             var ConfigureViewModel = (function () {
                 function ConfigureViewModel() {
@@ -214,4 +348,3 @@ var Gaia;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-viewmodels.js.map

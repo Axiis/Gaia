@@ -32,8 +32,8 @@ namespace Gaia.Core.Domain.MarketPlace
 
     public enum ServiceStatus
     {
-        Available,
         Unavailable,
+        Available,
         Suspended
     }
 }

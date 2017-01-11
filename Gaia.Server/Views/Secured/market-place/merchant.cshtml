@@ -9,10 +9,9 @@
          class="col-md-2 col-xs-12 col-sm-2">
 
         <ul class="gaia-vertical-menu-list" style="font-size:13px;">
-            <li ng-class="{active:vm.isServicesActive()}"><a ui-sref="merchant.services">Services</a></li>
-            <li ng-class="{active:vm.isProductsActive()}" ng-show="vm.isFarmerAccount()"><a ui-sref="merchant.products">Products</a></li>
-            <li>&nbsp;</li>
-            <li ng-class="{active:vm.isOrdersActive()}"><a ui-sref="merchant.orders">Orders</a></li>
+            <li ng-class="{active:vm.isServicesActive()}" style="margin:5px 0;"><a ui-sref="merchant.services"><strong>Services</strong></a></li>
+            <li ng-class="{active:vm.isProductsActive()}" style="margin:5px 0;" ng-show="vm.isFarmerAccount"><a ui-sref="merchant.products"><strong>Products</strong></a></li>
+            <li ng-class="{active:vm.isOrdersActive()}" style="margin:20px 0 5px 0;"><a ui-sref="merchant.orders"><strong>Orders</strong></a></li>
         </ul>
     </div>
 

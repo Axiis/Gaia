@@ -8,10 +8,10 @@ module Gaia.ViewModels.MarketPlace {
             return this.domModels.simpleModel.AccessProfiles.split(',');
         }
         get isMerchantAccount(): boolean {
-            return this.accessProfiles.contains('system.[Service-Provider Profile]');
+            return this.accessProfiles.contains(Gaia.Utils.ServiceProvierAccountProfile);
         }
         get isFarmerAccount(): boolean {
-            return this.accessProfiles.contains('system.[Farmer Profile]');
+            return this.accessProfiles.contains(Gaia.Utils.FarmerAccountProfile);
         }
 
         isMerchantActive(): boolean {
@@ -39,6 +39,16 @@ module Gaia.ViewModels.MarketPlace {
 
     export class MerchantViewModel {
 
+        get accessProfiles(): string[] {
+            return this.domModels.simpleModel.AccessProfiles.split(',');
+        }
+        get isMerchantAccount(): boolean {
+            return this.accessProfiles.contains(Gaia.Utils.ServiceProvierAccountProfile);
+        }
+        get isFarmerAccount(): boolean {
+            return this.accessProfiles.contains(Gaia.Utils.FarmerAccountProfile);
+        }
+
 
         isServicesActive(): boolean {
             return this.$state.current.name == 'merchant.services';
@@ -50,18 +60,140 @@ module Gaia.ViewModels.MarketPlace {
             return this.$state.current.name == 'merchant.products';
         }
 
-        static $inject = ['$state'];
-        constructor(private $state: ng.ui.IStateService) {
+        static $inject = ['$state', '#gaia.utils.domModel'];
+        constructor(private $state: ng.ui.IStateService, private domModels: Gaia.Utils.Services.DomModelService) {
             if (this.$state.current.name == 'merchant') this.$state.go('merchant.services');
         }
     }
 
+
     export class MerchantProductsViewModel {
 
-        static $inject = [];
-        constructor() {
+        isSearching: boolean = false;
+        isListingProducts: boolean = true;
+        isModifyingProduct: boolean = false;
+        isPersistingProduct: boolean = false;
+
+        currentProduct: Domain.Product = null;
+        currentListingPage: number = 0;
+        pageSize: number = 30;
+        searchString: string = null;
+        products: Utils.SequencePage<Domain.Product> = new Utils.SequencePage<Domain.Product>([], 0, 1, 0);
+
+        switchState(state: any) {
+            if (!Object.isNullOrUndefined(state)) {
+                this.isSearching = this.isListingProducts = this.isModifyingProduct = this.isPersistingProduct = false;
+                (state as Object).keyValuePairs().forEach(kvp => this[kvp.Key] = kvp.Value);
+            }
+        }
+
+        isCurrentProductNascent(): boolean {
+            if (Object.isNullOrUndefined(this.currentProduct)) return false;
+            else if (this.currentProduct['$nascent'] == true) return true;
+            else return false;
+        }
+
+        refreshProducts() {
+            this.currentListingPage = 0;
+            this.searchString = null;
+            this.listProducts(this.currentListingPage, this.searchString);
+        }
+
+        listProducts(pageIndex: number, search: string) {
+            this.isSearching = true;
+            this.marketplace.findMerchantProducts(search, this.pageSize, pageIndex)
+                .then(opr => {
+                    this.products = opr.Result
+                    this.isSearching = false;
+                    this.currentListingPage = pageIndex;
+                }, err => {
+                    this.products = new Utils.SequencePage<Domain.Product>([], 0, 1, 0);
+                    this.isSearching = false;
+                    return this.$q.defer().reject();
+                });
+        }
+
+        newProduct(init?: Func1<Domain.Product, void>): Domain.Product {
+            var p = new Domain.Product();
+            if (!Object.isNullOrUndefined(init)) init(p);
+            return p;
+        }
+
+        addAndModify() {
+            this.modifyProduct(this.newProduct(s => {
+                s['$nascent'] = true;
+            }));
+        }
+
+        modifyProduct(product: Domain.Product) {
+            this.isListingProducts = this.isSearching = false;
+            this.isModifyingProduct = true;
+            this.currentProduct = product;
+        }
+
+        search() {
+            this.listProducts(0, this.searchString);
+        }
+
+        persistCurrentProduct() {
+            if (!Object.isNullOrUndefined(this.currentProduct) && !this.isPersistingProduct) {
+                this.isPersistingProduct = true;
+
+                if (this.currentProduct['$nascent']) {
+                    this.marketplace
+                        .addProduct(this.currentProduct)
+                        .then(opr => {
+                            this.currentProduct.EntityId = opr.Result;
+                            this.currentProduct.CreatedBy = this.domModel.simpleModel.UserId;
+                            this.notify.success('the Product was persisted successfully!');
+                            this.isPersistingProduct = false;
+
+                            delete this.currentProduct['$nascent'];
+                            this.products.Page.push(this.currentProduct);
+
+                            this.switchState({ isListingProducts: true, currentProduct: null });
+                        }, err => {
+                            this.notify.error(err.data.Message, 'Error!');
+                            this.isPersistingProduct = false;
+                            return this.$q.reject(err);
+                        });
+                }
+                else {
+                    this.marketplace
+                        .modifyProduct(this.currentProduct)
+                        .then(opr => {
+                            this.notify.success('the Product was persisted successfully!');
+                            this.isPersistingProduct = false;
+
+                            this.switchState({ isListingProducts: true, currentProduct: null });
+                        }, err => {
+                            this.notify.error(err.data.Message, 'Error!');
+                            this.isPersistingProduct = false;
+                            return this.$q.reject(err);
+                        });
+                }
+            }
+        }
+
+
+        statusString(product: Domain.Product): string {
+            return Domain.ProductStatus[product.Status];
+        }
+
+        isPublished(product: Domain.Product): boolean {
+            return product.Status == Domain.ProductStatus.Published;
+        }
+        isReviewing(product: Domain.Product): boolean {
+            return product.Status == Domain.ProductStatus.Reviewing;
+        }
+
+        static $inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
+        constructor(private marketplace: Services.MarketPlaceService, private $q: ng.IQService, private notify: Gaia.Utils.Services.NotifyService, private domModel: Gaia.Utils.Services.DomModelService) {
+
+            this.listProducts(0, null);
         }
     }
+
 
     export class MerchantServicesViewModel {
 
@@ -192,6 +324,7 @@ module Gaia.ViewModels.MarketPlace {
             this.listServices(0, null);
         }
     }
+
 
     export class MerchantOrdersViewModel {
 

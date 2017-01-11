@@ -4,7 +4,9 @@ module Gaia.App.MarketPlace {
     export const module = angular.module("gaiaMarketPlace", ['ui.router', 'ngSanitize', 'ngAnimate']);
 
     ///Gaia Directives
-    module.directive('#gaia.binaryData', Gaia.Directives.BinaryData);
+    module.directive('binaryData', Gaia.Directives.BinaryData);
+    module.directive('tagsInput', () => new Gaia.Directives.TagsInput());
+    module.directive('enumOptions', () => new Gaia.Directives.EnumOptions());
 
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);

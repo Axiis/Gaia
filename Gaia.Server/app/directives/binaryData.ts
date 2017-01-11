@@ -6,6 +6,7 @@ module Gaia.Directives {
             scope: {
                 binaryData: "="
             },
+            restrict: 'A',
             link: function (scope, element, attributes) {
 
                 element.bind("change", (changeEvent) => {

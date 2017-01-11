@@ -37,9 +37,11 @@ namespace Gaia.Server.Controllers
 
         [HttpGet]
         [Route("api/market-place/merchant/products")]
-        public IHttpActionResult FindMerchantProducts([FromBody]SearchArgs info)
-            => _marketPlace.FindMerchantProducts(info.SearchString, info.PageSize, info.PageIndex)
-                .OperationResult(Request);
+        public IHttpActionResult FindMerchantProducts(string data)
+            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(info => _marketPlace.FindMerchantProducts(info.SearchString, info.PageSize, info.PageIndex))
+                .Pipe(_op => _op.OperationResult(Request));
 
         [HttpGet]
         [Route("api/market-place/merchant/services")]

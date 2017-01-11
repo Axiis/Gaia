@@ -7,6 +7,7 @@ var Gaia;
                 scope: {
                     binaryData: "="
                 },
+                restrict: 'A',
                 link: function (scope, element, attributes) {
                     element.bind("change", function (changeEvent) {
                         var reader = new FileReader();
@@ -32,4 +33,3 @@ var Gaia;
         Directives.BinaryData = BinaryData;
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=binaryData.js.map

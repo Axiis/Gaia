@@ -114,6 +114,25 @@ var Gaia;
             return SequencePage;
         }());
         Utils.SequencePage = SequencePage;
+        //http://stackoverflow.com/a/21294925/4137383
+        //Enum helper
+        var EnumHelper = (function () {
+            function EnumHelper() {
+            }
+            EnumHelper.getNamesAndValues = function (e) {
+                return EnumHelper.getNames(e).map(function (n) { return ({ name: n, value: e[n] }); });
+            };
+            EnumHelper.getNames = function (e) {
+                return EnumHelper.getObjValues(e).filter(function (v) { return typeof v === "string"; });
+            };
+            EnumHelper.getValues = function (e) {
+                return EnumHelper.getObjValues(e).filter(function (v) { return typeof v === "number"; });
+            };
+            EnumHelper.getObjValues = function (e) {
+                return Object.keys(e).map(function (k) { return e[k]; });
+            };
+            return EnumHelper;
+        }());
+        Utils.EnumHelper = EnumHelper;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=tools.js.map

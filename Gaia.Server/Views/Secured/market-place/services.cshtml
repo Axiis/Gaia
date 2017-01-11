@@ -8,13 +8,13 @@
             <div class="form-horizontal">
                 <div class="form-group" style="margin:0px;">
                     <div class="has-feedback" style="display: inline-block;">
-                        <input type="text" class="form-control" placeholder="Search" style="min-width:250px;" ng-model="vm.searchString">
+                        <input type="text" class="form-control" placeholder="Search Services" style="min-width:250px;" ng-model="vm.searchString">
                         <i class="icon-search3 form-control-feedback" style="right:0; cursor:pointer;"
                            ng-click="vm.search()"></i>
                     </div>
 
                     <button class="btn btn-icon"
-                            style="margin-bottom:1px; background:white; border:1px solid #ccc; border-radius:1px; color:#999;"
+                            style="background:white; border:1px solid #ccc; border-radius:1px; color:#999; margin-bottom:1px;"
                             href
                             data-toggle="tooltip"
                             title="Add new service"
@@ -108,19 +108,7 @@
                     </div>
                     <div>
                         <label style="display: block; width:100%;">Status</label>
-                        <select class="multi-select service-status" ng-model="vm.currentService.Status">
-                            <option value="0">Available</option>
-                            <option value="1">Unavailable</option>
-                            <option value="2">Suspended</option>
-                        </select>
-                        <script type="text/javascript">
-                            //$('.multi-select.service-status').multiselect({
-                            //    buttonClass: 'btn btn-default',
-                            //    onChange: function (element, checked) {
-                            //        $.uniform.update();
-                            //    }
-                            //});
-                        </script>
+                        <select class="form-control" enum-options="vm.currentService.Status : Gaia.Domain.ServiceStatus"></select>
                     </div>
                 </div>
                 <div class="col-sm-6">

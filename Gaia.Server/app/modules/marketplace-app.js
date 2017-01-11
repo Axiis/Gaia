@@ -6,7 +6,9 @@ var Gaia;
         (function (MarketPlace) {
             MarketPlace.module = angular.module("gaiaMarketPlace", ['ui.router', 'ngSanitize', 'ngAnimate']);
             ///Gaia Directives
-            MarketPlace.module.directive('#gaia.binaryData', Gaia.Directives.BinaryData);
+            MarketPlace.module.directive('binaryData', Gaia.Directives.BinaryData);
+            MarketPlace.module.directive('tagsInput', function () { return new Gaia.Directives.TagsInput(); });
+            MarketPlace.module.directive('enumOptions', function () { return new Gaia.Directives.EnumOptions(); });
             ///Gaia services
             MarketPlace.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             MarketPlace.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
@@ -72,4 +74,3 @@ var Gaia;
         })(MarketPlace = App.MarketPlace || (App.MarketPlace = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-app.js.map

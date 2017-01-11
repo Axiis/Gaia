@@ -365,6 +365,8 @@
     <Content Include="Content\2016-Earth-RegionalInfo.csv" />
     <Content Include="Content\2016-IsoCountryCodes.csv" />
     <None Include="scripts\jquery-1.12.4.intellisense.js" />
+    <TypeScriptCompile Include="app\directives\enumOptions.ts" />
+    <TypeScriptCompile Include="app\directives\tagsInput.ts" />
     <TypeScriptCompile Include="app\modules\dashboard-app.ts" />
     <TypeScriptCompile Include="app\directives\binaryData.ts" />
     <TypeScriptCompile Include="app\modules\login-app.ts" />
