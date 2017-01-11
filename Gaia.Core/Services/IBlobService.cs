@@ -1,9 +1,10 @@
 ﻿using Axis.Luna;
+using Gaia.Core.System;
 using System;
 
 namespace Gaia.Core.Services
 {
-    public interface IBlobService : IGaiaService, IUserContextService
+    public interface IBlobStoreService : IGaiaService, IUserContextAware
     {
         Operation<Uri> Persist(EncodedBinaryData blob);
         Operation Delete(Uri blobUri);

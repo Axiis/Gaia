@@ -87,9 +87,9 @@ var Gaia;
                             window.location.href = '/view-server/login/shell';
                     });
                 };
+                DomainTransport.inject = ['$http', '$q'];
                 return DomainTransport;
             }());
-            DomainTransport.inject = ['$http', '$q'];
             Services.DomainTransport = DomainTransport;
             var DomModelService = (function () {
                 function DomModelService() {
@@ -149,3 +149,4 @@ var Gaia;
         })(Services = Utils.Services || (Utils.Services = {}));
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=utility-services.js.map

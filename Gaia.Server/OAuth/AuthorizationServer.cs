@@ -13,10 +13,11 @@ using Axis.Pollux.Identity.Principal;
 using System.Linq;
 using Axis.Luna;
 using Gaia.Core.Domain;
+using System;
 
 namespace Gaia.Server.OAuth
 {
-    public class AuthorizationServer : OAuthAuthorizationServerProvider//, IAuthenticationTokenProvider
+    public class AuthorizationServer : OAuthAuthorizationServerProvider, IDisposable//, IAuthenticationTokenProvider
     {
         private ICredentialAuthentication _credentialAuthority = null;
         private IDataContext _dataContext = null;
@@ -71,6 +72,10 @@ namespace Gaia.Server.OAuth
         /// <returns></returns>
         public override Task GrantCustomExtension(OAuthGrantCustomExtensionContext context) => base.GrantCustomExtension(context);
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context) => Task.Run(() => context.Validated());
+
+        public void Dispose()
+        {
+        }
         #endregion
     }
 }

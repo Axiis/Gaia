@@ -93,12 +93,6 @@ namespace Gaia.Core.Services
                     });
 
                     ///create necessary "default" information for the user
-                    //1. default profile image
-                    DataContext.Store<UserData>()
-                        .Add(UserDataConstants.DefaultProfileImage.CloneForUser(userId))
-                        .Context
-                        .CommitChanges();
-
 
                     //apply the necessary access profile
                     AccessManager.ApplyAccessProfile(userId,

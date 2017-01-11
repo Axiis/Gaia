@@ -8,7 +8,15 @@ namespace Gaia.Core.Domain.MarketPlace
 {
     public class ServiceDataContract : GaiaEntity<long>
     {
-        public string Name { get; set; }
-        public string DDL { get; set; }
+        public string Name
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
+        public string DDL
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
     }
 }

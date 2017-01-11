@@ -63,7 +63,7 @@
                     <h5 style="text-overflow:ellipsis; white-space:nowrap;">{{data.Title}}</h5>
                     <p style="text-overflow:ellipsis; white-space:nowrap;">{{data.Description}}</p>
                 </div>
-                <div class="col-sm-2 col-xs-4" style="text-align:right;">
+                <div class="col-sm-2 col-xs-4" style="text-align:right; margin-bottom:5px;">
                     <h6 class="text-danger">&#8358; {{data.Cost}}</h6>
                     <span class="label" ng-class="{'label-success': vm.isPublished(data), 'label-warning': vm.isReviewing(data)}">{{vm.statusString(data)}}</span>
                 </div>

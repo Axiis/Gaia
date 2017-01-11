@@ -36,9 +36,10 @@ var Gaia;
             return StringPair;
         }());
         Utils.StringPair = StringPair;
-        var Encoding;
         (function (Encoding) {
             Encoding[Encoding["InlineCss"] = 0] = "InlineCss";
-        })(Encoding = Utils.Encoding || (Utils.Encoding = {}));
+        })(Utils.Encoding || (Utils.Encoding = {}));
+        var Encoding = Utils.Encoding;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=map.js.map

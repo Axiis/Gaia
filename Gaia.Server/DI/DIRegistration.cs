@@ -23,6 +23,7 @@ using Axis.Pollux.RBAC.OAModule;
 using Gaia.Core.OAModule;
 using Axis.Pollux.CoreAuthentication;
 using System.Configuration;
+using Gaia.Server.Services;
 #endregion
 
 namespace Gaia.Server.DI
@@ -35,12 +36,25 @@ namespace Gaia.Server.DI
             var serviceAssembly = typeof(BaseService).Assembly;
 
             #region infrastructure service registration
-            c.Register<AuthorizationServer>();
+
+            //authorization server is a special case where it is created in the singleton scope, but relies on some services that are registered in ScopedLifeStyles...
+            //thus we explicitly create the instance of the authorization server.
             c.Register<IOAuthAuthorizationServerProvider>(() => c.GetInstance<AuthorizationServer>());
-
-
-            c.Register<ICredentialAuthentication, CredentialAuthentication>(Lifestyle.Scoped);
+            c.Register(() =>
+            {
+                var europa = new EuropaContext(c.GetInstance<ContextConfiguration<EuropaContext>>());
+                var credentialAuthenticator = new CredentialAuthentication(europa, new DefaultHasher());
+                return new AuthorizationServer(credentialAuthenticator, europa);
+            }, Lifestyle.Singleton);
+                        
             c.Register<ICredentialHasher, DefaultHasher>(Lifestyle.Scoped);
+
+            //owin context provider
+            c.Register<IOwinContextProvider, CallContextOwinProvider>(Lifestyle.Scoped);
+
+
+            c.Register<IUserLocator, UserLocator>(Lifestyle.Scoped);
+            c.Register<IBlobStoreService, FileSystemBlobStore>(Lifestyle.Scoped);
             #endregion
 
 
@@ -61,8 +75,10 @@ namespace Gaia.Server.DI
                 .UsingModule(new AuthenticationAccessModuleConfig())
                 .UsingModule(new RBACAccessModuleConfig())
                 .UsingModule(new GaiaDomainModuleConfig());
+            c.Register(() => config, Lifestyle.Scoped);
 
-            c.Register<IDataContext>(() => new EuropaContext(config), Lifestyle.Scoped);
+            c.Register<IDataContext, EuropaContext>(Lifestyle.Scoped);
+
 
             #endregion
 
@@ -90,7 +106,7 @@ namespace Gaia.Server.DI
                 .GetTypes()
                 .Where(_t => _t.Namespace?.Equals("Axis.Pollux.Authentication.Service") ?? false)
                 .Where(_t => _t.IsInterface)
-                .Where(_t => !_t.Equals(typeof(ICredentialAuthentication)))
+                //.Where(_t => !_t.Equals(typeof(ICredentialAuthentication)))
                 .Select(_t => new { @interface = _t, implementation = polluxAuthServiceImplAssembly.GetTypes().FirstOrDefault(_impl => _impl.GetInterfaces().Contains(_t)) })
                 .Where(_pair => _pair.implementation != null)
                 .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation, Lifestyle.Scoped));
@@ -138,7 +154,6 @@ namespace Gaia.Server.DI
 
             #region Others
 
-            c.Register<IUserLocator, Services.UserLocator>(Lifestyle.Scoped);
 
             #endregion
 

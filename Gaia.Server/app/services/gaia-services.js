@@ -127,9 +127,9 @@ var Gaia;
             ProfileService.prototype.removeCorporateData = function (ids, config) {
                 return this.transport.delete('/api/profiles/corporate-data/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
+            ProfileService.$inject = ["#gaia.utils.domainTransport"];
             return ProfileService;
         }());
-        ProfileService.$inject = ["#gaia.utils.domainTransport"];
         Services.ProfileService = ProfileService;
         var UserAccountService = (function () {
             function UserAccountService(transport) {
@@ -158,9 +158,9 @@ var Gaia;
             UserAccountService.prototype.removeFarm = function (ids, config) {
                 return this.transport.delete('/api/profiles/farm-account/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
+            UserAccountService.$inject = ["#gaia.utils.domainTransport"];
             return UserAccountService;
         }());
-        UserAccountService.$inject = ["#gaia.utils.domainTransport"];
         Services.UserAccountService = UserAccountService;
         var AccessProfileService = (function () {
             function AccessProfileService(transport) {
@@ -227,9 +227,9 @@ var Gaia;
                     return oprc.data;
                 });
             };
+            AccessProfileService.$inject = ["#gaia.utils.domainTransport"];
             return AccessProfileService;
         }());
-        AccessProfileService.$inject = ["#gaia.utils.domainTransport"];
         Services.AccessProfileService = AccessProfileService;
         var MarketPlaceService = (function () {
             function MarketPlaceService(transport, $q) {
@@ -412,10 +412,11 @@ var Gaia;
                     return oprc.data;
                 });
             };
+            ///end-Customer
+            MarketPlaceService.$inject = ["#gaia.utils.domainTransport", '$q'];
             return MarketPlaceService;
         }());
-        ///end-Customer
-        MarketPlaceService.$inject = ["#gaia.utils.domainTransport", '$q'];
         Services.MarketPlaceService = MarketPlaceService;
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=gaia-services.js.map

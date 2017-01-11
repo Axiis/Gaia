@@ -1,10 +1,5 @@
 ﻿using Axis.Jupiter.Europa;
 using Gaia.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gaia.Core.OAModule.Mappings
 {
@@ -16,6 +11,10 @@ namespace Gaia.Core.OAModule.Mappings
             this.Property(e => e.Context)
                 .HasMaxLength(400)
                 .IsIndex("BlobContext", false);
+
+            this.HasRequired(e => e.Owner)
+                .WithMany()
+                .HasForeignKey(e => e.OwnerId);
         }
     }
 }

@@ -289,7 +289,9 @@
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\jura\OFL.txt" />
+    <Content Include="Content\images\consumer.svg" />
     <Content Include="Content\images\cube.svg" />
+    <Content Include="Content\images\default-image-200.png" />
     <Content Include="Content\images\farmer.svg" />
     <Content Include="Content\images\GaiaLogo.svg" />
     <Content Include="Content\images\merchant.svg" />
@@ -1460,7 +1462,8 @@
     <Compile Include="OAuth\AuthorizationServer.cs" />
     <Compile Include="OAuth\Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\BlobService.cs" />
+    <Compile Include="Services\FileSystemBlobStore.cs" />
+    <Compile Include="Services\OwinContextProvider.cs" />
     <Compile Include="Services\UserLocator.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\ContentFileSystem.cs" />
@@ -1510,6 +1513,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Blob\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

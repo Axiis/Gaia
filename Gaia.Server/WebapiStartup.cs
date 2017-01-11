@@ -14,10 +14,7 @@ using Microsoft.Owin.StaticFiles;
 using Gaia.Server.Utils;
 using System.Net.Http.Formatting;
 using Axis.Luna.Extensions;
-
-using static Axis.Luna.Extensions.EnumerableExtensions;
-using Newtonsoft.Json;
-using System.Linq;
+using Gaia.Server.Services;
 
 [assembly: OwinStartup(typeof(Gaia.Server.WebapiStartup))]
 
@@ -29,6 +26,8 @@ namespace Gaia.Server
         public void Configuration(IAppBuilder app)
         {
             ConfigureDI(app); //<-- must come first!!!
+
+            app.UseCallContextOwinProvider();
 
             ConfigureOAuth(app);
             ConfigureWebApi(app);
@@ -48,7 +47,7 @@ namespace Gaia.Server
         }
 
         private static void ConfigureDI(IAppBuilder app)
-        {
+        {            
             app.Properties[OWINMapKeys.ResolutionContext] = new WebApiResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes);
 
             //shutdown delegate

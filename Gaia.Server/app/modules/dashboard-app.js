@@ -7,6 +7,7 @@ var Gaia;
             Dashboard.module = angular.module("gaiaDashboard", ['ui.router', 'ngSanitize']);
             ///Gaia Directives
             Dashboard.module.directive('binaryData', Gaia.Directives.BinaryData);
+            Dashboard.module.directive('enumOptins', function () { return new Gaia.Directives.EnumOptions(); });
             ///Gaia services
             Dashboard.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             Dashboard.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
@@ -47,3 +48,4 @@ var Gaia;
         })(Dashboard = App.Dashboard || (App.Dashboard = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=dashboard-app.js.map

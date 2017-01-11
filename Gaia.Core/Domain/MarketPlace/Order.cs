@@ -7,27 +7,93 @@ namespace Gaia.Core.Domain.MarketPlace
     public class Order: GaiaEntity<long>
     {
         public static readonly string TransactionIdFormat = "O-X00-0000-XXX00X-X0X0";
-        public string TransactionId { get; set; } = IdGenerator.NewId(TransactionIdFormat);
+        public string TransactionId
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
 
-        public Service Service { get; set; }
-        public decimal Amount { get; set; }
+        public Service Service
+        {
+            get { return get<Service>(); }
+            set { set(ref value); }
+        }
+        public decimal Amount
+        {
+            get { return get<decimal>(); }
+            set { set(ref value); }
+        }
 
-        public DateTime TimeStamp { get; set; }
+        public DateTime TimeStamp
+        {
+            get { return get<DateTime>(); }
+            set { set(ref value); }
+        }
 
-        public string Message { get; set; }
-        public DateTime MessageTimeStamp { get; set; }
-        public OrderStatus Status { get; set; }
+        public string Message
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
+        public DateTime MessageTimeStamp
+        {
+            get { return get<DateTime>(); }
+            set { set(ref value); }
+        }
+        public OrderStatus Status
+        {
+            get { return get<OrderStatus>(); }
+            set { set(ref value); }
+        }
 
-        public User Customer { get; set; }
-        public User Merchant { get; set; }
+        public User Customer
+        {
+            get { return get<User>(); }
+            set { set(ref value); }
+        }
+        public User Merchant
+        {
+            get { return get<User>(); }
+            set { set(ref value); }
+        }
 
-        public string InputData { get; set;  }
-        public string OutputData { get; set; }
+        public string InputData
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
+        public string OutputData
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
 
-        public Order Previous { get; set; }
-        public Order Next { get; set; }
-        
-        public long? NextId { get; set; }
+        public Order Previous
+        {
+            get { return get<Order>(); }
+            set { set(ref value); }
+        }
+        public Order Next
+        {
+            get { return get<Order>(); }
+            set { set(ref value); }
+        }
+
+        public long? NextId
+        {
+            get { return get<long?>(); }
+            set { set(ref value); }
+        }
+        public long? PreviousId
+        {
+            get { return get<long?>(); }
+            set { set(ref value); }
+        }
+
+        public Order()
+        {
+            this.TransactionId = IdGenerator.NewId(TransactionIdFormat);
+        }
     }
 
 

@@ -19,8 +19,8 @@ namespace Gaia.Core.Utils
         {
             var r = random ?? new Random(Guid.NewGuid().GetHashCode());
             return format.ToUpper()
-                .Aggregate(new StringBuilder(), (acc, next) => acc.Append(next == 'X' ? Normalize(RandomAlpha(1, r).ToUpper()) : 
-                                                                          next == '0' ? RandomNumeric(1, r) :
+                .Aggregate(new StringBuilder(), (acc, next) => acc.Append(next == 'X' ? Normalize(RandomAlpha(1).ToUpper()) : 
+                                                                          next == '0' ? RandomNumeric(1) :
                                                                           next.ToString()))
                 .ToString();
         }

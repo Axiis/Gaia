@@ -23,6 +23,7 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
                 .HasMaxLength(22);
 
             this.HasOptional(e => e.Next).WithMany().HasForeignKey(e => e.NextId);
+            this.HasOptional(e => e.Previous).WithMany().HasForeignKey(e => e.PreviousId);
         }
     }
 

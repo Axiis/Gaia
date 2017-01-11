@@ -7,15 +7,43 @@ namespace Gaia.Core.Domain.MarketPlace
     public class Service: GaiaEntity<long>, ISearchableItem
     {
         public static readonly string TransactionIdFormat = "S-X00-0XX0-0XX00X";
-        public string TransactionId { get; set; } = IdGenerator.NewId(TransactionIdFormat);
+        public string TransactionId
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
 
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public ServiceStatus Status { get; set; }
-        public decimal Cost { get; set; }
-        public Product Product { get; set; } //only ever set for Product-pickup services
+        public string Title
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
+        public string Description
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
+        public ServiceStatus Status
+        {
+            get { return get<ServiceStatus>(); }
+            set { set(ref value); }
+        }
+        public decimal Cost
+        {
+            get { return get<decimal>(); }
+            set { set(ref value); }
+        }
+        public Product Product //only ever set for Product-pickup services
+        {
+            get { return get<Product>(); }
+            set { set(ref value); }
+        } 
 
-        public string Tags { get; set; }
+        public string Tags
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
 
         public ItemType ItemType => ItemType.Service; //ignore in db
 
@@ -24,10 +52,19 @@ namespace Gaia.Core.Domain.MarketPlace
         /// <summary>
         /// Represents the merchant that owns the product
         /// </summary>
-        public User Owner { get; set; }
+        public User Owner
+        {
+            get { return get<User>(); }
+            set { set(ref value); }
+        }
 
         public ICollection<ServiceInterface> Inputs { get; set; }  = new HashSet<ServiceInterface>();
         public ICollection<ServiceInterface> Outputs { get; set; } = new HashSet<ServiceInterface>();
+
+        public Service()
+        {
+            this.TransactionId = IdGenerator.NewId(TransactionIdFormat);
+        }
     }
 
     public enum ServiceStatus

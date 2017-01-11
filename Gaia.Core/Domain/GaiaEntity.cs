@@ -1,11 +1,14 @@
 ﻿using Axis.Narvi.Notify;
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using static Axis.Luna.Extensions.ObjectExtensions;
+using System.Collections.Generic;
+using Axis.Luna;
 
 namespace Gaia.Core.Domain
 {
-    public abstract class GaiaEntity<Key> : NotifierBase, IEquatable<GaiaEntity<Key>>, IBaseHash
+    public abstract class GaiaEntity<Key> : NotifierBase, IEquatable<GaiaEntity<Key>>, IBaseHash, IValidatableObject
     {
         public Key EntityId
         {
@@ -57,11 +60,17 @@ namespace Gaia.Core.Domain
         public override bool Equals(object obj) => Equals(obj.As<GaiaEntity<Key>>());
         public override int GetHashCode() => Eval(() => EntityId.GetHashCode());
 
-
         public GaiaEntity()
         {
             CreatedOn = DateTime.Now;
             this._bh = base.GetHashCode();
         }
+
+
+
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext) => new ValidationResult[0];
+
+        public Operation Validate()
+            => Operation.Try(() => Validator.ValidateObject(this, new ValidationContext(this, serviceProvider: null, items: null)));
     }
 }

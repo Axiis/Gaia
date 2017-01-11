@@ -33,3 +33,4 @@ var Gaia;
         Directives.BinaryData = BinaryData;
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=binaryData.js.map
