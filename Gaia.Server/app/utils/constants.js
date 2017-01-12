@@ -595,8 +595,13 @@ var Gaia;
         Utils.BusinessStatus_Verifying = 1;
         Utils.BusinessStatus_Rejected = 2;
         Utils.BusinessStatus_Verified = 3;
+        //access profiles
         Utils.ConsumerAccountProfile = 'system.[Default-User Profile]';
         Utils.ServiceProvierAccountProfile = 'system.[Service-Provider Profile]';
         Utils.FarmerAccountProfile = 'system.[Farmer Profile]';
+        //user data
+        Utils.UserData_ProfileImage = "ProfileImage";
+        //Misc
+        Utils.DefaultProfileImageUrl = '/content/images/default-user.png';
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));

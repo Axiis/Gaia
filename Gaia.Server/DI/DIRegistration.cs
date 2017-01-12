@@ -55,6 +55,7 @@ namespace Gaia.Server.DI
 
             c.Register<IUserLocator, UserLocator>(Lifestyle.Scoped);
             c.Register<IBlobStoreService, FileSystemBlobStore>(Lifestyle.Scoped);
+            c.Register<ISerializerSettingsProviderService, NewtonsoftSerializerSettingsProvider>();
             #endregion
 
 

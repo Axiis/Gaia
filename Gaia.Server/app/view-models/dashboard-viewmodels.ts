@@ -99,71 +99,57 @@ module Gaia.ViewModels.Dashboard {
         userData: Axis.Pollux.Domain.UserData[] = [];
 
         ///<Profile Image Stuff>
-        private _originalImage: Axis.Luna.Domain.BinaryData = null;
-        private _profileImage: Axis.Luna.Domain.BinaryData = null;
-        get profileImage(): Axis.Luna.Domain.BinaryData {
-            return this._profileImage;
-        }
-        set profileImage(value: Axis.Luna.Domain.BinaryData) {
-            this._profileImage = value;
-            this.isProfileImageChanged = true;
-        }
+        private _originalImageUrl: string = null;
+        private _previewImage: Utils.EncodedBinaryData = null;
+        private _isPreviewingImage: boolean = false;
 
-        profileImageUrl(): string {
-            if (this.profileImage && this.profileImage.IsDataEmbeded) return this.profileImage.EmbededDataUrl();
-            else if (this.profileImage) this.profileImage.Data;
-            else return '/content/images/default-image-200.png';
-        }
+        profileImageUrl: string = null;
 
-        removeProfileImage() {
-            if (this.isProfileImageChanged) {
-                this.profileImage = this._originalImage;
-                this.isProfileImageChanged = false;
+        get previewImage(): Utils.EncodedBinaryData {
+            return this._previewImage;
+        }
+        set previewImage(blob: Utils.EncodedBinaryData) {
+            
+            if (!Object.isNullOrUndefined(blob)) {
+
+                if (!this._isPreviewingImage) {
+                    this._isPreviewingImage = true;
+                    this._originalImageUrl = this.profileImageUrl;
+                }
+
+                this._previewImage = blob;
+                this.profileImageUrl = this._previewImage.DataUri();
             }
-            else {
-                if (this.isRemovingProfileImage) return;
+        }
 
-                this.isRemovingProfileImage = true;
-                this.profileService.removeData(['ProfileImage'])
-                    .then(oprc => {
-                        this.profileImage = this._originalImage = null;
-                        this.isRemovingProfileImage = false;
-                        this.isProfileImageChanged = false;
-                    }, e => {
-                        this.isRemovingProfileImage = false;
-                        this.hasProfileImagePersistenceError = true;
-                        this.notifyService.error('Something went wrong while removing your profile image...', 'Oops!');
+        refreshProfileImage() {
+            this.profileService
+                .getUserDataByName(Utils.UserData_ProfileImage)
+                .then(opr => {
+                    this.profileImageUrl = opr.Result.Data;
+                }, err => {
+                    this.profileImageUrl = Utils.DefaultProfileImageUrl;
+                });
+        }
+        discardPreview() {
+            this._isPreviewingImage = false;
+            this.profileImageUrl = this._originalImageUrl;
+            this._previewImage = null;
+            this._originalImageUrl = null;
+        }
+        persistPreviewImage() {
+            if (this._isPreviewingImage) { 
+                this.profileService
+                    .updateProfileImage(this.previewImage, this._originalImageUrl)
+                    .then(opr => {
+                        this.discardPreview();
+                        this.profileImageUrl = opr.Result;
+                    }, err => {
+                        this.notifyService.error("An error occured while saving your profile image");
                     });
             }
         }
-        persistProfileImage() {
-            if (this.isPersistingProfileImage) return;
 
-            this.isPersistingProfileImage = true;
-            this.profileService.removeData(['ProfileImage'])
-                .then(oprc => this.profileService.addData([new Axis.Pollux.Domain.UserData({
-                    Data: JSON.stringify(this.profileImage),
-                    Name: 'ProfileImage',
-                    OwnerId: this.user.UserId
-                })]).then(oprcx => {
-                    this.isPersistingProfileImage = false;
-                    this._originalImage = this.profileImage;
-                    this.isProfileImageChanged = false;
-                }), e => {
-                    this.isPersistingProfileImage = false;
-                    this.hasProfileImagePersistenceError = true;
-                    this.notifyService.error('Something went wrong while saving your profile image...', 'Oops!');
-                });
-        }
-        refreshProfileImage() {
-            this.profileService.getUserData().then(oprc => {
-                this._originalImage = this.profileImage = oprc.Result
-                    .filter(_ud => _ud.Name == 'ProfileImage')
-                    .map(_ud => new Axis.Luna.Domain.BinaryData(JSON.parse(_ud.Data)))
-                    .firstOrDefault();
-                this.isProfileImageChanged = false;
-            });
-        }
 
         ///</profile image stuff>
 
@@ -297,9 +283,9 @@ module Gaia.ViewModels.Dashboard {
 
         ///</Profile>
 
-        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
+        static $inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '$q'];
         constructor(private profileService: Gaia.Services.ProfileService, private domModel: Gaia.Utils.Services.DomModelService,
-            private notifyService: Gaia.Utils.Services.NotifyService) {
+            private notifyService: Gaia.Utils.Services.NotifyService, private $q: ng.IQService) {
 
             this.refreshBiodata();
             this.refreshContactData();

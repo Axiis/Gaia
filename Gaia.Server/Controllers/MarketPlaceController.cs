@@ -2,6 +2,7 @@
 using Gaia.Core.Domain.MarketPlace;
 using Gaia.Core.Services;
 using Gaia.Server.Controllers.MarketPlaceModels;
+using Gaia.Server.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Text;
@@ -39,7 +40,7 @@ namespace Gaia.Server.Controllers
         [Route("api/market-place/merchant/products")]
         public IHttpActionResult FindMerchantProducts(string data)
             => Encoding.UTF8.GetString(Convert.FromBase64String(data))
-                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindMerchantProducts(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
 
@@ -47,7 +48,7 @@ namespace Gaia.Server.Controllers
         [Route("api/market-place/merchant/services")]
         public IHttpActionResult FindMerchantServices(string data)
             => Encoding.UTF8.GetString(Convert.FromBase64String(data))
-                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindMerchantServices(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
 
@@ -56,7 +57,7 @@ namespace Gaia.Server.Controllers
         [Route("api/market-place/merchants/orders")]
         public IHttpActionResult GetMerchantOrders(string data)
             => Encoding.UTF8.GetString(Convert.FromBase64String(data))
-                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.GetMerchantOrders(info.PageIndex, info.PageSize))
                 .Pipe(_op => _op.OperationResult(Request));
 
@@ -108,7 +109,7 @@ namespace Gaia.Server.Controllers
         [Route("api/market-place/customer/products")]
         public IHttpActionResult FindCustomerProduct(string data)
             => Encoding.UTF8.GetString(Convert.FromBase64String(data))
-                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindCustomerProducts(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
 
@@ -116,7 +117,7 @@ namespace Gaia.Server.Controllers
         [Route("api/market-place/customer/services")]
         public IHttpActionResult FindCustomerService(string data)
             => Encoding.UTF8.GetString(Convert.FromBase64String(data))
-                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindCustomerServices(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
 
@@ -168,7 +169,7 @@ namespace Gaia.Server.Controllers
         [Route("api/market-place/customer/orders")]
         IHttpActionResult GetCustomerOrders(string data)
             => Encoding.UTF8.GetString(Convert.FromBase64String(data))
-                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json))
+                .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.GetCustomerOrders(info?.PageIndex ?? 0, info?.PageSize ?? -1))
                 .Pipe(_op => _op.OperationResult(Request));
 

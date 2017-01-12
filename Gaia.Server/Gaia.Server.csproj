@@ -1464,6 +1464,7 @@
     <Compile Include="OAuth\Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\FileSystemBlobStore.cs" />
+    <Compile Include="Services\NewtonsoftSerializerSettingsProvider.cs" />
     <Compile Include="Services\OwinContextProvider.cs" />
     <Compile Include="Services\UserLocator.cs" />
     <Compile Include="Utils\Constants.cs" />

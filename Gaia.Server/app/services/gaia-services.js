@@ -58,8 +58,16 @@ var Gaia;
                 });
             };
             ProfileService.prototype.getUserData = function (config) {
-                return this.transport.get('/api/profiles/data', null, config).then(function (oprc) {
+                return this.transport.get('/api/profiles/data/all', null, config).then(function (oprc) {
                     oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(function (_ud) { return new Axis.Pollux.Domain.UserData(_ud); }) : [];
+                    return oprc.data;
+                });
+            };
+            ProfileService.prototype.getUserDataByName = function (name, config) {
+                return this.transport.get('/api/profiles/data', {
+                    Name: name
+                }, config).then(function (oprc) {
+                    oprc.data.Result = !Object.isNullOrUndefined(oprc.data.Result) ? new Axis.Pollux.Domain.UserData(oprc.data.Result) : null;
                     return oprc.data;
                 });
             };
@@ -74,15 +82,15 @@ var Gaia;
                 });
             };
             ProfileService.prototype.removeData = function (dataNames, config) {
-                return this.transport.delete('/api/profiles/data/?dataNames=' + dataNames.join(','), null, config)
-                    .then(function (oprc) { return oprc.data; });
+                return this.transport.delete('/api/profiles/data', {
+                    Names: dataNames
+                }, config).then(function (oprc) { return oprc.data; });
             };
             ProfileService.prototype.updateProfileImage = function (blob, oldUrl, config) {
-                return this.transport.put('/api/profiles/data', {
+                return this.transport.put('/api/profiles/data/image', {
                     Blob: blob,
                     OldImageUri: oldUrl
-                }, config).then(function (oprc) {
-                });
+                }, config);
             };
             ProfileService.prototype.getBioData = function (config) {
                 return this.transport.get('/api/profiles/bio-data', null, config).then(function (oprc) {

@@ -107,6 +107,7 @@
     <Compile Include="Services\IMarketPlaceService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ICommentService.cs" />
+    <Compile Include="Services\ISerializerSettingsProviderService.cs" />
     <Compile Include="Services\IUserContextService.cs" />
     <Compile Include="Services\IForumService.cs" />
     <Compile Include="Services\IIncidentManagementService.cs" />

@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Text;
 using Gaia.Server.Utils;
 using Axis.Luna;
+using System;
+using Newtonsoft.Json;
 
 namespace Gaia.Server.Controllers
 {
@@ -89,28 +91,33 @@ namespace Gaia.Server.Controllers
         [HttpPut]
         [Route("api/profiles/data")]
         public IHttpActionResult AddData([FromBody]UserDataInfo data)
-            => _profileService.AddData(data.DataList.ToArray())
-                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                  .Result;
+            => _profileService.AddData(data.DataList.ToArray()).OperationResult(Request);
+
+        [HttpGet]
+        [Route("api/profiles/data/all")]
+        public IHttpActionResult GetUserData()
+            => _profileService.GetUserData().OperationResult(Request);
+
+        [HttpGet]
+        [Route("api/profiles/data")]
+        public IHttpActionResult GetUserDataByName(string data)
+            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<NamedUserDataInfo>(_json, Constants.DefaultJsonSerializerSettings))
+                .Pipe(info => _profileService.GetUserData(info.Name))
+                .Pipe(_op => _op.OperationResult(Request));
 
         [HttpPut]
-        [Route("api/profiles/image")]
+        [Route("api/profiles/data/image")]
         public IHttpActionResult UpdateProfileImage([FromBody]ProfileImageInfo data)
             => _profileService.UpdateProfileImage(data.Blob, data.OldImageUri).OperationResult(Request);
 
         [HttpDelete]
-        [Route("api/profiles/data")] //<-- http://abcd.xyz/api/profiles/data/?dataNames=abcd,efgh,ijkl,etc
-        public IHttpActionResult RemoveData([FromUri]string dataNames)
-            => _profileService.RemoveData(dataNames?.Split(',') ?? new string[0])
-                  .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                  .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                  .Result;
-
-        [HttpGet]
         [Route("api/profiles/data")]
-        public IHttpActionResult GetUserData()
-            => _profileService.GetUserData().OperationResult(Request);
+        public IHttpActionResult RemoveData(string data)
+            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<RemoveUserDataInfo>(_json, Constants.DefaultJsonSerializerSettings))
+                .Pipe(info => _profileService.RemoveData(info.Names))
+                .Pipe(_op => _op.OperationResult(Request));
 
         #endregion
 
@@ -230,6 +237,11 @@ namespace Gaia.Server.Controllers
             public List<UserData> DataList { get; set; }
         }
 
+        public class NamedUserDataInfo
+        {
+            public string Name { get; set; }
+        }
+
         public class UserValueInfo
         {
             public string User { get; set; }
@@ -240,6 +252,11 @@ namespace Gaia.Server.Controllers
         {
             public EncodedBinaryData Blob { get; set; }
             public string OldImageUri { get; set; }
+        }
+
+        public class RemoveUserDataInfo
+        {
+            public string[] Names { get; set; }
         }
     }
 }

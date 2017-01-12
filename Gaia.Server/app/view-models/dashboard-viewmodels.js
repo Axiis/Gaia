@@ -83,10 +83,11 @@ var Gaia;
             DashboardViewModel.$inject = ['#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.accessProfileService'];
             Dashboard.DashboardViewModel = DashboardViewModel;
             var ProfileViewModel = (function () {
-                function ProfileViewModel(profileService, domModel, notifyService) {
+                function ProfileViewModel(profileService, domModel, notifyService, $q) {
                     this.profileService = profileService;
                     this.domModel = domModel;
                     this.notifyService = notifyService;
+                    this.$q = $q;
                     this.user = null;
                     ///<<Profile>
                     this.isEditingBioData = false;
@@ -101,8 +102,10 @@ var Gaia;
                     this.contact = null;
                     this.userData = [];
                     ///<Profile Image Stuff>
-                    this._originalImage = null;
-                    this._profileImage = null;
+                    this._originalImageUrl = null;
+                    this._previewImage = null;
+                    this._isPreviewingImage = false;
+                    this.profileImageUrl = null;
                     ///</profile image stuff>
                     ///<Biodata stuff>
                     this.isPersistingBiodata = false;
@@ -118,76 +121,51 @@ var Gaia;
                         Stataus: 1
                     });
                 }
-                Object.defineProperty(ProfileViewModel.prototype, "profileImage", {
+                Object.defineProperty(ProfileViewModel.prototype, "previewImage", {
                     get: function () {
-                        return this._profileImage;
+                        return this._previewImage;
                     },
-                    set: function (value) {
-                        this._profileImage = value;
-                        this.isProfileImageChanged = true;
+                    set: function (blob) {
+                        if (!Object.isNullOrUndefined(blob)) {
+                            if (!this._isPreviewingImage) {
+                                this._isPreviewingImage = true;
+                                this._originalImageUrl = this.profileImageUrl;
+                            }
+                            this._previewImage = blob;
+                            this.profileImageUrl = this._previewImage.DataUri();
+                        }
                     },
                     enumerable: true,
                     configurable: true
                 });
-                ProfileViewModel.prototype.profileImageUrl = function () {
-                    if (this.profileImage && this.profileImage.IsDataEmbeded)
-                        return this.profileImage.EmbededDataUrl();
-                    else if (this.profileImage)
-                        this.profileImage.Data;
-                    else
-                        return '/content/images/default-image-200.png';
-                };
-                ProfileViewModel.prototype.removeProfileImage = function () {
-                    var _this = this;
-                    if (this.isProfileImageChanged) {
-                        this.profileImage = this._originalImage;
-                        this.isProfileImageChanged = false;
-                    }
-                    else {
-                        if (this.isRemovingProfileImage)
-                            return;
-                        this.isRemovingProfileImage = true;
-                        this.profileService.removeData(['ProfileImage'])
-                            .then(function (oprc) {
-                            _this.profileImage = _this._originalImage = null;
-                            _this.isRemovingProfileImage = false;
-                            _this.isProfileImageChanged = false;
-                        }, function (e) {
-                            _this.isRemovingProfileImage = false;
-                            _this.hasProfileImagePersistenceError = true;
-                            _this.notifyService.error('Something went wrong while removing your profile image...', 'Oops!');
-                        });
-                    }
-                };
-                ProfileViewModel.prototype.persistProfileImage = function () {
-                    var _this = this;
-                    if (this.isPersistingProfileImage)
-                        return;
-                    this.isPersistingProfileImage = true;
-                    this.profileService.removeData(['ProfileImage'])
-                        .then(function (oprc) { return _this.profileService.addData([new Axis.Pollux.Domain.UserData({
-                            Data: JSON.stringify(_this.profileImage),
-                            Name: 'ProfileImage',
-                            OwnerId: _this.user.UserId
-                        })]).then(function (oprcx) {
-                        _this.isPersistingProfileImage = false;
-                        _this._originalImage = _this.profileImage;
-                        _this.isProfileImageChanged = false;
-                    }); }, function (e) {
-                        _this.isPersistingProfileImage = false;
-                        _this.hasProfileImagePersistenceError = true;
-                        _this.notifyService.error('Something went wrong while saving your profile image...', 'Oops!');
-                    });
-                };
                 ProfileViewModel.prototype.refreshProfileImage = function () {
                     var _this = this;
-                    this.profileService.getUserData().then(function (oprc) {
-                        _this._originalImage = _this.profileImage = oprc.Result
-                            .filter(function (_ud) { return _ud.Name == 'ProfileImage'; })
-                            .map(function (_ud) { return new Axis.Luna.Domain.BinaryData(JSON.parse(_ud.Data)); })
-                            .firstOrDefault();
-                        _this.isProfileImageChanged = false;
+                    this.profileService
+                        .getUserDataByName(Gaia.Utils.UserData_ProfileImage)
+                        .then(function (opr) {
+                        _this.profileImageUrl = opr.Result.Data;
+                    }, function (err) {
+                        _this.profileImageUrl = Gaia.Utils.DefaultProfileImageUrl;
                     });
+                };
+                ProfileViewModel.prototype.discardPreview = function () {
+                    this._isPreviewingImage = false;
+                    this.profileImageUrl = this._originalImageUrl;
+                    this._previewImage = null;
+                    this._originalImageUrl = null;
+                };
+                ProfileViewModel.prototype.persistPreviewImage = function () {
+                    var _this = this;
+                    if (this._isPreviewingImage) {
+                        this.profileService
+                            .updateProfileImage(this.previewImage, this._originalImageUrl)
+                            .then(function (opr) {
+                            _this.discardPreview();
+                            _this.profileImageUrl = opr.Result;
+                        }, function (err) {
+                            _this.notifyService.error("An error occured while saving your profile image");
+                        });
+                    }
                 };
                 ProfileViewModel.prototype.nameDisplay = function () {
                     if (this.biodata) {
@@ -328,7 +306,7 @@ var Gaia;
             }());
             /// </contact-stuff>
             ///</Profile>
-            ProfileViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
+            ProfileViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '$q'];
             Dashboard.ProfileViewModel = ProfileViewModel;
             var UserAccountViewModel = (function () {
                 function UserAccountViewModel(domModel, accessProfile, notify) {

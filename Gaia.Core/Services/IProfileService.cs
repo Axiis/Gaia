@@ -71,6 +71,9 @@ namespace Gaia.Core.Services
         [Feature("system/Profiles/UserData/@get")]
         Operation<IEnumerable<UserData>> GetUserData();
 
+        [Feature("system/Profiles/UserData/@get")]
+        Operation<UserData> GetUserData(string name);
+
         [Feature("system/Profiles/UserData/@add")]
         Operation<string> UpdateProfileImage(EncodedBinaryData image, string oldImageUrl);
         #endregion

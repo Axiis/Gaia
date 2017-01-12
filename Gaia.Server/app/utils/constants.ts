@@ -600,8 +600,17 @@ module Gaia.Utils {
     export const BusinessStatus_Verified = 3;
 
 
+    //access profiles
     export const ConsumerAccountProfile = 'system.[Default-User Profile]';
     export const ServiceProvierAccountProfile = 'system.[Service-Provider Profile]';
     export const FarmerAccountProfile = 'system.[Farmer Profile]';
+
+
+    //user data
+    export const UserData_ProfileImage = "ProfileImage";
+
+
+    //Misc
+    export const DefaultProfileImageUrl = '/content/images/default-user.png';
 
 }

@@ -429,6 +429,16 @@ namespace Gaia.Core.Services
                     .UsingEach(_ud => _ud.Owner = null);
             });
 
+        public Operation<UserData> GetUserData(string name)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                return DataContext.Store<UserData>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .Where(_ud => _ud.Name == name)
+                    .FirstOrDefault()
+                    .UsingValue(_ud => _ud.Owner = null);
+            });
+
         public Operation<string> UpdateProfileImage(EncodedBinaryData image, string oldImageUrl)
             => FeatureAccess.Guard(UserContext, () =>
             {

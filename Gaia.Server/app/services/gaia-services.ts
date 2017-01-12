@@ -62,8 +62,17 @@ module Gaia.Services {
         }
 
         public getUserData(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.UserData[]>> {
-            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.UserData[]>>('/api/profiles/data', null, config).then(oprc => {
+            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.UserData[]>>('/api/profiles/data/all', null, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_ud => new Axis.Pollux.Domain.UserData(_ud)) : [];
+                return oprc.data;
+            });
+        }
+
+        public getUserDataByName(name: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.UserData>> {
+            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.UserData>>('/api/profiles/data', {
+                Name: name
+            }, config).then(oprc => {
+                oprc.data.Result = !Object.isNullOrUndefined(oprc.data.Result) ? new Axis.Pollux.Domain.UserData(oprc.data.Result) : null;
                 return oprc.data;
             });
         }
@@ -77,15 +86,15 @@ module Gaia.Services {
             });
         }
         public removeData(dataNames: Array<string>, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.delete<void>('/api/profiles/data/?dataNames=' + dataNames.join(','), null, config)
-                .then(oprc => oprc.data);
+            return this.transport.delete<void>('/api/profiles/data', {
+                Names: dataNames
+            }, config).then(oprc => oprc.data);
         }
         public updateProfileImage(blob: Utils.EncodedBinaryData, oldUrl: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
-            return this.transport.put<Utils.Operation<string>>('/api/profiles/data', {
+            return this.transport.put<Utils.Operation<string>>('/api/profiles/data/image', {
                 Blob: blob,
                 OldImageUri: oldUrl
-            }, config).then(oprc => {
-            });
+            }, config);
         }
 
 
