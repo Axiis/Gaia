@@ -21,5 +21,9 @@ namespace Gaia.Core
         /// Would try to include more punctuation characters into the allowed characters
         /// </summary>
         public static readonly Regex UserIdPattern = new Regex(@"[a-zA-Z0-9_\.\$]{3,}", RegexOptions.IgnoreCase);
+
+        #region User Data
+        public static readonly string UserData_ProfileImage = "ProfileImage";
+        #endregion
     }
 }

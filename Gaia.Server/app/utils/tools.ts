@@ -42,7 +42,7 @@ module Gaia.Utils {
 
     //https://gist.github.com/jonleighton/958841
     const _b64Encodings: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-    export function ToBase64String(arrayBuffer: number[]): string {
+    export function ToBase64String(arrayBuffer: number[] | Uint8Array): string {
         var base64 = ''
 
         var bytes = new Uint8Array(arrayBuffer)
@@ -153,6 +153,30 @@ module Gaia.Utils {
 
         private static getObjValues(e: any): (number | string)[] {
             return Object.keys(e).map(k => e[k]);
+        }
+    }
+
+
+    export class MimeMap {
+        MimeCode: string;
+        Extensions: string;
+
+        constructor(code?: string, extension?: string) {
+            this.MimeCode = code;
+            this.Extensions = Object.isNullOrUndefined(extension) ? null :
+                extension.startsWith('.') ? extension : '.' + extension;
+        }
+    }
+
+
+    export class Operation<R> {
+
+        Result: R;
+        Succeeded: boolean;
+        Message: string;
+
+        constructor(initArg?: Object) {
+            if (initArg) initArg.copyTo(this);
         }
     }
 }

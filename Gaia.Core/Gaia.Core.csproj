@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CQRS\IDataCommands.cs" />
     <Compile Include="DomainConstants.cs" />
     <Compile Include="Domain\Farm.cs" />
     <Compile Include="Domain\Advert.cs" />
@@ -97,7 +98,7 @@
     <Compile Include="Domain\ContextVerification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Domain\Rating.cs" />
-    <Compile Include="Queries\IDomainQuery.cs" />
+    <Compile Include="CQRS\IDomainQuery.cs" />
     <Compile Include="Services\IActivityFeedService.cs" />
     <Compile Include="Services\IAdvertService.cs" />
     <Compile Include="Services\IBlobService.cs" />

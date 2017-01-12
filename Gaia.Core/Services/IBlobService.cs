@@ -6,8 +6,8 @@ namespace Gaia.Core.Services
 {
     public interface IBlobStoreService : IGaiaService, IUserContextAware
     {
-        Operation<Uri> Persist(EncodedBinaryData blob);
-        Operation Delete(Uri blobUri);
-        Operation<EncodedBinaryData> GetBlob(Uri blobUri);
+        Operation<string> Persist(EncodedBinaryData blob);
+        Operation Delete(string blobUri);
+        Operation<EncodedBinaryData> GetBlob(string blobUri);
     }
 }

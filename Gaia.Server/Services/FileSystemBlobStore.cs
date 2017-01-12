@@ -40,10 +40,12 @@ namespace Gaia.Server.Services
         /// </summary>
         /// <param name="blobUri"></param>
         /// <returns></returns>
-        public Operation Delete(Uri blobUri)
+        public Operation Delete(string blobUri)
             => Operation.Try(() =>
             {
-                var finfo = new FileInfo(GetLocalPath(blobUri));
+                if (blobUri == null) return;
+
+                var finfo = new FileInfo(GetLocalPath(new Uri(blobUri)));
                 if (finfo.Exists) finfo.Delete();
             });
 
@@ -52,10 +54,10 @@ namespace Gaia.Server.Services
         /// </summary>
         /// <param name="blobUri"></param>
         /// <returns></returns>
-        public Operation<EncodedBinaryData> GetBlob(Uri blobUri)
+        public Operation<EncodedBinaryData> GetBlob(string blobUri)
             => Operation.Try(() =>
             {
-                var finfo = new FileInfo(GetLocalPath(blobUri));
+                var finfo = new FileInfo(GetLocalPath(new Uri(blobUri)));
                 return new EncodedBinaryData(finfo.OpenRead() as Stream, MimeMap.ToMime(finfo.Extension));
             });
 
@@ -66,7 +68,7 @@ namespace Gaia.Server.Services
         /// <param name="blobMime"></param>
         /// <param name="subDirectory"></param>
         /// <returns></returns>
-        public Operation<Uri> Persist(EncodedBinaryData blob)
+        public Operation<string> Persist(EncodedBinaryData blob)
             => Operation.Try(() =>
             {
                 var mime = blob.MimeObject();
@@ -77,7 +79,7 @@ namespace Gaia.Server.Services
                 using (var stream = new FileInfo(Path.Combine(dinfo.FullName, fileName)).OpenWrite())
                     stream.Write(blob.Data, 0, blob.Data.Length);
 
-                return new Uri($"{RefererRequest.RefererUri().Scheme}://{RefererRequest.RefererUri().Authority}/Content/Blob/{fileName}");
+                return new Uri($"{RefererRequest.RefererUri().Scheme}://{RefererRequest.RefererUri().Authority}/Content/Blob/{fileName}").ToString(); //just to make sure it parses correctly
             });
 
 

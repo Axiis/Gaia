@@ -74,4 +74,3 @@ var Gaia;
         })(MarketPlace = App.MarketPlace || (App.MarketPlace = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-app.js.map

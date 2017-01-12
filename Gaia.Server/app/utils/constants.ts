@@ -568,22 +568,29 @@ module Gaia.Utils {
 
 
         toMimeCode: function (extension: string): string {
-            return (this as Object).keys().filter(_k => _k == extension).map(_k => this[_k]).firstOrDefault();
+            return MimeCodes.toMimeMap(extension).MimeCode;
         },
+
+        toMimeMap: function (extension: string): MimeMap {
+            var ext = (extension || '').toLowerCase();
+            var key = (this as Object).keys().firstOrDefault(_k => _k == ext);
+            if (!Object.isNullOrUndefined(key)) return new MimeMap(this[key], key);
+            else return new MimeMap('application/octet-stream', '.');
+        },
+
         toExtension: function (mimeCode: string): string {
             if (mimeCode) return (this as Object)
                 .keyValuePairs()
-                .filter(_kvp => _kvp.Value == mimeCode)
-                .firstOrDefault()
+                .firstOrDefault(_kvp => _kvp.Value == mimeCode)
                 .Key;
 
             else return null;
         },
 
-        toMimeMaps(): Array<Gaia.Utils.Map<string, string>> {
+        toMimeMaps(): Gaia.Utils.Map<string, string>[] {
             return (this as Object)
                 .keyValuePairs()
-                .filter(_kvp => _kvp.Key.startsWith('.')) as Gaia.Utils.Map<string, string>[];
+                .filter(_kvp => _kvp.Key.startsWith('.'));
         }
     };
 

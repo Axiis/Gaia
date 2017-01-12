@@ -96,6 +96,7 @@ module Gaia.ViewModels.Dashboard {
 
         biodata: Axis.Pollux.Domain.BioData = null;
         contact: Axis.Pollux.Domain.ContactData = null;
+        userData: Axis.Pollux.Domain.UserData[] = [];
 
         ///<Profile Image Stuff>
         private _originalImage: Axis.Luna.Domain.BinaryData = null;

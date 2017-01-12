@@ -1,6 +1,13 @@
 ﻿
 module Gaia.Services {
 
+    export class BlobService {
+        static $inject = ['#gaia.utils.domainTransport'];
+        constructor(private transport: Gaia.Utils.Services.DomainTransport) {
+
+        }
+    }
+
     export class ProfileService {
 
         static $inject = ["#gaia.utils.domainTransport"];
@@ -27,8 +34,8 @@ module Gaia.Services {
             }, config).then(oprc => oprc.data);
         }
 
-        public archiveUser(userId: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>>('/api/profiles/archives', {
+        public archiveUser(userId: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.User>> {
+            return this.transport.put<Utils.Operation<Axis.Pollux.Domain.User>>('/api/profiles/archives', {
                 User: userId
             }, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result? new Axis.Pollux.Domain.User(oprc.data.Result): null;
@@ -36,16 +43,16 @@ module Gaia.Services {
             });                
         }
 
-        public createActivationVerification(userId: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>>('/api/profiles/activation', {
+        public createActivationVerification(userId: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.User>> {
+            return this.transport.put<Utils.Operation<Axis.Pollux.Domain.User>>('/api/profiles/activation', {
                 User: userId
             }, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.User(oprc.data.Result) : null;
                 return oprc.data;
             });
         }
-        public verifyUserActivation(userId: string, token: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.User>>('/api/profiles/activation', {
+        public verifyUserActivation(userId: string, token: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.User>> {
+            return this.transport.put<Utils.Operation<Axis.Pollux.Domain.User>>('/api/profiles/activation', {
                 User: userId,
                 Value: token
             }, config).then(oprc => {
@@ -54,14 +61,14 @@ module Gaia.Services {
             });
         }
 
-        public getUserData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Array<Axis.Pollux.Domain.UserData>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Array<Axis.Pollux.Domain.UserData>>>('/api/profiles/data', null, config).then(oprc => {
+        public getUserData(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.UserData[]>> {
+            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.UserData[]>>('/api/profiles/data', null, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_ud => new Axis.Pollux.Domain.UserData(_ud)) : [];
                 return oprc.data;
             });
         }
         public addData(data: Array<Axis.Pollux.Domain.UserData>, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<Axis.Luna.Domain.Operation<number[]>>('/api/profiles/data', {
+            return this.transport.put<Utils.Operation<number[]>>('/api/profiles/data', {
                 DataList: data
             }, config).then(oprc => {
                 data.forEach((value, index) => {
@@ -73,34 +80,41 @@ module Gaia.Services {
             return this.transport.delete<void>('/api/profiles/data/?dataNames=' + dataNames.join(','), null, config)
                 .then(oprc => oprc.data);
         }
+        public updateProfileImage(blob: Utils.EncodedBinaryData, oldUrl: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
+            return this.transport.put<Utils.Operation<string>>('/api/profiles/data', {
+                Blob: blob,
+                OldImageUri: oldUrl
+            }, config).then(oprc => {
+            });
+        }
 
 
-        public getBioData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.BioData>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.BioData>>('/api/profiles/bio-data', null, config).then(oprc => {
+        public getBioData(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.BioData>> {
+            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.BioData>>('/api/profiles/bio-data', null, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.BioData(oprc.data.Result): null;
                 return oprc.data;
             });
         }
         public modifyBioData(biodata: Axis.Pollux.Domain.BioData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/bio-data', biodata, config).then(oprc => {
+            return this.transport.put<Utils.Operation<number>>('/api/profiles/bio-data', biodata, config).then(oprc => {
                 if (!biodata.EntityId || biodata.EntityId <= 0) biodata.EntityId = oprc.data.Result;
             });
         }
 
 
-        public getContactData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Array<Axis.Pollux.Domain.ContactData>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.ContactData[]>>('/api/profiles/contact-data', null, config).then(oprc => {
+        public getContactData(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Array<Axis.Pollux.Domain.ContactData>>> {
+            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.ContactData[]>>('/api/profiles/contact-data', null, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Axis.Pollux.Domain.ContactData(_cd)) : null;
                 return oprc.data;
             });
         }
         public addContactData(contactData: Axis.Pollux.Domain.ContactData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/profiles/contact-data', contactData, config).then(oprc => {
+            return this.transport.post<Utils.Operation<number>>('/api/profiles/contact-data', contactData, config).then(oprc => {
                 contactData.EntityId = oprc.data.Result;
             });
         }
         public modifyContactData(contactData: Axis.Pollux.Domain.ContactData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/contact-data', contactData, config).then(oprc => { });
+            return this.transport.put<Utils.Operation<void>>('/api/profiles/contact-data', contactData, config).then(oprc => { });
         }
         public persistContactData(contactData: Axis.Pollux.Domain.ContactData): ng.IPromise<void> {
             if (!contactData.EntityId || contactData.EntityId <= 0) return this.addContactData(contactData);
@@ -111,19 +125,19 @@ module Gaia.Services {
         }
 
 
-        public getCorporateData(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.CorporateData[]>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Axis.Pollux.Domain.CorporateData[]>>('/api/profiles/corporate-data', null, config).then(oprc => {
+        public getCorporateData(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Axis.Pollux.Domain.CorporateData[]>> {
+            return this.transport.get<Utils.Operation<Axis.Pollux.Domain.CorporateData[]>>('/api/profiles/corporate-data', null, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Axis.Pollux.Domain.CorporateData(_cd)): null;
                 return oprc.data;
             });
         }
         public addCorporateData(corporateData: Axis.Pollux.Domain.CorporateData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => {
+            return this.transport.post<Utils.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => {
                 corporateData.EntityId = oprc.data.Result;
             });
         }
         public modifyCorporateData(corporateData: Axis.Pollux.Domain.CorporateData, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => { });
+            return this.transport.put<Utils.Operation<number>>('/api/profiles/corporate-data', corporateData, config).then(oprc => { });
         }
         public persistCorporateData(data: Axis.Pollux.Domain.CorporateData): ng.IPromise<void> {
             if (!data.EntityId || data.EntityId <= 0) return this.addCorporateData(data);
@@ -136,21 +150,21 @@ module Gaia.Services {
 
     export class UserAccountService {
 
-        public getFarmAccounts(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.Farm[]>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Gaia.Domain.Farm[]>>('/api/profiles/farm-account', null, config).then(oprc => {
+        public getFarmAccounts(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.Farm[]>> {
+            return this.transport.get<Utils.Operation<Gaia.Domain.Farm[]>>('/api/profiles/farm-account', null, config).then(oprc => {
                 oprc.data.Result = oprc.data.Result ? oprc.data.Result.map(_cd => new Gaia.Domain.Farm(_cd)) : null;
                 return oprc.data;
             });
         }
 
         public addFarmAccount(FarmAccount: Gaia.Domain.Farm, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => {
+            return this.transport.post<Utils.Operation<number>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => {
                 FarmAccount.EntityId = oprc.data.Result;
             });
         }
 
         public modifyFarmAccount(FarmAccount: Gaia.Domain.Farm, config?: ng.IRequestShortcutConfig): ng.IPromise<void> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => { });
+            return this.transport.put<Utils.Operation<void>>('/api/profiles/farm-account', FarmAccount, config).then(oprc => { });
         }
 
         public persistFarm(data: Gaia.Domain.Farm): ng.IPromise<void> {
@@ -171,8 +185,8 @@ module Gaia.Services {
 
     export class AccessProfileService {
 
-        public createFeatureAccessProfile(profileCode: string, title: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.FeatureAccessProfile>> {
-            return this.transport.post<Axis.Luna.Domain.Operation<Gaia.Domain.FeatureAccessProfile>>('/api/access-profiles', {
+        public createFeatureAccessProfile(profileCode: string, title: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.FeatureAccessProfile>> {
+            return this.transport.post<Utils.Operation<Gaia.Domain.FeatureAccessProfile>>('/api/access-profiles', {
                 Code: profileCode,
                 Title: title
             }, config).then(oprc => {
@@ -183,8 +197,8 @@ module Gaia.Services {
 
 
         public modifyFeatureAccessProfile(profile: Gaia.Domain.FeatureAccessProfile,
-            grantedDescriptors: string[], deniedDescriptors: string[], config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.FeatureAccessProfile>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<Gaia.Domain.FeatureAccessProfile>>('/api/access-profiles', {
+            grantedDescriptors: string[], deniedDescriptors: string[], config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.FeatureAccessProfile>> {
+            return this.transport.put<Utils.Operation<Gaia.Domain.FeatureAccessProfile>>('/api/access-profiles', {
                 Profile: profile,
                 Granted: grantedDescriptors,
                 Denied: deniedDescriptors
@@ -195,14 +209,14 @@ module Gaia.Services {
         }
 
 
-        public archiveAccessProfile(profileId: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/access-profiles/archives', { Id: profileId }, config);
+        public archiveAccessProfile(profileId: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
+            return this.transport.put<Utils.Operation<void>>('/api/access-profiles/archives', { Id: profileId }, config);
         }
 
 
         public applyAccessProfile(userId: string, accessProfileCode: string, expiryDate?: Axis.Apollo.Domain.JsonDateTime,
-            config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile>>('/api/access-profiles/applications', {
+            config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.UserAccessProfile>> {
+            return this.transport.put<Utils.Operation<Gaia.Domain.UserAccessProfile>>('/api/access-profiles/applications', {
                 UserId: userId,
                 Code: accessProfileCode,
                 ExpiryDate: expiryDate
@@ -214,8 +228,8 @@ module Gaia.Services {
 
 
         public revokeAccessProfile(userId: string, accessProfileCode: string,
-            config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile>> {
-            return this.transport.delete<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile>>('/api/access-profiles', {
+            config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.UserAccessProfile>> {
+            return this.transport.delete<Utils.Operation<Gaia.Domain.UserAccessProfile>>('/api/access-profiles', {
                 UserId: userId,
                 Code: accessProfileCode
             }, config).then(oprc => {
@@ -226,8 +240,8 @@ module Gaia.Services {
 
 
         public migrateAccessProfile(userId: string, oldAccessProfileCode: string, newAccessProfileCode: string,
-            newExpiry?: Axis.Apollo.Domain.JsonDateTime, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile>> {
-            return this.transport.delete<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile>>('/api/access-profiles/migrations', {
+            newExpiry?: Axis.Apollo.Domain.JsonDateTime, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.UserAccessProfile>> {
+            return this.transport.delete<Utils.Operation<Gaia.Domain.UserAccessProfile>>('/api/access-profiles/migrations', {
                 UserId: userId,
                 OldAccessProfileCode: oldAccessProfileCode,
                 NewAccessProfileCode: newAccessProfileCode,
@@ -239,8 +253,8 @@ module Gaia.Services {
         }
 
 
-        public activeUserAccessProfiles(userId: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile[]>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Gaia.Domain.UserAccessProfile[]>>('/api/access-profiles/active', {
+        public activeUserAccessProfiles(userId: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Gaia.Domain.UserAccessProfile[]>> {
+            return this.transport.get<Utils.Operation<Gaia.Domain.UserAccessProfile[]>>('/api/access-profiles/active', {
                 UserId: userId
             }, config).then(oprc => {
                 oprc.data.Result = !Object.isNullOrUndefined(oprc.data.Result) ?
@@ -258,16 +272,16 @@ module Gaia.Services {
     export class MarketPlaceService {
 
         ///Merchant
-        getProductCategories(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Domain.ProductCategory[]>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Domain.ProductCategory[]>>('/api/market-place/merchants/product-categories', null, config).then(oprc => {
+        getProductCategories(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Domain.ProductCategory[]>> {
+            return this.transport.get<Utils.Operation<Domain.ProductCategory[]>>('/api/market-place/merchants/product-categories', null, config).then(oprc => {
                 oprc.data.Result = !Object.isNullOrUndefined(oprc.data.Result) ?
                     oprc.data.Result.map(_r => new Domain.ProductCategory(_r)) : [];
                 return oprc.data;
             });
         }
 
-        getServiceCategories(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Domain.ServiceCategory[]>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Domain.ServiceCategory[]>>('/api/market-place/merchants/service-categories', null, config).then(oprc => {
+        getServiceCategories(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Domain.ServiceCategory[]>> {
+            return this.transport.get<Utils.Operation<Domain.ServiceCategory[]>>('/api/market-place/merchants/service-categories', null, config).then(oprc => {
                 oprc.data.Result = !Object.isNullOrUndefined(oprc.data.Result) ?
                     oprc.data.Result.map(_r => new Domain.ServiceCategory(_r)) : [];
                 return oprc.data;
@@ -275,8 +289,8 @@ module Gaia.Services {
         }
 
         findMerchantProducts(searchString: string, pageSize: number, pageIndex: number, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Product>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Product>>>('/api/market-place/merchant/products', {
+            ng.IPromise<Utils.Operation<Utils.SequencePage<Domain.Product>>> {
+            return this.transport.get<Utils.Operation<Utils.SequencePage<Domain.Product>>>('/api/market-place/merchant/products', {
                 SearchString: searchString,
                 PageIndex: pageIndex,
                 PageSize: pageSize
@@ -293,8 +307,8 @@ module Gaia.Services {
 
 
         findMerchantServices(searchString: string, pageSize: number, pageIndex: number, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Service>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Service>>>('/api/market-place/merchant/services', {
+            ng.IPromise<Utils.Operation<Utils.SequencePage<Domain.Service>>> {
+            return this.transport.get<Utils.Operation<Utils.SequencePage<Domain.Service>>>('/api/market-place/merchant/services', {
                 SearchString: searchString,
                 PageIndex: pageIndex,
                 PageSize: pageSize
@@ -307,7 +321,7 @@ module Gaia.Services {
                     oprc.data.Result.PageIndex);
                 return oprc.data;
             });
-            //return this.$q.resolve(new Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Service>>({
+            //return this.$q.resolve(new Utils.Operation<Utils.SequencePage<Domain.Service>>({
             //    Succeeded: true,
             //    Result: new Utils.SequencePage<Domain.Service>([new Domain.Service({
             //        TransactionId: '0000-0000000-0000',
@@ -344,8 +358,8 @@ module Gaia.Services {
             //}));
         }
 
-        getMerchantOrders(pageIndex: number, pageSize: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Order>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Order>>>('/api/market-place/merchants/orders', {
+        getMerchantOrders(pageIndex: number, pageSize: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Utils.SequencePage<Domain.Order>>> {
+            return this.transport.get<Utils.Operation<Utils.SequencePage<Domain.Order>>>('/api/market-place/merchants/orders', {
                 PageIndex: pageIndex,
                 PageSize: pageSize
             }, config).then(oprc => {
@@ -359,39 +373,39 @@ module Gaia.Services {
             });
         }
 
-        modifyOrder(order: Gaia.Domain.Order, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/market-place/merchants/orders', order, config).then(opr => opr.data);
+        modifyOrder(order: Gaia.Domain.Order, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
+            return this.transport.put<Utils.Operation<void>>('/api/market-place/merchants/orders', order, config).then(opr => opr.data);
         }
         
-        fulfillOrder(order: Gaia.Domain.Order, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/market-place/merchants/orders/fulfilled', order, config).then(opr => opr.data);
+        fulfillOrder(order: Gaia.Domain.Order, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
+            return this.transport.put<Utils.Operation<void>>('/api/market-place/merchants/orders/fulfilled', order, config).then(opr => opr.data);
         }
 
-        addService(service: Gaia.Domain.Service, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<number>> {
-            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/market-place/merchants/services', service, config).then(opr => opr.data);
+        addService(service: Gaia.Domain.Service, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<number>> {
+            return this.transport.post<Utils.Operation<number>>('/api/market-place/merchants/services', service, config).then(opr => opr.data);
         }
 
-        modifyService(service: Gaia.Domain.Service, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/market-place/merchants/services', service, config).then(opr => opr.data);
+        modifyService(service: Gaia.Domain.Service, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
+            return this.transport.put<Utils.Operation<void>>('/api/market-place/merchants/services', service, config).then(opr => opr.data);
         }
         
-        addServiceInterface(sinterface: Gaia.Domain.ServiceInterface, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<number>> {
-            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/market-place/merchants/services-interfaces', sinterface, config).then(opr => opr.data);
+        addServiceInterface(sinterface: Gaia.Domain.ServiceInterface, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<number>> {
+            return this.transport.post<Utils.Operation<number>>('/api/market-place/merchants/services-interfaces', sinterface, config).then(opr => opr.data);
         }
 
-        addProduct(product: Gaia.Domain.Product, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<number>> {
-            return this.transport.post<Axis.Luna.Domain.Operation<number>>('/api/market-place/merchants/products', product, config).then(opr => opr.data);
+        addProduct(product: Gaia.Domain.Product, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<number>> {
+            return this.transport.post<Utils.Operation<number>>('/api/market-place/merchants/products', product, config).then(opr => opr.data);
         }
-        modifyProduct(product: Gaia.Domain.Product, config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/market-place/merchants/products', product, config).then(opr => opr.data);
+        modifyProduct(product: Gaia.Domain.Product, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
+            return this.transport.put<Utils.Operation<void>>('/api/market-place/merchants/products', product, config).then(opr => opr.data);
         }
         ///end-Merchant
 
         /// Customer
 
         findCustomerProduct(searchString: string, pageSize: number, pageIndex: number, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Product>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Product>>>('/api/market-place/customer/products', {
+            ng.IPromise<Utils.Operation<Utils.SequencePage<Domain.Product>>> {
+            return this.transport.get<Utils.Operation<Utils.SequencePage<Domain.Product>>>('/api/market-place/customer/products', {
                 SearchString: searchString,
                 PageIndex: pageIndex,
                 PageSize: pageSize
@@ -408,8 +422,8 @@ module Gaia.Services {
 
 
         findCustomerService(searchString: string, pageSize: number, pageIndex: number, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Service>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Service>>>('/api/market-place/customer/services', {
+            ng.IPromise<Utils.Operation<Utils.SequencePage<Domain.Service>>> {
+            return this.transport.get<Utils.Operation<Utils.SequencePage<Domain.Service>>>('/api/market-place/customer/services', {
                 SearchString: searchString,
                 PageIndex: pageIndex,
                 PageSize: pageSize
@@ -425,28 +439,28 @@ module Gaia.Services {
         }
 
 
-        getShoppingLists(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<string[]>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<string[]>>('/api/merket-place/customer/shopping-list', null, config).then(opr => opr.data);
+        getShoppingLists(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string[]>> {
+            return this.transport.get<Utils.Operation<string[]>>('/api/merket-place/customer/shopping-list', null, config).then(opr => opr.data);
         }
         
         addToBasket(itemId: number, type: Gaia.Domain.ItemType, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<number>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<number>>('/api/merket-place/customer/cart', {
+            ng.IPromise<Utils.Operation<number>> {
+            return this.transport.put<Utils.Operation<number>>('/api/merket-place/customer/cart', {
                 ItemId: itemId,
                 ItemType: type
             }, config);
         }
         
         removeFromBasket(baskeItemId: number, config?: ng.IRequestShortcutConfig)
-            : ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.delete<Axis.Luna.Domain.Operation<void>>('/api/merket-place/customer/cart', {
+            : ng.IPromise<Utils.Operation<void>> {
+            return this.transport.delete<Utils.Operation<void>>('/api/merket-place/customer/cart', {
                 ItemId: baskeItemId,
             }, config);
         }
         
         addToList(listName: string, itemId: number, type: Domain.ItemType, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<number>> {
-            return this.transport.put<Axis.Luna.Domain.Operation<void>>('/api/merket-place/customer/list', {
+            ng.IPromise<Utils.Operation<number>> {
+            return this.transport.put<Utils.Operation<void>>('/api/merket-place/customer/list', {
                 ItemId: itemId,
                 ItemType: type,
                 ListName: listName
@@ -454,20 +468,20 @@ module Gaia.Services {
         }
 
         removeFromList(listName: string, itemId: number, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.delete<Axis.Luna.Domain.Operation<void>>('/api/merket-place/customer/list', {
+            ng.IPromise<Utils.Operation<void>> {
+            return this.transport.delete<Utils.Operation<void>>('/api/merket-place/customer/list', {
                 ItemId: itemId,
                 ListName: listName
             }, config);
         }
         
-        checkout(config?: ng.IRequestShortcutConfig): ng.IPromise<Axis.Luna.Domain.Operation<void>> {
-            return this.transport.post<Axis.Luna.Domain.Operation<void>>('/api/market-place/customer/cart/checkout', null, config).then(opr => opr.data);
+        checkout(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
+            return this.transport.post<Utils.Operation<void>>('/api/market-place/customer/cart/checkout', null, config).then(opr => opr.data);
         }
 
         getCustomerOrders(pageIndex: number, pageSize: number, config?: ng.IRequestShortcutConfig):
-            ng.IPromise<Axis.Luna.Domain.Operation<Utils.SequencePage<Gaia.Domain.Order>>> {
-            return this.transport.get<Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Order>>>('/api/market-place/customer/orders', {
+            ng.IPromise<Utils.Operation<Utils.SequencePage<Gaia.Domain.Order>>> {
+            return this.transport.get<Utils.Operation<Utils.SequencePage<Domain.Order>>>('/api/market-place/customer/orders', {
                 PageIndex: pageIndex,
                 PageSize: pageSize
             }, config).then(oprc => {

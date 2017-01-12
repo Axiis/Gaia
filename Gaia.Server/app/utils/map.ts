@@ -8,26 +8,35 @@ module Gaia.Utils {
         Value: V;
     }
 
+    export enum Encoding {
+        InlineCss
+    }   
+
     export class StringPair implements Map<string, string> {
         Key: string;
         Value: string;
+        
+        constructor(key: string, value: string) {
+            this.Key = StringPair.DecodeDelimiters(key);
+            this.Value = StringPair.DecodeDelimiters(value);
+        }
 
-        toString(encoding: Encoding): string {
+        toString(encoding?: Encoding): string {
 
             //if(encoding == ...) //encode
 
             //else //default encoding
-            return this.Key + ':' + this.Value + ';';
+            return StringPair.EncodeDelimiters(this.Key) + ':' + StringPair.EncodeDelimiters(this.Value) + ';';
         }
+
+
 
         static ParseStringPairs(value: string, encoding?: Encoding): Array<StringPair> {
             encoding = encoding || Encoding.InlineCss;
             if (encoding == Encoding.InlineCss) return value.split(';')
                 .map(v => {
                     var parts = v.split(':');
-                    var sp = new StringPair();
-                    sp.Key = this.DecodeDelimiters(parts[0]).trim();
-                    if (parts.length > 1) sp.Value = this.DecodeDelimiters(parts[1]).trim();
+                    var sp = new StringPair(parts[0].trim(), parts.length > 1 ? parts[1].trim() : null);
                     return sp;
                 })
                 .filter(pair => pair.Key != null && pair.Key != '');
@@ -43,9 +52,44 @@ module Gaia.Utils {
         static DecodeDelimiters(value: string): string {
             return value.replace('##col', ':').replace('##scol', ';');
         }
-    }
+    } 
 
-    export enum Encoding {
-        InlineCss
-    }    
+    export class StringPairCollection {
+        private _pairs: StringPair[] = [];
+
+        get pairs(): StringPair[] {
+            return this._pairs;
+        }
+
+        getOrAdd(key: string, generator: (k: string) => string): StringPair {
+            var pair = this._pairs.firstOrDefault(_p => _p.Key == key);
+            if (Object.isNullOrUndefined(pair)) this._pairs.push(pair = new StringPair(key, generator(key)));
+
+            return pair;
+        }
+
+        add(key: string, value: string): StringPairCollection {
+            this.getOrAdd(key, _k => value).Value = value;
+            return this;
+        }
+        remove(key: string): StringPairCollection {
+            var indx = 0;
+            for (; indx < this._pairs.length; indx++) {
+                if (this._pairs[indx].Key == key) break;
+            }
+
+            if (indx < this._pairs.length) this._pairs.removeAt(indx);
+            return this;
+        }
+
+        toString(): string {
+            return this._pairs.reduce('', (sbuff, next) => sbuff + ' ' + next.toString());
+        }
+
+        constructor(pairs?: string) {
+            if (!Object.isNullOrUndefined(pairs))
+                this._pairs.push(...StringPair.ParseStringPairs(pairs));
+        }
+
+    }
 }

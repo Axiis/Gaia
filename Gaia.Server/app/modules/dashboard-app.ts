@@ -5,7 +5,7 @@ module Gaia.App.Dashboard {
 
     ///Gaia Directives
     module.directive('binaryData', Gaia.Directives.BinaryData);
-    module.directive('enumOptins', () => new Gaia.Directives.EnumOptions());
+    module.directive('enumOptions', () => new Gaia.Directives.EnumOptions());
 
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);

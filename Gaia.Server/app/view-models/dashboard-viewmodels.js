@@ -78,9 +78,9 @@ var Gaia;
                         _this.upgradeMessageDescription = 'An error occured while upgrading your account';
                     });
                 };
-                DashboardViewModel.$inject = ['#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.accessProfileService'];
                 return DashboardViewModel;
             }());
+            DashboardViewModel.$inject = ['#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.accessProfileService'];
             Dashboard.DashboardViewModel = DashboardViewModel;
             var ProfileViewModel = (function () {
                 function ProfileViewModel(profileService, domModel, notifyService) {
@@ -99,6 +99,7 @@ var Gaia;
                     this.hasProfileImagePersistenceError = false;
                     this.biodata = null;
                     this.contact = null;
+                    this.userData = [];
                     ///<Profile Image Stuff>
                     this._originalImage = null;
                     this._profileImage = null;
@@ -323,11 +324,11 @@ var Gaia;
                         _this.contact = oprc.Result.firstOrDefault() || new Axis.Pollux.Domain.ContactData({ Email: _this.user.UserId });
                     });
                 };
-                /// </contact-stuff>
-                ///</Profile>
-                ProfileViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
                 return ProfileViewModel;
             }());
+            /// </contact-stuff>
+            ///</Profile>
+            ProfileViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify'];
             Dashboard.ProfileViewModel = ProfileViewModel;
             var UserAccountViewModel = (function () {
                 function UserAccountViewModel(domModel, accessProfile, notify) {
@@ -389,9 +390,9 @@ var Gaia;
                         _this.notify.error('An error occured while modifying your account');
                     });
                 };
-                UserAccountViewModel.$inject = ['#gaia.utils.domModel', '#gaia.accessProfileService', '#gaia.utils.notify'];
                 return UserAccountViewModel;
             }());
+            UserAccountViewModel.$inject = ['#gaia.utils.domModel', '#gaia.accessProfileService', '#gaia.utils.notify'];
             Dashboard.UserAccountViewModel = UserAccountViewModel;
             //Obsolete
             var BusinessAccountViewModel = (function () {
@@ -582,9 +583,9 @@ var Gaia;
                     else
                         return '';
                 };
-                BusinessAccountViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter', '$scope'];
                 return BusinessAccountViewModel;
             }());
+            BusinessAccountViewModel.$inject = ['#gaia.profileService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter', '$scope'];
             Dashboard.BusinessAccountViewModel = BusinessAccountViewModel;
             var FarmAccountViewModel = (function () {
                 function FarmAccountViewModel(accountFarm, domModel, notifyFarm, counter) {
@@ -712,9 +713,9 @@ var Gaia;
                         _this.farmList = oprc.Result || [];
                     });
                 };
-                FarmAccountViewModel.$inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
                 return FarmAccountViewModel;
             }());
+            FarmAccountViewModel.$inject = ['#gaia.accountsService', '#gaia.utils.domModel', '#gaia.utils.notify', '#gaia.dashboard.localServices.AccountCounter'];
             Dashboard.FarmAccountViewModel = FarmAccountViewModel;
             var AccountTabsViewModel = (function () {
                 function AccountTabsViewModel(counter) {
@@ -727,9 +728,9 @@ var Gaia;
                     enumerable: true,
                     configurable: true
                 });
-                AccountTabsViewModel.$inject = ['#gaia.dashboard.localServices.AccountCounter'];
                 return AccountTabsViewModel;
             }());
+            AccountTabsViewModel.$inject = ['#gaia.dashboard.localServices.AccountCounter'];
             Dashboard.AccountTabsViewModel = AccountTabsViewModel;
             ///local services
             var AccountCounter = (function () {
@@ -737,11 +738,10 @@ var Gaia;
                     this.farmVm = null;
                     this.businessVm = null;
                 }
-                AccountCounter.$inject = [];
                 return AccountCounter;
             }());
+            AccountCounter.$inject = [];
             Dashboard.AccountCounter = AccountCounter;
         })(Dashboard = ViewModels.Dashboard || (ViewModels.Dashboard = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-viewmodels.js.map

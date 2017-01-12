@@ -15,12 +15,11 @@ module Gaia.Directives {
                     reader.onload = (loadEvent) => {
                         scope.$apply(() => {
                             var parts = reader.result.split(',');
-                            scope.binaryData = new Axis.Luna.Domain.BinaryData({
+                            scope.binaryData = Gaia.Utils.EncodedBinaryData.Create({
                                 Size: changeEvent.target.files[0].size,
+                                Data: parts[1],
                                 Mime: changeEvent.target.files[0].type,
-                                Name: changeEvent.target.files[0].name,
-                                IsDataEmbeded: true,
-                                Data: parts[1]
+                                Name: changeEvent.target.files[0].name
                             });
                         });
                     }

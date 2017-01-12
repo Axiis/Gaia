@@ -134,6 +134,22 @@ var Gaia;
             return EnumHelper;
         }());
         Utils.EnumHelper = EnumHelper;
+        var MimeMap = (function () {
+            function MimeMap(code, extension) {
+                this.MimeCode = code;
+                this.Extensions = Object.isNullOrUndefined(extension) ? null :
+                    extension.startsWith('.') ? extension : '.' + extension;
+            }
+            return MimeMap;
+        }());
+        Utils.MimeMap = MimeMap;
+        var Operation = (function () {
+            function Operation(initArg) {
+                if (initArg)
+                    initArg.copyTo(this);
+            }
+            return Operation;
+        }());
+        Utils.Operation = Operation;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=tools.js.map

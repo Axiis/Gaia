@@ -566,15 +566,21 @@ var Gaia;
             ".z": "application/x-compress",
             ".zip": "application/x-zip-compressed",
             toMimeCode: function (extension) {
-                var _this = this;
-                return this.keys().filter(function (_k) { return _k == extension; }).map(function (_k) { return _this[_k]; }).firstOrDefault();
+                return Utils.MimeCodes.toMimeMap(extension).MimeCode;
+            },
+            toMimeMap: function (extension) {
+                var ext = (extension || '').toLowerCase();
+                var key = this.keys().firstOrDefault(function (_k) { return _k == ext; });
+                if (!Object.isNullOrUndefined(key))
+                    return new Utils.MimeMap(this[key], key);
+                else
+                    return new Utils.MimeMap('application/octet-stream', '.');
             },
             toExtension: function (mimeCode) {
                 if (mimeCode)
                     return this
                         .keyValuePairs()
-                        .filter(function (_kvp) { return _kvp.Value == mimeCode; })
-                        .firstOrDefault()
+                        .firstOrDefault(function (_kvp) { return _kvp.Value == mimeCode; })
                         .Key;
                 else
                     return null;
@@ -594,4 +600,3 @@ var Gaia;
         Utils.FarmerAccountProfile = 'system.[Farmer Profile]';
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=constants.js.map

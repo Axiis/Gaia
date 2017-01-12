@@ -27,6 +27,7 @@ namespace Gaia.Core.Services
         public ICredentialAuthentication CredentialAuth { get; private set; }
         public IContextVerificationService ContextVerifier { get; private set; }
         public IAccessProfileService AccessManager { get; private set; }
+        public IBlobStoreService BlobStore { get; private set; }
         public IMailPushService MessagePush { get; private set; }
         public Dictionary<string, SystemSetting> SystemSettings { get; private set; }
 
@@ -35,6 +36,7 @@ namespace Gaia.Core.Services
                               ICredentialAuthentication credentialAuthentication,
                               IContextVerificationService contextVerifier,
                               IAccessProfileService accessManager,
+                              IBlobStoreService blobStore,
                               IMailPushService messagePush)
         {
             ThrowNullArguments(() => userContext,
@@ -42,6 +44,7 @@ namespace Gaia.Core.Services
                                () => credentialAuthentication,
                                () => contextVerifier,
                                () => accessManager,
+                               () => blobStore,
                                () => messagePush);
 
             this.UserContext = userContext;
@@ -49,6 +52,7 @@ namespace Gaia.Core.Services
             this.CredentialAuth = credentialAuthentication;
             this.ContextVerifier = contextVerifier;
             this.AccessManager = accessManager;
+            this.BlobStore = blobStore;
             this.MessagePush = messagePush;
 
             //populate system settings
@@ -423,6 +427,33 @@ namespace Gaia.Core.Services
                 return DataContext.Store<UserData>().Query
                     .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
                     .UsingEach(_ud => _ud.Owner = null);
+            });
+
+        public Operation<string> UpdateProfileImage(EncodedBinaryData image, string oldImageUrl)
+            => FeatureAccess.Guard(UserContext, () =>
+            {
+                var url = BlobStore.Delete(oldImageUrl) //shouldnt fail even if oldImageUrl is null
+                                   .Then(opr => BlobStore.Persist(image))
+                                   .Resolve();
+
+                //create the ProfileImage UserData and store the url
+                var userData = DataContext.Store<UserData>().Query
+                    .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
+                    .Where(_ud => _ud.Name == UserData_ProfileImage)
+                    .FirstOrDefault() ??
+                    new UserData
+                    {
+                        Name = UserData_ProfileImage,
+                        OwnerId = UserContext.CurrentUser.EntityId,
+                        Type = CommonDataType.Url
+                    };
+
+                userData.Data = url;
+
+                if (userData.EntityId > 0) DataContext.Store<UserData>().Modify(userData, true);
+                else DataContext.Store<UserData>().Add(userData).Context.CommitChanges();
+
+                return url;
             });
         #endregion
 

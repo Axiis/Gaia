@@ -380,6 +380,7 @@
     <TypeScriptCompile Include="app\services\pollux-services.ts" />
     <TypeScriptCompile Include="app\services\utility-services.ts" />
     <TypeScriptCompile Include="app\utils\constants.ts" />
+    <TypeScriptCompile Include="app\utils\encodedBinaryData.ts" />
     <TypeScriptCompile Include="app\utils\extensions.ts" />
     <Content Include="scripts\angular-ui-router.js" />
     <Content Include="scripts\angular-ui-router.min.js" />

@@ -10,6 +10,8 @@ using System.Web.Http;
 using Axis.Luna.Extensions;
 using System.Collections.Generic;
 using System.Text;
+using Gaia.Server.Utils;
+using Axis.Luna;
 
 namespace Gaia.Server.Controllers
 {
@@ -92,6 +94,11 @@ namespace Gaia.Server.Controllers
                   .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
                   .Result;
 
+        [HttpPut]
+        [Route("api/profiles/image")]
+        public IHttpActionResult UpdateProfileImage([FromBody]ProfileImageInfo data)
+            => _profileService.UpdateProfileImage(data.Blob, data.OldImageUri).OperationResult(Request);
+
         [HttpDelete]
         [Route("api/profiles/data")] //<-- http://abcd.xyz/api/profiles/data/?dataNames=abcd,efgh,ijkl,etc
         public IHttpActionResult RemoveData([FromUri]string dataNames)
@@ -103,10 +110,8 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/profiles/data")]
         public IHttpActionResult GetUserData()
-            => _profileService.GetUserData()
-                .Then(opr => this.Ok(opr).As<IHttpActionResult>())
-                .Instead(opr => this.Content(System.Net.HttpStatusCode.InternalServerError, opr))
-                .Result;
+            => _profileService.GetUserData().OperationResult(Request);
+
         #endregion
 
         #region bio-data
@@ -229,6 +234,12 @@ namespace Gaia.Server.Controllers
         {
             public string User { get; set; }
             public string Value { get; set; }
+        }
+
+        public class ProfileImageInfo
+        {
+            public EncodedBinaryData Blob { get; set; }
+            public string OldImageUri { get; set; }
         }
     }
 }

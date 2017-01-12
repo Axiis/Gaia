@@ -2,6 +2,14 @@ var Gaia;
 (function (Gaia) {
     var Services;
     (function (Services) {
+        var BlobService = (function () {
+            function BlobService(transport) {
+                this.transport = transport;
+            }
+            return BlobService;
+        }());
+        BlobService.$inject = ['#gaia.utils.domainTransport'];
+        Services.BlobService = BlobService;
         var ProfileService = (function () {
             function ProfileService(transport) {
                 this.transport = transport;
@@ -69,6 +77,13 @@ var Gaia;
                 return this.transport.delete('/api/profiles/data/?dataNames=' + dataNames.join(','), null, config)
                     .then(function (oprc) { return oprc.data; });
             };
+            ProfileService.prototype.updateProfileImage = function (blob, oldUrl, config) {
+                return this.transport.put('/api/profiles/data', {
+                    Blob: blob,
+                    OldImageUri: oldUrl
+                }, config).then(function (oprc) {
+                });
+            };
             ProfileService.prototype.getBioData = function (config) {
                 return this.transport.get('/api/profiles/bio-data', null, config).then(function (oprc) {
                     oprc.data.Result = oprc.data.Result ? new Axis.Pollux.Domain.BioData(oprc.data.Result) : null;
@@ -127,9 +142,9 @@ var Gaia;
             ProfileService.prototype.removeCorporateData = function (ids, config) {
                 return this.transport.delete('/api/profiles/corporate-data/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
-            ProfileService.$inject = ["#gaia.utils.domainTransport"];
             return ProfileService;
         }());
+        ProfileService.$inject = ["#gaia.utils.domainTransport"];
         Services.ProfileService = ProfileService;
         var UserAccountService = (function () {
             function UserAccountService(transport) {
@@ -158,9 +173,9 @@ var Gaia;
             UserAccountService.prototype.removeFarm = function (ids, config) {
                 return this.transport.delete('/api/profiles/farm-account/?ids=' + ids.join(','), null, config).then(function (oprc) { return oprc.data; });
             };
-            UserAccountService.$inject = ["#gaia.utils.domainTransport"];
             return UserAccountService;
         }());
+        UserAccountService.$inject = ["#gaia.utils.domainTransport"];
         Services.UserAccountService = UserAccountService;
         var AccessProfileService = (function () {
             function AccessProfileService(transport) {
@@ -227,9 +242,9 @@ var Gaia;
                     return oprc.data;
                 });
             };
-            AccessProfileService.$inject = ["#gaia.utils.domainTransport"];
             return AccessProfileService;
         }());
+        AccessProfileService.$inject = ["#gaia.utils.domainTransport"];
         Services.AccessProfileService = AccessProfileService;
         var MarketPlaceService = (function () {
             function MarketPlaceService(transport, $q) {
@@ -276,7 +291,7 @@ var Gaia;
                         oprc.data.Result = new Gaia.Utils.SequencePage(oprc.data.Result.Page.map(function (_s) { return new Gaia.Domain.Service(_s); }), oprc.data.Result.SequenceLength, oprc.data.Result.PageSize, oprc.data.Result.PageIndex);
                     return oprc.data;
                 });
-                //return this.$q.resolve(new Axis.Luna.Domain.Operation<Utils.SequencePage<Domain.Service>>({
+                //return this.$q.resolve(new Utils.Operation<Utils.SequencePage<Domain.Service>>({
                 //    Succeeded: true,
                 //    Result: new Utils.SequencePage<Domain.Service>([new Domain.Service({
                 //        TransactionId: '0000-0000000-0000',
@@ -412,11 +427,10 @@ var Gaia;
                     return oprc.data;
                 });
             };
-            ///end-Customer
-            MarketPlaceService.$inject = ["#gaia.utils.domainTransport", '$q'];
             return MarketPlaceService;
         }());
+        ///end-Customer
+        MarketPlaceService.$inject = ["#gaia.utils.domainTransport", '$q'];
         Services.MarketPlaceService = MarketPlaceService;
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=gaia-services.js.map

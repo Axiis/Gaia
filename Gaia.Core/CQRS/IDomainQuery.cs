@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gaia.Core.Queries
+namespace Gaia.Core.CQRS
 {
     public interface IDomainQuery
     {

@@ -7,52 +7,53 @@ var Gaia;
 (function (Gaia) {
     var Domain;
     (function (Domain) {
+        var AdvertStatus;
         (function (AdvertStatus) {
             AdvertStatus[AdvertStatus["Draft"] = 0] = "Draft";
             AdvertStatus[AdvertStatus["Review"] = 1] = "Review";
             AdvertStatus[AdvertStatus["Published"] = 2] = "Published";
             AdvertStatus[AdvertStatus["Archived"] = 3] = "Archived";
             AdvertStatus[AdvertStatus["Suspended"] = 4] = "Suspended";
-        })(Domain.AdvertStatus || (Domain.AdvertStatus = {}));
-        var AdvertStatus = Domain.AdvertStatus;
+        })(AdvertStatus = Domain.AdvertStatus || (Domain.AdvertStatus = {}));
+        var AdvertMediaType;
         (function (AdvertMediaType) {
             AdvertMediaType[AdvertMediaType["Video"] = 0] = "Video";
             AdvertMediaType[AdvertMediaType["Image"] = 1] = "Image";
-        })(Domain.AdvertMediaType || (Domain.AdvertMediaType = {}));
-        var AdvertMediaType = Domain.AdvertMediaType;
+        })(AdvertMediaType = Domain.AdvertMediaType || (Domain.AdvertMediaType = {}));
+        var AccessPermission;
         (function (AccessPermission) {
             AccessPermission[AccessPermission["Grant"] = 0] = "Grant";
             AccessPermission[AccessPermission["Deny"] = 1] = "Deny";
-        })(Domain.AccessPermission || (Domain.AccessPermission = {}));
-        var AccessPermission = Domain.AccessPermission;
+        })(AccessPermission = Domain.AccessPermission || (Domain.AccessPermission = {}));
+        var FeatureAccessProfileStatus;
         (function (FeatureAccessProfileStatus) {
             FeatureAccessProfileStatus[FeatureAccessProfileStatus["Active"] = 0] = "Active";
             FeatureAccessProfileStatus[FeatureAccessProfileStatus["Archived"] = 1] = "Archived";
-        })(Domain.FeatureAccessProfileStatus || (Domain.FeatureAccessProfileStatus = {}));
-        var FeatureAccessProfileStatus = Domain.FeatureAccessProfileStatus;
+        })(FeatureAccessProfileStatus = Domain.FeatureAccessProfileStatus || (Domain.FeatureAccessProfileStatus = {}));
+        var ForumThreadStatus;
         (function (ForumThreadStatus) {
             ForumThreadStatus[ForumThreadStatus["Open"] = 0] = "Open";
             ForumThreadStatus[ForumThreadStatus["Closed"] = 1] = "Closed";
             ForumThreadStatus[ForumThreadStatus["Flagged"] = 2] = "Flagged";
-        })(Domain.ForumThreadStatus || (Domain.ForumThreadStatus = {}));
-        var ForumThreadStatus = Domain.ForumThreadStatus;
+        })(ForumThreadStatus = Domain.ForumThreadStatus || (Domain.ForumThreadStatus = {}));
+        var ForumTopicStatus;
         (function (ForumTopicStatus) {
             ForumTopicStatus[ForumTopicStatus["Open"] = 0] = "Open";
             ForumTopicStatus[ForumTopicStatus["Closed"] = 1] = "Closed";
             ForumTopicStatus[ForumTopicStatus["Flagged"] = 2] = "Flagged";
-        })(Domain.ForumTopicStatus || (Domain.ForumTopicStatus = {}));
-        var ForumTopicStatus = Domain.ForumTopicStatus;
+        })(ForumTopicStatus = Domain.ForumTopicStatus || (Domain.ForumTopicStatus = {}));
+        var NotificationStatus;
         (function (NotificationStatus) {
             NotificationStatus[NotificationStatus["Seen"] = 0] = "Seen";
             NotificationStatus[NotificationStatus["Unseen"] = 1] = "Unseen";
-        })(Domain.NotificationStatus || (Domain.NotificationStatus = {}));
-        var NotificationStatus = Domain.NotificationStatus;
+        })(NotificationStatus = Domain.NotificationStatus || (Domain.NotificationStatus = {}));
+        var PostStatus;
         (function (PostStatus) {
             PostStatus[PostStatus["Private"] = 0] = "Private";
             PostStatus[PostStatus["Published"] = 1] = "Published";
             PostStatus[PostStatus["Archived"] = 2] = "Archived";
-        })(Domain.PostStatus || (Domain.PostStatus = {}));
-        var PostStatus = Domain.PostStatus;
+        })(PostStatus = Domain.PostStatus || (Domain.PostStatus = {}));
+        var CommonDataType;
         (function (CommonDataType) {
             CommonDataType[CommonDataType["String"] = 0] = "String";
             CommonDataType[CommonDataType["Intereger"] = 1] = "Intereger";
@@ -63,31 +64,31 @@ var Gaia;
             CommonDataType[CommonDataType["TimeSpan"] = 6] = "TimeSpan";
             CommonDataType[CommonDataType["Url"] = 7] = "Url";
             CommonDataType[CommonDataType["Object"] = 8] = "Object";
-        })(Domain.CommonDataType || (Domain.CommonDataType = {}));
-        var CommonDataType = Domain.CommonDataType;
+        })(CommonDataType = Domain.CommonDataType || (Domain.CommonDataType = {}));
+        var FarmType;
         (function (FarmType) {
             FarmType[FarmType["Other"] = 0] = "Other";
             FarmType[FarmType["Crop"] = 1] = "Crop";
             FarmType[FarmType["Livestock"] = 2] = "Livestock";
             FarmType[FarmType["Mixed"] = 3] = "Mixed";
-        })(Domain.FarmType || (Domain.FarmType = {}));
-        var FarmType = Domain.FarmType;
+        })(FarmType = Domain.FarmType || (Domain.FarmType = {}));
+        var ItemType;
         (function (ItemType) {
             ItemType[ItemType["Product"] = 0] = "Product";
             ItemType[ItemType["Service"] = 1] = "Service";
-        })(Domain.ItemType || (Domain.ItemType = {}));
-        var ItemType = Domain.ItemType;
+        })(ItemType = Domain.ItemType || (Domain.ItemType = {}));
+        var ServiceStatus;
         (function (ServiceStatus) {
             ServiceStatus[ServiceStatus["Unavailable"] = 0] = "Unavailable";
             ServiceStatus[ServiceStatus["Available"] = 1] = "Available";
             ServiceStatus[ServiceStatus["Suspended"] = 2] = "Suspended";
-        })(Domain.ServiceStatus || (Domain.ServiceStatus = {}));
-        var ServiceStatus = Domain.ServiceStatus;
+        })(ServiceStatus = Domain.ServiceStatus || (Domain.ServiceStatus = {}));
+        var ProductStatus;
         (function (ProductStatus) {
             ProductStatus[ProductStatus["Reviewing"] = 0] = "Reviewing";
             ProductStatus[ProductStatus["Published"] = 1] = "Published";
-        })(Domain.ProductStatus || (Domain.ProductStatus = {}));
-        var ProductStatus = Domain.ProductStatus;
+        })(ProductStatus = Domain.ProductStatus || (Domain.ProductStatus = {}));
+        var OrderStatus;
         (function (OrderStatus) {
             /// <summary>
             /// A brand-new order will always be in this state. This is the only point (for now) where an order may be cancelled
@@ -120,8 +121,7 @@ var Gaia;
             /// If some irrecoverable error happens during the life time of the order, before it is fulfilled, it is aborted.
             /// </summary>
             OrderStatus[OrderStatus["OrderAborted"] = 6] = "OrderAborted";
-        })(Domain.OrderStatus || (Domain.OrderStatus = {}));
-        var OrderStatus = Domain.OrderStatus;
+        })(OrderStatus = Domain.OrderStatus || (Domain.OrderStatus = {}));
         var GaiaEntity = (function () {
             function GaiaEntity(data) {
                 if (data) {
@@ -136,16 +136,17 @@ var Gaia;
         var Farm = (function (_super) {
             __extends(Farm, _super);
             function Farm(data) {
-                _super.call(this, data);
-                this.BusinessAccounts = [];
+                var _this = _super.call(this, data) || this;
+                _this.BusinessAccounts = [];
                 //set default values
-                if (Object.isNullOrUndefined(this.FarmType))
-                    this.FarmType = null;
-                if (Object.isNullOrUndefined(this.BusinessAccounts))
-                    this.BusinessAccounts = [];
+                if (Object.isNullOrUndefined(_this.FarmType))
+                    _this.FarmType = null;
+                if (Object.isNullOrUndefined(_this.BusinessAccounts))
+                    _this.BusinessAccounts = [];
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             //ContextData: ContextData[] = [];
             Farm.prototype.GeoArea = function () {
@@ -157,9 +158,10 @@ var Gaia;
         var FeatureURI = (function (_super) {
             __extends(FeatureURI, _super);
             function FeatureURI(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
                 }
+                return _this;
             }
             return FeatureURI;
         }(GaiaEntity));
@@ -167,9 +169,10 @@ var Gaia;
         var ProductCategory = (function (_super) {
             __extends(ProductCategory, _super);
             function ProductCategory(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
                 }
+                return _this;
             }
             return ProductCategory;
         }(GaiaEntity));
@@ -177,9 +180,10 @@ var Gaia;
         var ServiceCategory = (function (_super) {
             __extends(ServiceCategory, _super);
             function ServiceCategory(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
                 }
+                return _this;
             }
             return ServiceCategory;
         }(GaiaEntity));
@@ -187,11 +191,12 @@ var Gaia;
         var Advert = (function (_super) {
             __extends(Advert, _super);
             function Advert(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             Object.defineProperty(Advert.prototype, "IsExpired", {
                 get: function () { return Date.now() > this.ExpiresOn.toMoment().toDate().valueOf(); },
@@ -211,10 +216,11 @@ var Gaia;
         var AdvertHit = (function (_super) {
             __extends(AdvertHit, _super);
             function AdvertHit(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return AdvertHit;
         }(GaiaEntity));
@@ -222,10 +228,11 @@ var Gaia;
         var Comment = (function (_super) {
             __extends(Comment, _super);
             function Comment(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return Comment;
         }(GaiaEntity));
@@ -233,11 +240,12 @@ var Gaia;
         var ContextVerification = (function (_super) {
             __extends(ContextVerification, _super);
             function ContextVerification(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
-                    this.User = data['User'] ? new Axis.Pollux.Domain.User(data['User']) : null;
+                    _this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
+                    _this.User = data['User'] ? new Axis.Pollux.Domain.User(data['User']) : null;
                 }
+                return _this;
             }
             Object.defineProperty(ContextVerification.prototype, "IsExpired", {
                 get: function () { return Date.now() > this.ExpiresOn.toMoment().toDate().valueOf(); },
@@ -250,9 +258,10 @@ var Gaia;
         var FeatureAccessDescriptor = (function (_super) {
             __extends(FeatureAccessDescriptor, _super);
             function FeatureAccessDescriptor(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
                 }
+                return _this;
             }
             return FeatureAccessDescriptor;
         }(GaiaEntity));
@@ -260,14 +269,15 @@ var Gaia;
         var FeatureAccessProfile = (function (_super) {
             __extends(FeatureAccessProfile, _super);
             function FeatureAccessProfile(data) {
-                _super.call(this, data);
-                this.AccessDescriptors = [];
+                var _this = _super.call(this, data) || this;
+                _this.AccessDescriptors = [];
                 if (data) {
-                    this.AccessDescriptors = (data['AccessDescriptors'] || []).map(function (v) {
+                    _this.AccessDescriptors = (data['AccessDescriptors'] || []).map(function (v) {
                         return new FeatureAccessDescriptor(v);
                     });
                 }
-                this.AccessCode = this.AccessCode || Gaia.Utils.NewGuid();
+                _this.AccessCode = _this.AccessCode || Gaia.Utils.NewGuid();
+                return _this;
             }
             return FeatureAccessProfile;
         }(GaiaEntity));
@@ -285,10 +295,11 @@ var Gaia;
         var PinnedFeedEntry = (function (_super) {
             __extends(PinnedFeedEntry, _super);
             function PinnedFeedEntry(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.PinnedOn = data['PinnedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['PinnedOn']) : null;
+                    _this.PinnedOn = data['PinnedOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['PinnedOn']) : null;
                 }
+                return _this;
             }
             return PinnedFeedEntry;
         }(FeedEntry));
@@ -296,10 +307,11 @@ var Gaia;
         var ForumThread = (function (_super) {
             __extends(ForumThread, _super);
             function ForumThread(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return ForumThread;
         }(GaiaEntity));
@@ -307,10 +319,11 @@ var Gaia;
         var ForumThreadWatch = (function (_super) {
             __extends(ForumThreadWatch, _super);
             function ForumThreadWatch(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return ForumThreadWatch;
         }(GaiaEntity));
@@ -318,9 +331,10 @@ var Gaia;
         var ForumTopic = (function (_super) {
             __extends(ForumTopic, _super);
             function ForumTopic(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
                 }
+                return _this;
             }
             return ForumTopic;
         }(GaiaEntity));
@@ -328,10 +342,11 @@ var Gaia;
         var Notification = (function (_super) {
             __extends(Notification, _super);
             function Notification(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.TargetUser = data['TargetUser'] ? new Axis.Pollux.Domain.User(data['TargetUser']) : null;
+                    _this.TargetUser = data['TargetUser'] ? new Axis.Pollux.Domain.User(data['TargetUser']) : null;
                 }
+                return _this;
             }
             return Notification;
         }(GaiaEntity));
@@ -339,10 +354,11 @@ var Gaia;
         var PinnedFeed = (function (_super) {
             __extends(PinnedFeed, _super);
             function PinnedFeed(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return PinnedFeed;
         }(GaiaEntity));
@@ -350,10 +366,11 @@ var Gaia;
         var Post = (function (_super) {
             __extends(Post, _super);
             function Post(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return Post;
         }(GaiaEntity));
@@ -361,10 +378,11 @@ var Gaia;
         var Rating = (function (_super) {
             __extends(Rating, _super);
             function Rating(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return Rating;
         }(GaiaEntity));
@@ -372,9 +390,10 @@ var Gaia;
         var SystemSetting = (function (_super) {
             __extends(SystemSetting, _super);
             function SystemSetting(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
                 }
+                return _this;
             }
             return SystemSetting;
         }(GaiaEntity));
@@ -382,11 +401,12 @@ var Gaia;
         var UserAccessProfile = (function (_super) {
             __extends(UserAccessProfile, _super);
             function UserAccessProfile(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.ExpiresOn = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             Object.defineProperty(UserAccessProfile.prototype, "IsExpired", {
                 get: function () { return Date.now() > this.ExpiresOn.toMoment().toDate().valueOf(); },
@@ -399,10 +419,11 @@ var Gaia;
         var UserReaction = (function (_super) {
             __extends(UserReaction, _super);
             function UserReaction(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (data) {
-                    this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
+                    _this.Owner = data['Owner'] ? new Axis.Pollux.Domain.User(data['Owner']) : null;
                 }
+                return _this;
             }
             return UserReaction;
         }(GaiaEntity));
@@ -410,12 +431,13 @@ var Gaia;
         var OrderAggregate = (function (_super) {
             __extends(OrderAggregate, _super);
             function OrderAggregate(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.TimeStamp = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
+                    _this.TimeStamp = data['ExpiresOn'] ? new Axis.Apollo.Domain.JsonDateTime(data['ExpiresOn']) : null;
                     var _orders = (data['Orders'] || []).map(function (r) { return new Order(r); });
-                    (_a = this.Orders).push.apply(_a, _orders);
+                    (_a = _this.Orders).push.apply(_a, _orders);
                 }
+                return _this;
                 var _a;
             }
             return OrderAggregate;
@@ -424,16 +446,17 @@ var Gaia;
         var Order = (function (_super) {
             __extends(Order, _super);
             function Order(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.Service = !Object.isNullOrUndefined(data['Service']) ? new Service(data['Service']) : null;
-                    this.TimeStamp = !Object.isNullOrUndefined(data['TimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['TimeStamp']) : null;
-                    this.MessageTimeStamp = !Object.isNullOrUndefined(data['MessageTimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['MessageTimeStamp']) : null;
-                    this.Customer = !Object.isNullOrUndefined(data['Customer']) ? new Axis.Pollux.Domain.User(data['Customer']) : null;
-                    this.Merchant = !Object.isNullOrUndefined(data['Merchant']) ? new Axis.Pollux.Domain.User(data['Merchant']) : null;
-                    this.Previous = !Object.isNullOrUndefined(data['Previous']) ? new Order(data['Previous']) : null;
-                    this.Next = !Object.isNullOrUndefined(data['Next']) ? new Order(data['Next']) : null;
+                    _this.Service = !Object.isNullOrUndefined(data['Service']) ? new Service(data['Service']) : null;
+                    _this.TimeStamp = !Object.isNullOrUndefined(data['TimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['TimeStamp']) : null;
+                    _this.MessageTimeStamp = !Object.isNullOrUndefined(data['MessageTimeStamp']) ? new Axis.Apollo.Domain.JsonDateTime(data['MessageTimeStamp']) : null;
+                    _this.Customer = !Object.isNullOrUndefined(data['Customer']) ? new Axis.Pollux.Domain.User(data['Customer']) : null;
+                    _this.Merchant = !Object.isNullOrUndefined(data['Merchant']) ? new Axis.Pollux.Domain.User(data['Merchant']) : null;
+                    _this.Previous = !Object.isNullOrUndefined(data['Previous']) ? new Order(data['Previous']) : null;
+                    _this.Next = !Object.isNullOrUndefined(data['Next']) ? new Order(data['Next']) : null;
                 }
+                return _this;
             }
             return Order;
         }(GaiaEntity));
@@ -441,16 +464,17 @@ var Gaia;
         var Service = (function (_super) {
             __extends(Service, _super);
             function Service(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.Product = !Object.isNullOrUndefined(this.Product) ? new Product(this.Product) : null;
-                    this.Inputs = !Object.isNullOrUndefined(this.Inputs) ? this.Inputs.map(function (r) { return new ServiceInterface(r); }) : [];
-                    this.Outputs = !Object.isNullOrUndefined(this.Outputs) ? this.Outputs.map(function (r) { return new ServiceInterface(r); }) : [];
+                    _this.Product = !Object.isNullOrUndefined(_this.Product) ? new Product(_this.Product) : null;
+                    _this.Inputs = !Object.isNullOrUndefined(_this.Inputs) ? _this.Inputs.map(function (r) { return new ServiceInterface(r); }) : [];
+                    _this.Outputs = !Object.isNullOrUndefined(_this.Outputs) ? _this.Outputs.map(function (r) { return new ServiceInterface(r); }) : [];
                 }
-                if (Object.isNullOrUndefined(this.Status))
-                    this.Status = ServiceStatus.Unavailable;
-                if (Object.isNullOrUndefined(this.Cost))
-                    this.Cost = 0.0;
+                if (Object.isNullOrUndefined(_this.Status))
+                    _this.Status = ServiceStatus.Unavailable;
+                if (Object.isNullOrUndefined(_this.Cost))
+                    _this.Cost = 0.0;
+                return _this;
             }
             Object.defineProperty(Service.prototype, "ItemType", {
                 get: function () { return ItemType.Service; },
@@ -463,15 +487,16 @@ var Gaia;
         var Product = (function (_super) {
             __extends(Product, _super);
             function Product(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(function (r) { return new Axis.Luna.Domain.BinaryData(r); }) : [];
-                    this.Videos = !Object.isNullOrUndefined(this.Videos) ? this.Videos.map(function (r) { return new Axis.Luna.Domain.BinaryData(r); }) : [];
+                    _this.Images = !Object.isNullOrUndefined(_this.Images) ? _this.Images.map(function (r) { return new Axis.Luna.Domain.BinaryData(r); }) : [];
+                    _this.Videos = !Object.isNullOrUndefined(_this.Videos) ? _this.Videos.map(function (r) { return new Axis.Luna.Domain.BinaryData(r); }) : [];
                 }
-                if (Object.isNullOrUndefined(this.Status))
-                    this.Status = ProductStatus.Reviewing;
-                if (Object.isNullOrUndefined(this.Cost))
-                    this.Cost = 0.0;
+                if (Object.isNullOrUndefined(_this.Status))
+                    _this.Status = ProductStatus.Reviewing;
+                if (Object.isNullOrUndefined(_this.Cost))
+                    _this.Cost = 0.0;
+                return _this;
             }
             Object.defineProperty(Product.prototype, "ItemType", {
                 get: function () { return ItemType.Product; },
@@ -484,10 +509,11 @@ var Gaia;
         var ServiceInterface = (function (_super) {
             __extends(ServiceInterface, _super);
             function ServiceInterface(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.Datacontract = !Object.isNullOrUndefined(this.Datacontract) ? new ServiceDataContract(this.Datacontract) : null;
+                    _this.Datacontract = !Object.isNullOrUndefined(_this.Datacontract) ? new ServiceDataContract(_this.Datacontract) : null;
                 }
+                return _this;
             }
             return ServiceInterface;
         }(GaiaEntity));
@@ -495,7 +521,7 @@ var Gaia;
         var ServiceDataContract = (function (_super) {
             __extends(ServiceDataContract, _super);
             function ServiceDataContract(data) {
-                _super.call(this, data);
+                return _super.call(this, data) || this;
             }
             return ServiceDataContract;
         }(GaiaEntity));
@@ -503,10 +529,11 @@ var Gaia;
         var ShoppingCartItem = (function (_super) {
             __extends(ShoppingCartItem, _super);
             function ShoppingCartItem(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
+                    _this.Owner = !Object.isNullOrUndefined(_this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
                 }
+                return _this;
             }
             return ShoppingCartItem;
         }(GaiaEntity));
@@ -514,14 +541,14 @@ var Gaia;
         var ShoppingListItem = (function (_super) {
             __extends(ShoppingListItem, _super);
             function ShoppingListItem(data) {
-                _super.call(this, data);
+                var _this = _super.call(this, data) || this;
                 if (!Object.isNullOrUndefined(data)) {
-                    this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
+                    _this.Owner = !Object.isNullOrUndefined(_this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
                 }
+                return _this;
             }
             return ShoppingListItem;
         }(GaiaEntity));
         Domain.ShoppingListItem = ShoppingListItem;
     })(Domain = Gaia.Domain || (Gaia.Domain = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=gaia-domain.js.map
