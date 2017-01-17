@@ -35,28 +35,29 @@
                         <div class="block">
                             <div class="thumbnail">
                                 <div class="thumb">
-                                    <img alt="" ng-src="{{vm.profileImageUrl()}}" style="max-width:200px; max-height:200px;" id="profile-image"/>
+                                    <img alt="" ng-src="{{vm.profileImageUrl}}" style="max-width:200px; max-height:200px;" id="profile-image"/>
                                     <div class="thumb-options">
                                         <span>
                                             <label class="btn btn-icon btn-success"
                                                    style="margin-right:5px;">
                                                 <i class="icon-pencil"></i>
-                                                <input type="file"                                                        
-                                                       binary-data="vm.profileImage" 
-                                                       style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;"/>
+                                                <form id="profileImageSelector">
+                                                    <input type="file"                                                        
+                                                           binary-data="vm.previewImage" 
+                                                           style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;"/>
+                                                </form>
                                             </label>
                                             <a class="btn btn-icon btn-success" 
                                                ng-click="vm.persistProfileImage()"
-                                               ng-show="vm.isProfileImageChanged">
-                                                <i class="icon-thumbs-up3"
+                                               ng-show="vm.isPreviewingProfileImage">
+                                                <i class="fa fa-floppy-o" style="font-size:18px;"
                                                    ng-hide="vm.isPersistingProfileImage"></i>
-                                                <div id="persist-profileImage-ring-loader" ng-show="vm.isPersistingProfileImage"></div>
+                                                <ring-loader size="18" color="'white'" show="vm.isPersistingProfileImage"></ring-loader>
                                             </a>
                                             <a class="btn btn-icon btn-danger"
-                                               ng-click="vm.removeProfileImage()">
-                                                <i class="icon-remove"
-                                                   ng-hide="vm.isRemovingProfileImage"></i>
-                                                <div id="remove-profileImage-ring-loader" ng-show="vm.isRemovingProfileImage"></div>
+                                               ng-click="vm.discardPreviewImage()"
+                                               ng-show="vm.isPreviewingProfileImage">
+                                                <i class="icon-remove"></i>
                                             </a>
                                         </span>
                                     </div>
@@ -367,13 +368,11 @@
                                  class="gaia-card-shadow">
                                 <div style="text-align:center; background:orange; margin:0px; padding:10px;">
                                     <div class="btn-group btn-group-xs">
-                                        <button disabled class="btn" 
-                                                ng-class="{'btn-info':vm.isServiceProviderAccount(), 'btn-danger':!vm.isServiceProviderAccount()}">
+                                        <button disabled class="btn btn-default">
                                             {{vm.isServiceProviderAccount()? 'Yes':'No'}}
                                         </button>
-                                        <button class="btn dropdown-toggle" 
-                                                data-toggle="dropdown"
-                                                ng-class="{'btn-info':vm.isServiceProviderAccount(), 'btn-danger':!vm.isServiceProviderAccount()}">
+                                        <button class="btn dropdown-toggle btn-default" 
+                                                data-toggle="dropdown">
                                             <span class="caret caret-split"></span>
                                         </button>
                                         <ul class="dropdown-menu">
@@ -406,12 +405,11 @@
                                   class="gaia-card-shadow">
                                  <div style="text-align:center; background:steelblue; margin:0px; padding:10px;">
                                      <div class="btn-group btn-group-xs">
-                                         <button disabled class="btn" ng-class="{'btn-success':vm.isFarmerAccount(), 'btn-danger':!vm.isFarmerAccount()}">
+                                         <button disabled class="btn btn-default">
                                              {{vm.isFarmerAccount()? 'Yes':'No'}}
                                          </button>
-                                         <button class="btn dropdown-toggle" 
-                                                 data-toggle="dropdown"
-                                                 ng-class="{'btn-success':vm.isFarmerAccount(), 'btn-danger':!vm.isFarmerAccount()}">
+                                         <button class="btn dropdown-toggle btn-default" 
+                                                 data-toggle="dropdown">
                                             <span class="caret caret-split"></span>
                                          </button>
                                          <ul class="dropdown-menu">

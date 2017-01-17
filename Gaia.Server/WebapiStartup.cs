@@ -4,17 +4,13 @@ using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Gaia.Server.DI;
 using static Axis.Luna.Extensions.ObjectExtensions;
-using System.Web.Http.Dependencies;
 using Gaia.Server.OAuth;
-using Microsoft.Owin.BuilderProperties;
-using System.Threading;
-using System;
 using SimpleInjector.Integration.WebApi;
 using Microsoft.Owin.StaticFiles;
 using Gaia.Server.Utils;
 using System.Net.Http.Formatting;
 using Axis.Luna.Extensions;
-using Gaia.Server.Services;
+using Microsoft.Owin.Extensions;
 
 [assembly: OwinStartup(typeof(Gaia.Server.WebapiStartup))]
 
@@ -25,13 +21,13 @@ namespace Gaia.Server
         #region Owin Startup
         public void Configuration(IAppBuilder app)
         {
-            ConfigureDI(app); //<-- must come first!!!
-
-            app.UseCallContextOwinProvider();
+            var httpConfig = new HttpConfiguration();
 
             ConfigureOAuth(app);
-            ConfigureWebApi(app);
-            //ConfigureFileServer(app);
+
+            ConfigureDI(app);
+
+            ConfigureWebApi(app, httpConfig);
         }
 
         private static void ConfigureFileServer(IAppBuilder app)
@@ -47,51 +43,42 @@ namespace Gaia.Server
         }
 
         private static void ConfigureDI(IAppBuilder app)
-        {            
-            app.Properties[OWINMapKeys.ResolutionContext] = new WebApiResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes);
-
-            //shutdown delegate
-            var token = new AppProperties(app.Properties).OnAppDisposing;
-            if (token != CancellationToken.None)
-                token.Register(() => app.Properties[OWINMapKeys.ResolutionContext].As<WebApiResolutionContext>().Dispose());
+        {
+            app.UseSimpleInjectorOwinResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes); 
         }
 
-        private static void ConfigureWebApi(IAppBuilder app)
+        private static void ConfigureWebApi(IAppBuilder app, HttpConfiguration config)
         {
-            new HttpConfiguration().Pipe(config =>
-            {
-                //change the json formatter
-                config.Formatters.Clear();
-                config.Formatters.Add(new JsonMediaTypeFormatter
-                {
-                    SerializerSettings = Constants.DefaultJsonSerializerSettings
-                });
+            //change the json formatter
+            config.Formatters.Clear();
+            config.Formatters.Add(new JsonMediaTypeFormatter { SerializerSettings = Constants.DefaultJsonSerializerSettings });
 
-                //conigure dependency injection
-                config.DependencyResolver = app.Properties[OWINMapKeys.ResolutionContext].As<IDependencyResolver>();
+            //conigure dependency injection
+            config.DependencyResolver = app.GetSimpleInjectorOwinResolutionContext();
 
-                //enable attribute routes
-                config.MapHttpAttributeRoutes();
+            //enable attribute routes
+            config.MapHttpAttributeRoutes();
 
-                config.SuppressDefaultHostAuthentication();
-                config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
-                //config.Filters.Add(new OAuthAuthenticationFilter(OAuthDefaults.AuthenticationType));
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
+            //config.Filters.Add(new OAuthAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
-                //apply the configuration
-                app.UseWebApi(config);
-            });
+            //apply the configuration
+            app.UseWebApi(config);
         }
 
         private static void ConfigureOAuth(IAppBuilder app)
         {
-            app.Properties[OWINMapKeys.ResolutionContext].As<WebApiResolutionContext>().ManagedScope().Using(resolver =>
+            new SimpleInjectorOwinResolutionContext(new WebApiRequestLifestyle(), DIRegistration.RegisterTypes).UsingValue(resolver =>
             {
+                app.Properties["___Gaia_AuthorizationServerContainer"] = resolver;
+
                 var oauthAuthorizeOptions = new OAuthAuthorizationServerOptions
                 {
                     //AuthorizeEndpointPath = new PathString(OAuthPaths.CredentialAuthorizationPath),
                     TokenEndpointPath = new PathString(OAuthPaths.TokenPath),
-                    ApplicationCanDisplayErrors = true, 
-                    AccessTokenExpireTimeSpan = DefaultSettings.TokenExpiryInterval,
+                    ApplicationCanDisplayErrors = true,
+                    AccessTokenExpireTimeSpan = Constants.TokenExpiryInterval,
                     AuthenticationType = OAuthDefaults.AuthenticationType,
                     AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
                     //AuthorizationCodeProvider = ...,
@@ -101,7 +88,7 @@ namespace Gaia.Server
 #endif
 
                     // Authorization server provider which controls the lifecycle of Authorization Server
-                    Provider = resolver.Resolve<IOAuthAuthorizationServerProvider>()
+                    Provider = resolver.GetService(typeof(IOAuthAuthorizationServerProvider)).As<IOAuthAuthorizationServerProvider>()
                 };
 
                 //app.UseOAuthBearerTokens(oauthAuthorizeOptions);
@@ -111,16 +98,7 @@ namespace Gaia.Server
                 //app.UseCors(CorsOptions.AllowAll); //<-- will configure this appropriately when it is needed
             });
         }
-
-        public class OWINMapKeys
-        {
-            public static readonly string ResolutionContext = "Gaia.Server.OWIN/ResolutionContext";
-        }
-
-        public class DefaultSettings
-        {
-            public static readonly TimeSpan TokenExpiryInterval = TimeSpan.FromHours(1);
-        }
+        
         #endregion
     }
 }

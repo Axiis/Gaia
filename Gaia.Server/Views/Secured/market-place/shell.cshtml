@@ -237,9 +237,9 @@
     </div>
     <!-- /content -->
 
-    <div class="hidden" 
+    <gaia-models class="hidden" 
          id="local-models"
-         simple-models="UserId:@Model.UserId;AccessProfiles:@Model.AccessProfiles.JoinUsing(",")"></div>
+         simple-models="UserId:@Model.UserId;AccessProfiles:@Model.AccessProfiles.JoinUsing(",")">@Model.EncodeComplexData()</gaia-models>
 
 
     <script type="text/javascript" src="~/app/utils/extensions.js"></script>

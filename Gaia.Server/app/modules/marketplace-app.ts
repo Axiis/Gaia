@@ -33,7 +33,7 @@ module Gaia.App.MarketPlace {
     module.controller('MerchantProductsViewModel', Gaia.ViewModels.MarketPlace.MerchantProductsViewModel);
     module.controller('MerchantServicesViewModel', Gaia.ViewModels.MarketPlace.MerchantServicesViewModel);
     module.controller('MerchantOrdersViewModel', Gaia.ViewModels.MarketPlace.MerchantOrdersViewModel);
-    module.controller('ConfigureViewModel', Gaia.ViewModels.MarketPlace.ConfigureViewModel);
+    module.controller('PreferencesViewModel', Gaia.ViewModels.MarketPlace.PreferencesViewModel);
 
 
     //configure states
@@ -71,10 +71,10 @@ module Gaia.App.MarketPlace {
                 controller: 'MerchantOrdersViewModel',
                 controllerAs: 'vm'
             })
-            .state('configure', {
-                url: '/configure',
-                templateUrl: 'configure', //<-- /view-server/secured/market-place/configure
-                controller: 'ConfigureViewModel',
+            .state('preferences', {
+                url: '/preferences',
+                templateUrl: 'preferences', //<-- /view-server/secured/market-place/preferences
+                controller: 'PreferencesViewModel',
                 controllerAs: 'vm'
             });
     });

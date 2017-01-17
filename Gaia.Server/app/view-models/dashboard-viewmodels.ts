@@ -86,9 +86,8 @@ module Gaia.ViewModels.Dashboard {
         ///<<Profile>
         isEditingBioData: boolean = false;
         isEditingContactData: boolean = false;
-        isProfileImageChanged: boolean = false;
         isPersistingProfileImage: boolean = false;
-        isRemovingProfileImage: boolean = false;
+        isPreviewingProfileImage: boolean = false;
 
         hasBiodataPersistenceError: boolean = false;
         hasContactdataPersistenceError: boolean = false;
@@ -101,7 +100,6 @@ module Gaia.ViewModels.Dashboard {
         ///<Profile Image Stuff>
         private _originalImageUrl: string = null;
         private _previewImage: Utils.EncodedBinaryData = null;
-        private _isPreviewingImage: boolean = false;
 
         profileImageUrl: string = null;
 
@@ -112,8 +110,8 @@ module Gaia.ViewModels.Dashboard {
             
             if (!Object.isNullOrUndefined(blob)) {
 
-                if (!this._isPreviewingImage) {
-                    this._isPreviewingImage = true;
+                if (!this.isPreviewingProfileImage) {
+                    this.isPreviewingProfileImage = true;
                     this._originalImageUrl = this.profileImageUrl;
                 }
 
@@ -126,26 +124,33 @@ module Gaia.ViewModels.Dashboard {
             this.profileService
                 .getUserDataByName(Utils.UserData_ProfileImage)
                 .then(opr => {
-                    this.profileImageUrl = opr.Result.Data;
+                    if (!Object.isNullOrUndefined(opr.Result)) this.profileImageUrl = opr.Result.Data;
+                    else this.profileImageUrl = Utils.DefaultProfileImageUrl;
                 }, err => {
                     this.profileImageUrl = Utils.DefaultProfileImageUrl;
                 });
         }
-        discardPreview() {
-            this._isPreviewingImage = false;
+        discardPreviewImage() {
+            this.isPreviewingProfileImage = false;
             this.profileImageUrl = this._originalImageUrl;
             this._previewImage = null;
             this._originalImageUrl = null;
+
+            ($('#profileImageSelector').get(0) as any).reset();
         }
-        persistPreviewImage() {
-            if (this._isPreviewingImage) { 
+        persistProfileImage() {
+            if (this.isPreviewingProfileImage) {
+                this.isPersistingProfileImage = true;
                 this.profileService
                     .updateProfileImage(this.previewImage, this._originalImageUrl)
                     .then(opr => {
-                        this.discardPreview();
+                        this.discardPreviewImage();
                         this.profileImageUrl = opr.Result;
+                        this.notifyService.success("Your profile imaage was saved");
+                        this.isPersistingProfileImage = false;
                     }, err => {
                         this.notifyService.error("An error occured while saving your profile image");
+                        this.isPersistingProfileImage = false;
                     });
             }
         }

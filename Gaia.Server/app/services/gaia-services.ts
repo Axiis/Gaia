@@ -92,7 +92,7 @@ module Gaia.Services {
         }
         public updateProfileImage(blob: Utils.EncodedBinaryData, oldUrl: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
             return this.transport.put<Utils.Operation<string>>('/api/profiles/data/image', {
-                Blob: blob,
+                Blob: blob.RawObjectForm(),
                 OldImageUri: oldUrl
             }, config);
         }

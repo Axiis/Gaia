@@ -8,6 +8,8 @@ var Gaia;
             ///Gaia Directives
             Dashboard.module.directive('binaryData', Gaia.Directives.BinaryData);
             Dashboard.module.directive('enumOptions', function () { return new Gaia.Directives.EnumOptions(); });
+            Dashboard.module.directive('ringLoader', function () { return new Gaia.Directives.RingLoader(); });
+            Dashboard.module.directive('boxLoader', function () { return new Gaia.Directives.BoxLoader(); });
             ///Gaia services
             Dashboard.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             Dashboard.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);

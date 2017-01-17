@@ -4,6 +4,8 @@ using Axis.Luna.Extensions;
 using Gaia.Core;
 using Gaia.Core.Services;
 using Gaia.Server.Utils;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -26,7 +28,7 @@ namespace Gaia.Server.Controllers.MVC
         {
             ThrowNullArguments(() => context);
 
-            this._userLocator = new MVCUserLocator(context);
+            _userLocator = new MVCUserLocator(context);
         }
 
 
@@ -62,12 +64,8 @@ namespace Gaia.Server.Controllers.MVC
             .Result;
 
         private ActionResult Html(FileInfo finfo)
-            => Operation.Try(() => finfo.OpenRead()
-                .Pipe(_s => new StreamReader(_s))
-                .Using(_sr => _sr.ReadToEnd())
-                .Pipe(_content => Content(_content, "text/html").As<ActionResult>()))
-                .Instead(opr => new HttpStatusCodeResult(HttpStatusCode.InternalServerError))
-                .Result;
+            => Operation.Try<ActionResult>(() => new FileStreamResult(finfo.OpenRead(), MimeMap.ToMime(".html")))
+                        .Resolve();
 
         private ActionResult Razor(string viewPath)
             => View($"{viewPath}{(viewPath.ToLower().EndsWith(".cshtml") ? "" : ".cshtml")}", new Models.ShellModel
@@ -84,6 +82,10 @@ namespace Gaia.Server.Controllers.MVC
         {
             public string UserId { get; set; }
             public string[] AccessProfiles { get; set; }
+
+            public Dictionary<string, object> ComplexData { get; private set; } = new Dictionary<string, object>();
+
+            public string EncodeComplexData() => JsonConvert.SerializeObject(ComplexData, Constants.DefaultJsonSerializerSettings);
         }
 
     }

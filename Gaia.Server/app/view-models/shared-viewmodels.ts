@@ -14,8 +14,7 @@ module Gaia.ViewModels.Shared {
 
 
         static $inject = ['#gaia.utils.domainTransport']
-        constructor(private transport: Gaia.Utils.Services.DomainTransport) {
-            
+        constructor(private transport: Gaia.Utils.Services.DomainTransport) {            
         }
     }
 

@@ -97,7 +97,7 @@ module Gaia.Utils.Services {
 
             //complex model
             try {
-                this.complexModel = JSON.parse($element.html());
+                this.complexModel = JSON.parse($element.text());
             }
             catch (e) {
                 this.complexModel = {};

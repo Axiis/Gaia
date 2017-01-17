@@ -69,6 +69,14 @@ module Gaia.Utils {
             return this._metadata.pairs;
         }
 
+        RawObjectForm(): {} {
+            return {
+                Data: Utils.ToBase64String(this.Data),
+                Name: this.Name,
+                Mime: this.Mime
+            };
+        }
+
 
         constructor(data: Uint8Array, mime: string, name?: string, metadata?: string) {
             this.Data = data;

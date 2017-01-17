@@ -435,7 +435,7 @@ namespace Gaia.Core.Services
                 return DataContext.Store<UserData>().Query
                     .Where(_ud => _ud.OwnerId == UserContext.CurrentUser.EntityId)
                     .Where(_ud => _ud.Name == name)
-                    .FirstOrDefault()
+                    .FirstOrDefault()?
                     .UsingValue(_ud => _ud.Owner = null);
             });
 

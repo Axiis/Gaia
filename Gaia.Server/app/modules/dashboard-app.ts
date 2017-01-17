@@ -6,6 +6,8 @@ module Gaia.App.Dashboard {
     ///Gaia Directives
     module.directive('binaryData', Gaia.Directives.BinaryData);
     module.directive('enumOptions', () => new Gaia.Directives.EnumOptions());
+    module.directive('ringLoader', () => new Gaia.Directives.RingLoader());
+    module.directive('boxLoader', () => new Gaia.Directives.BoxLoader());
 
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);

@@ -23,5 +23,11 @@ namespace Gaia.Server.Utils
             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
             StringEscapeHandling = StringEscapeHandling.Default
         };
+
+
+        /// <summary>
+        /// Default Owin token expiration
+        /// </summary>
+        public static readonly TimeSpan TokenExpiryInterval = TimeSpan.FromHours(1);
     }
 }

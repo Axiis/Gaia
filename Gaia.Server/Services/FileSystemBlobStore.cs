@@ -43,9 +43,7 @@ namespace Gaia.Server.Services
         public Operation Delete(string blobUri)
             => Operation.Try(() =>
             {
-                if (blobUri == null) return;
-
-                var finfo = new FileInfo(GetLocalPath(new Uri(blobUri)));
+                var finfo = new FileInfo(GetLocalPath(blobUri));
                 if (finfo.Exists) finfo.Delete();
             });
 
@@ -57,7 +55,7 @@ namespace Gaia.Server.Services
         public Operation<EncodedBinaryData> GetBlob(string blobUri)
             => Operation.Try(() =>
             {
-                var finfo = new FileInfo(GetLocalPath(new Uri(blobUri)));
+                var finfo = new FileInfo(GetLocalPath(blobUri));
                 return new EncodedBinaryData(finfo.OpenRead() as Stream, MimeMap.ToMime(finfo.Extension));
             });
 
@@ -79,16 +77,22 @@ namespace Gaia.Server.Services
                 using (var stream = new FileInfo(Path.Combine(dinfo.FullName, fileName)).OpenWrite())
                     stream.Write(blob.Data, 0, blob.Data.Length);
 
-                return new Uri($"{RefererRequest.RefererUri().Scheme}://{RefererRequest.RefererUri().Authority}/Content/Blob/{fileName}").ToString(); //just to make sure it parses correctly
+                var referrerUri = RefererRequest.RefererUri();
+                return new Uri($"{referrerUri.Scheme}://{referrerUri.Authority}/Content/Blob/{fileName}").ToString(); //just to make sure it parses correctly
             });
 
 
-        internal string GetLocalPath(Uri uri)
+        internal string GetLocalPath(string uri)
         {
-            var path = Regex.Replace(uri.PathAndQuery, "\\/Content\\/Blob\\/", "", RegexOptions.IgnoreCase);
+            if (string.IsNullOrWhiteSpace(uri)) return null;
+
+            var path = uri.StartsWith("/") ? uri : new Uri(uri).PathAndQuery;
+
+            if (!path.ToLower().StartsWith("/content/blob")) return null;
+
+            path = Regex.Replace(path, "\\/Content\\/Blob\\/", "", RegexOptions.IgnoreCase);
             return Path.Combine(RootDirecotry, path);
-        }
-        
+        }        
     }
 
     /// <summary>
@@ -113,18 +117,18 @@ namespace Gaia.Server.Services
     /// </summary>
     public class OWINRefererUrlProvier : IRefererUrlProvider
     {
-        private IOwinContextProvider _owinContextProvider;
+        private IOwinContextProvider _owinProvider;
 
-        public OWINRefererUrlProvier(IOwinContextProvider owinContextProvider)
+        public OWINRefererUrlProvier(IOwinContextProvider owinProvider)
         {
-            _owinContextProvider = owinContextProvider;
+            _owinProvider = owinProvider;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public Uri RefererUri() => _owinContextProvider.OwinContext.Request.Uri;
+        public Uri RefererUri() => _owinProvider.Context.Request.Uri;
         /// <summary>
         /// 
         /// </summary>

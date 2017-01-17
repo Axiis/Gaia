@@ -44,12 +44,21 @@ var Gaia;
             }());
             MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
             MarketPlace.MarketPlaceViewModel = MarketPlaceViewModel;
-            var CustomerViewModel = (function () {
-                function CustomerViewModel() {
+            var PreferencesViewModel = (function () {
+                function PreferencesViewModel() {
                 }
-                return CustomerViewModel;
+                return PreferencesViewModel;
             }());
-            MarketPlace.CustomerViewModel = CustomerViewModel;
+            MarketPlace.PreferencesViewModel = PreferencesViewModel;
+        })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
+    })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
+})(Gaia || (Gaia = {}));
+//Merchant
+(function (Gaia) {
+    var ViewModels;
+    (function (ViewModels) {
+        var MarketPlace;
+        (function (MarketPlace) {
             var MerchantViewModel = (function () {
                 function MerchantViewModel($state, domModels) {
                     this.$state = $state;
@@ -339,12 +348,21 @@ var Gaia;
             }());
             MerchantOrdersViewModel.$inject = [];
             MarketPlace.MerchantOrdersViewModel = MerchantOrdersViewModel;
-            var ConfigureViewModel = (function () {
-                function ConfigureViewModel() {
+        })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
+    })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
+})(Gaia || (Gaia = {}));
+//Customer
+(function (Gaia) {
+    var ViewModels;
+    (function (ViewModels) {
+        var MarketPlace;
+        (function (MarketPlace) {
+            var CustomerViewModel = (function () {
+                function CustomerViewModel() {
                 }
-                return ConfigureViewModel;
+                return CustomerViewModel;
             }());
-            MarketPlace.ConfigureViewModel = ConfigureViewModel;
+            MarketPlace.CustomerViewModel = CustomerViewModel;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));

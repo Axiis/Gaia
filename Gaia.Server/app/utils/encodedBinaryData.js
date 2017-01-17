@@ -85,6 +85,13 @@ var Gaia;
             EncodedBinaryData.prototype.MetadataTags = function () {
                 return this._metadata.pairs;
             };
+            EncodedBinaryData.prototype.RawObjectForm = function () {
+                return {
+                    Data: Utils.ToBase64String(this.Data),
+                    Name: this.Name,
+                    Mime: this.Mime
+                };
+            };
             EncodedBinaryData.Create = function (data) {
                 return new EncodedBinaryData(data.Data, data.Mime, data.Name, data.Metadata);
             };

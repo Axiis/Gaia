@@ -29,7 +29,7 @@ var Gaia;
             MarketPlace.module.controller('MerchantProductsViewModel', Gaia.ViewModels.MarketPlace.MerchantProductsViewModel);
             MarketPlace.module.controller('MerchantServicesViewModel', Gaia.ViewModels.MarketPlace.MerchantServicesViewModel);
             MarketPlace.module.controller('MerchantOrdersViewModel', Gaia.ViewModels.MarketPlace.MerchantOrdersViewModel);
-            MarketPlace.module.controller('ConfigureViewModel', Gaia.ViewModels.MarketPlace.ConfigureViewModel);
+            MarketPlace.module.controller('PreferencesViewModel', Gaia.ViewModels.MarketPlace.PreferencesViewModel);
             //configure states
             MarketPlace.module.config(function ($stateProvider, $urlRouterProvider) {
                 $urlRouterProvider.otherwise('/customer');
@@ -64,10 +64,10 @@ var Gaia;
                     controller: 'MerchantOrdersViewModel',
                     controllerAs: 'vm'
                 })
-                    .state('configure', {
-                    url: '/configure',
-                    templateUrl: 'configure',
-                    controller: 'ConfigureViewModel',
+                    .state('preferences', {
+                    url: '/preferences',
+                    templateUrl: 'preferences',
+                    controller: 'PreferencesViewModel',
                     controllerAs: 'vm'
                 });
             });

@@ -24,6 +24,9 @@ using Gaia.Core.OAModule;
 using Axis.Pollux.CoreAuthentication;
 using System.Configuration;
 using Gaia.Server.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 #endregion
 
 namespace Gaia.Server.DI
@@ -34,6 +37,10 @@ namespace Gaia.Server.DI
         {
             var coreAssembly = typeof(GaiaEntity<>).Assembly;
             var serviceAssembly = typeof(BaseService).Assembly;
+
+            //register the container
+            c.Register(() => c, Lifestyle.Singleton);
+            
 
             #region infrastructure service registration
 
@@ -49,13 +56,14 @@ namespace Gaia.Server.DI
                         
             c.Register<ICredentialHasher, DefaultHasher>(Lifestyle.Scoped);
 
-            //owin context provider
-            c.Register<IOwinContextProvider, CallContextOwinProvider>(Lifestyle.Scoped);
+            //request provider
+            c.Register<IOwinContextProvider, OwinContextProvider>(Lifestyle.Scoped);
 
 
             c.Register<IUserLocator, UserLocator>(Lifestyle.Scoped);
             c.Register<IBlobStoreService, FileSystemBlobStore>(Lifestyle.Scoped);
             c.Register<ISerializerSettingsProviderService, NewtonsoftSerializerSettingsProvider>();
+            c.Register<IRefererUrlProvider, OWINRefererUrlProvier>(Lifestyle.Scoped);
             #endregion
 
 
@@ -76,7 +84,7 @@ namespace Gaia.Server.DI
                 .UsingModule(new AuthenticationAccessModuleConfig())
                 .UsingModule(new RBACAccessModuleConfig())
                 .UsingModule(new GaiaDomainModuleConfig());
-            c.Register(() => config, Lifestyle.Scoped);
+            c.Register(() => config, Lifestyle.Singleton);
 
             c.Register<IDataContext, EuropaContext>(Lifestyle.Scoped);
 
@@ -168,6 +176,60 @@ namespace Gaia.Server.DI
                                   .ForAll((_cnt, _t) => c.Register(_t, _t, Lifestyle.Scoped));
             #endregion
 
+        }
+    }
+
+    public class __DataContext : IDataContext
+    {
+        public string Name
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool SupportsBulkPersist
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Task BulkInsert<Entity>(IEnumerable<Entity> objectStream) where Entity : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CommitChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> CommitChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<Entity> ContextQuery<Entity>(string queryIdentity, params object[] args) where Entity : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IObjectFactory<DomainObject> FactoryFor<DomainObject>() where DomainObject : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public IObjectStore<Entity> Store<Entity>() where Entity : class
+        {
+            throw new NotImplementedException();
         }
     }
 }

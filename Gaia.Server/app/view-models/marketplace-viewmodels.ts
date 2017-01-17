@@ -31,11 +31,14 @@ module Gaia.ViewModels.MarketPlace {
         }
     }
 
-
-    export class CustomerViewModel {
+    export class PreferencesViewModel {
 
     }
+}
 
+
+//Merchant
+module Gaia.ViewModels.MarketPlace {
 
     export class MerchantViewModel {
 
@@ -65,7 +68,6 @@ module Gaia.ViewModels.MarketPlace {
             if (this.$state.current.name == 'merchant') this.$state.go('merchant.services');
         }
     }
-
 
     export class MerchantProductsViewModel {
 
@@ -193,7 +195,6 @@ module Gaia.ViewModels.MarketPlace {
             this.listProducts(0, null);
         }
     }
-
 
     export class MerchantServicesViewModel {
 
@@ -325,7 +326,6 @@ module Gaia.ViewModels.MarketPlace {
         }
     }
 
-
     export class MerchantOrdersViewModel {
 
 
@@ -333,9 +333,13 @@ module Gaia.ViewModels.MarketPlace {
         constructor() {
         }
     }
+}
 
+//Customer
+module Gaia.ViewModels.MarketPlace {
 
-    export class ConfigureViewModel {
+    export class CustomerViewModel {
 
     }
+
 }

@@ -1,7 +1,4 @@
 ﻿using Gaia.Core.Services;
-using Microsoft.Owin;
-using System.Web;
-using System;
 using Axis.Jupiter;
 using Gaia.Core.Domain;
 using System.Linq;
@@ -10,21 +7,21 @@ namespace Gaia.Server.Services
 {
     public class UserLocator : IUserLocator
     {
-        private IOwinContext _owin = null;
-        private IDataContext _context = null;
-        public UserLocator(IDataContext context)
+        private IDataContext _dataContext = null;
+        private IOwinContextProvider _contextProvider = null;
+        public UserLocator(IDataContext dataContext, IOwinContextProvider provider)
         {
-            this._owin = HttpContext.Current.GetOwinContext();
-            this._context = context;
+            _dataContext = dataContext;
+            _contextProvider = provider;
         }
 
 
-        public string CurrentUser() => _owin?.Authentication?.User?.Identity.Name;
+        public string CurrentUser() => (_contextProvider.Context)?.Authentication?.User?.Identity.Name;
 
         public string[] UserAccessProfiles()
         {
             var user = CurrentUser();
-            return _context.Store<UserAccessProfile>().Query
+            return _dataContext.Store<UserAccessProfile>().Query
                 .Where(_uap => _uap.OwnerId == user)
                 .Select(_uap => _uap.AccessProfileCode)
                 .ToArray();

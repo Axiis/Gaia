@@ -131,4 +131,11 @@ ul.gaia-vertical-menu-list > li.active > a{
     box-shadow:0 1px 6px 2px #999;
 }
 
+.inline-center-pseudo:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
 

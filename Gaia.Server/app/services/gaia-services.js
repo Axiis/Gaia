@@ -88,7 +88,7 @@ var Gaia;
             };
             ProfileService.prototype.updateProfileImage = function (blob, oldUrl, config) {
                 return this.transport.put('/api/profiles/data/image', {
-                    Blob: blob,
+                    Blob: blob.RawObjectForm(),
                     OldImageUri: oldUrl
                 }, config);
             };

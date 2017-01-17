@@ -92,9 +92,8 @@ var Gaia;
                     ///<<Profile>
                     this.isEditingBioData = false;
                     this.isEditingContactData = false;
-                    this.isProfileImageChanged = false;
                     this.isPersistingProfileImage = false;
-                    this.isRemovingProfileImage = false;
+                    this.isPreviewingProfileImage = false;
                     this.hasBiodataPersistenceError = false;
                     this.hasContactdataPersistenceError = false;
                     this.hasProfileImagePersistenceError = false;
@@ -104,7 +103,6 @@ var Gaia;
                     ///<Profile Image Stuff>
                     this._originalImageUrl = null;
                     this._previewImage = null;
-                    this._isPreviewingImage = false;
                     this.profileImageUrl = null;
                     ///</profile image stuff>
                     ///<Biodata stuff>
@@ -127,8 +125,8 @@ var Gaia;
                     },
                     set: function (blob) {
                         if (!Object.isNullOrUndefined(blob)) {
-                            if (!this._isPreviewingImage) {
-                                this._isPreviewingImage = true;
+                            if (!this.isPreviewingProfileImage) {
+                                this.isPreviewingProfileImage = true;
                                 this._originalImageUrl = this.profileImageUrl;
                             }
                             this._previewImage = blob;
@@ -143,27 +141,35 @@ var Gaia;
                     this.profileService
                         .getUserDataByName(Gaia.Utils.UserData_ProfileImage)
                         .then(function (opr) {
-                        _this.profileImageUrl = opr.Result.Data;
+                        if (!Object.isNullOrUndefined(opr.Result))
+                            _this.profileImageUrl = opr.Result.Data;
+                        else
+                            _this.profileImageUrl = Gaia.Utils.DefaultProfileImageUrl;
                     }, function (err) {
                         _this.profileImageUrl = Gaia.Utils.DefaultProfileImageUrl;
                     });
                 };
-                ProfileViewModel.prototype.discardPreview = function () {
-                    this._isPreviewingImage = false;
+                ProfileViewModel.prototype.discardPreviewImage = function () {
+                    this.isPreviewingProfileImage = false;
                     this.profileImageUrl = this._originalImageUrl;
                     this._previewImage = null;
                     this._originalImageUrl = null;
+                    $('#profileImageSelector').get(0).reset();
                 };
-                ProfileViewModel.prototype.persistPreviewImage = function () {
+                ProfileViewModel.prototype.persistProfileImage = function () {
                     var _this = this;
-                    if (this._isPreviewingImage) {
+                    if (this.isPreviewingProfileImage) {
+                        this.isPersistingProfileImage = true;
                         this.profileService
                             .updateProfileImage(this.previewImage, this._originalImageUrl)
                             .then(function (opr) {
-                            _this.discardPreview();
+                            _this.discardPreviewImage();
                             _this.profileImageUrl = opr.Result;
+                            _this.notifyService.success("Your profile imaage was saved");
+                            _this.isPersistingProfileImage = false;
                         }, function (err) {
                             _this.notifyService.error("An error occured while saving your profile image");
+                            _this.isPersistingProfileImage = false;
                         });
                     }
                 };

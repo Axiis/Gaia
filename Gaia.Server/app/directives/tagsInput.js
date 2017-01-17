@@ -11,7 +11,8 @@ var Gaia;
                 element.tagsInput({
                     width: '100%',
                     onChange: function (txt) {
-                        scope.$eval(binding + ' = "' + element.get(0).value + '"');
+                        //scope.$eval(binding + ' = "' + element.get(0).value + '"');
+                        scope['tagsInput'] = element.get(0).value;
                     }
                 });
             };
