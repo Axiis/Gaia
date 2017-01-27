@@ -6,10 +6,9 @@ var Pollux;
             function Authentication($http) {
                 this.$http = $http;
             }
-            Authentication.$inject = ["$http"];
             return Authentication;
         }());
+        Authentication.$inject = ["$http"];
         Services.Authentication = Authentication;
     })(Services = Pollux.Services || (Pollux.Services = {}));
 })(Pollux || (Pollux = {}));
-//# sourceMappingURL=pollux-services.js.map

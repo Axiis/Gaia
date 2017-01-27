@@ -40,9 +40,9 @@ var Gaia;
                 MarketPlaceViewModel.prototype.isCustomerActive = function () {
                     return this.state.current.name.startsWith('customer');
                 };
-                MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
                 return MarketPlaceViewModel;
             }());
+            MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
             MarketPlace.MarketPlaceViewModel = MarketPlaceViewModel;
             var PreferencesViewModel = (function () {
                 function PreferencesViewModel() {
@@ -54,7 +54,6 @@ var Gaia;
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
 //Merchant
-var Gaia;
 (function (Gaia) {
     var ViewModels;
     (function (ViewModels) {
@@ -97,9 +96,9 @@ var Gaia;
                 MerchantViewModel.prototype.isProductsActive = function () {
                     return this.$state.current.name == 'merchant.products';
                 };
-                MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
                 return MerchantViewModel;
             }());
+            MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
             MarketPlace.MerchantViewModel = MerchantViewModel;
             var MerchantProductsViewModel = (function () {
                 function MerchantProductsViewModel(marketplace, $q, notify, domModel) {
@@ -216,9 +215,9 @@ var Gaia;
                 MerchantProductsViewModel.prototype.isReviewing = function (product) {
                     return product.Status == Gaia.Domain.ProductStatus.Reviewing;
                 };
-                MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantProductsViewModel;
             }());
+            MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantProductsViewModel = MerchantProductsViewModel;
             var MerchantServicesViewModel = (function () {
                 function MerchantServicesViewModel(marketplace, $q, notify, domModel) {
@@ -338,22 +337,21 @@ var Gaia;
                 MerchantServicesViewModel.prototype.isAvailable = function (service) {
                     return service.Status == Gaia.Domain.ServiceStatus.Available;
                 };
-                MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantServicesViewModel;
             }());
+            MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantServicesViewModel = MerchantServicesViewModel;
             var MerchantOrdersViewModel = (function () {
                 function MerchantOrdersViewModel() {
                 }
-                MerchantOrdersViewModel.$inject = [];
                 return MerchantOrdersViewModel;
             }());
+            MerchantOrdersViewModel.$inject = [];
             MarketPlace.MerchantOrdersViewModel = MerchantOrdersViewModel;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
 //Customer
-var Gaia;
 (function (Gaia) {
     var ViewModels;
     (function (ViewModels) {
@@ -365,7 +363,153 @@ var Gaia;
                 return CustomerViewModel;
             }());
             MarketPlace.CustomerViewModel = CustomerViewModel;
+            var CustomerProductsViewModel = (function () {
+                function CustomerProductsViewModel() {
+                }
+                return CustomerProductsViewModel;
+            }());
+            MarketPlace.CustomerProductsViewModel = CustomerProductsViewModel;
+            var CustomerProductDetailsViewModel = (function () {
+                function CustomerProductDetailsViewModel() {
+                }
+                return CustomerProductDetailsViewModel;
+            }());
+            MarketPlace.CustomerProductDetailsViewModel = CustomerProductDetailsViewModel;
+            var CustomerCartViewModel = (function () {
+                function CustomerCartViewModel() {
+                }
+                return CustomerCartViewModel;
+            }());
+            MarketPlace.CustomerCartViewModel = CustomerCartViewModel;
+            var CustomerCheckoutViewModel = (function () {
+                function CustomerCheckoutViewModel() {
+                }
+                return CustomerCheckoutViewModel;
+            }());
+            MarketPlace.CustomerCheckoutViewModel = CustomerCheckoutViewModel;
+            var CustomerOrderHistoryViewModel = (function () {
+                function CustomerOrderHistoryViewModel() {
+                }
+                return CustomerOrderHistoryViewModel;
+            }());
+            MarketPlace.CustomerOrderHistoryViewModel = CustomerOrderHistoryViewModel;
+            var CustomerInvoiceViewModel = (function () {
+                function CustomerInvoiceViewModel() {
+                }
+                return CustomerInvoiceViewModel;
+            }());
+            MarketPlace.CustomerInvoiceViewModel = CustomerInvoiceViewModel;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-viewmodels.js.map
+(function (Gaia) {
+    var Directives;
+    (function (Directives) {
+        var MarketPlace;
+        (function (MarketPlace) {
+            var SmallProductCard = (function () {
+                function SmallProductCard(marketPlace, notify) {
+                    this.marketPlace = marketPlace;
+                    this.notify = notify;
+                    this.restrict = 'E';
+                    this.$scope = null;
+                    this.scope = {
+                        product: '=',
+                        style: '=?'
+                    };
+                    this.template = '' +
+                        '<div class="material-shadow small-product-card" style="{{style}}">' +
+                        '<div class= "material-interactive material-shadow primary-button" ng-click="vm.addToCart()"></div>' +
+                        '<div class= "flex-container">' +
+                        '<div></div>' +
+                        '<div class= "product-details">' +
+                        '<div>' +
+                        '<strong>{{product.Title}}</strong>' +
+                        '</div>' +
+                        '<div>' +
+                        '<small ng-bind-html="product.Description"></small>' +
+                        '</div>' +
+                        '<div>' +
+                        '<div></div>' +
+                        '<div class="product-price"> <strong class="text-muted">&#8358;{{product.Cost}} </strong></div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+                SmallProductCard.prototype.controller = function ($scope) {
+                    $scope.vm = this;
+                    this.$scope = $scope;
+                };
+                SmallProductCard.prototype.addToCart = function () {
+                    var _this = this;
+                    this.marketPlace.addToBasket(this.$scope.product.EntityId, Gaia.Domain.ItemType.Product)
+                        .then(function (oprc) {
+                        _this.notify.success(_this.$scope.product.Title + ' was added to your cart');
+                    }, function (err) {
+                        _this.notify.error('Something went wrong');
+                    });
+                };
+                SmallProductCard.prototype.addToList = function (list) {
+                    var _this = this;
+                    this.marketPlace.addToList(list, this.$scope.product.EntityId, Gaia.Domain.ItemType.Product)
+                        .then(function (oprc) {
+                        _this.notify.success(_this.$scope.product.Title + ' was added to your cart');
+                    }, function (err) {
+                        _this.notify.error('Something went wrong');
+                    });
+                };
+                return SmallProductCard;
+            }());
+            MarketPlace.SmallProductCard = SmallProductCard;
+            var LargeProductCard = (function () {
+                function LargeProductCard(marketPlace, notify) {
+                    this.marketPlace = marketPlace;
+                    this.notify = notify;
+                    this.restrict = 'E';
+                    this.$scope = null;
+                    this.scope = {
+                        product: '=',
+                        style: '=?'
+                    };
+                    this.template = '' +
+                        '<div style="{{style}}" class="material-shadow large-product-card">' +
+                        '<div class="material-interactive material-shadow primary-button"></div>' +
+                        '<div class= "flex-container">' +
+                        '<div></div>' +
+                        '<div class= "product-details">' +
+                        '<div>' +
+                        '<strong>{{product.Title}}</strong>' +
+                        '</div>' +
+                        '<div>' +
+                        '<small ng-bind-html="product.Description"></small>' +
+                        '</div>' +
+                        '<div>' +
+                        '<div class="product-price"><strong class="text-muted">&#8358;{{product.Cost}}</strong></div>' +
+                        '<div></div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+                LargeProductCard.prototype.controller = function ($scope) {
+                    $scope.vm = this;
+                    this.$scope = $scope;
+                };
+                LargeProductCard.prototype.addToCart = function () {
+                    var _this = this;
+                    this.marketPlace.addToBasket(this.$scope.product.EntityId, Gaia.Domain.ItemType.Product)
+                        .then(function (oprc) {
+                        _this.notify.success(_this.$scope.product.Title + ' was added to your cart');
+                    }, function (err) {
+                        _this.notify.error('Something went wrong');
+                    });
+                };
+                LargeProductCard.prototype.addToList = function (list) {
+                };
+                return LargeProductCard;
+            }());
+            MarketPlace.LargeProductCard = LargeProductCard;
+        })(MarketPlace = Directives.MarketPlace || (Directives.MarketPlace = {}));
+    })(Directives = Gaia.Directives || (Gaia.Directives = {}));
+})(Gaia || (Gaia = {}));

@@ -335,11 +335,147 @@ module Gaia.ViewModels.MarketPlace {
     }
 }
 
+
 //Customer
 module Gaia.ViewModels.MarketPlace {
+
 
     export class CustomerViewModel {
 
     }
 
+    export class CustomerProductsViewModel {
+
+    }
+
+    export class CustomerProductDetailsViewModel {
+
+    }
+
+    export class CustomerCartViewModel {
+
+    }
+
+    export class CustomerCheckoutViewModel {
+
+    }
+
+    export class CustomerOrderHistoryViewModel {
+
+    }
+
+    export class CustomerInvoiceViewModel {
+
+    }
+
+}
+
+module Gaia.Directives.MarketPlace{
+
+
+    export class SmallProductCard {
+
+        restrict: string = 'E';
+        $scope: any = null;
+        scope: any = {
+            product: '=',
+            style: '=?'
+        };
+
+        template: string = '' +
+        '<div class="material-shadow small-product-card" style="{{style}}">'+
+        '<div class= "material-interactive material-shadow primary-button" ng-click="vm.addToCart()"></div>'+
+        '<div class= "flex-container">'+
+        '<div></div>'+
+        '<div class= "product-details">'+
+        '<div>'+
+        '<strong>{{product.Title}}</strong>'+
+        '</div>'+
+        '<div>'+
+        '<small ng-bind-html="product.Description"></small>'+
+        '</div>'+
+        '<div>'+
+        '<div></div>'+
+        '<div class="product-price"> <strong class="text-muted">&#8358;{{product.Cost}} </strong></div>'+
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '</div>';
+
+        controller($scope: any) {
+            $scope.vm = this;
+            this.$scope = $scope;
+        }
+
+        addToCart() {
+            this.marketPlace.addToBasket((this.$scope.product as Domain.Product).EntityId, Domain.ItemType.Product)
+                .then(oprc => {
+                    this.notify.success(this.$scope.product.Title + ' was added to your cart');
+                }, err => {
+                    this.notify.error('Something went wrong');
+                });
+        }
+        addToList(list: string) {
+            this.marketPlace.addToList(list, (this.$scope.product as Domain.Product).EntityId, Domain.ItemType.Product)
+                .then(oprc => {
+                    this.notify.success(this.$scope.product.Title + ' was added to your cart');
+                }, err => {
+                    this.notify.error('Something went wrong');
+                });
+        }
+
+        constructor(private marketPlace: Services.MarketPlaceService, private notify: Utils.Services.NotifyService) {
+        }
+    }
+
+
+    export class LargeProductCard {
+        
+        restrict: string = 'E';
+        $scope: any = null;
+        scope: any = {
+            product: '=',
+            style: '=?'
+        };
+
+        template: string = '' +
+        '<div style="{{style}}" class="material-shadow large-product-card">'+
+        '<div class="material-interactive material-shadow primary-button"></div>' +
+        '<div class= "flex-container">' +
+        '<div></div>' +
+        '<div class= "product-details">' +
+        '<div>' +
+        '<strong>{{product.Title}}</strong>' +
+        '</div>' +
+        '<div>' +
+        '<small ng-bind-html="product.Description"></small>' +
+        '</div>' +
+        '<div>' +
+        '<div class="product-price"><strong class="text-muted">&#8358;{{product.Cost}}</strong></div>' +
+        '<div></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+        controller($scope: any) {
+            $scope.vm = this;
+            this.$scope = $scope;
+        }
+
+        addToCart() {
+            this.marketPlace.addToBasket((this.$scope.product as Domain.Product).EntityId, Domain.ItemType.Product)
+                .then(oprc => {
+                    this.notify.success(this.$scope.product.Title + ' was added to your cart');
+                }, err => {
+                    this.notify.error('Something went wrong');
+                });
+        }
+        addToList(list: string) {
+
+        }
+
+        constructor(private marketPlace: Services.MarketPlaceService, private notify: Utils.Services.NotifyService) {
+        }
+    }
 }

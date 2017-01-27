@@ -10,4 +10,3 @@ var Gaia;
         Directives.SvgLoader = SvgLoader;
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=svgLoader.js.map

@@ -2,10 +2,10 @@ var Gaia;
 (function (Gaia) {
     var Utils;
     (function (Utils) {
+        var Encoding;
         (function (Encoding) {
             Encoding[Encoding["InlineCss"] = 0] = "InlineCss";
-        })(Utils.Encoding || (Utils.Encoding = {}));
-        var Encoding = Utils.Encoding;
+        })(Encoding = Utils.Encoding || (Utils.Encoding = {}));
         var StringPair = (function () {
             function StringPair(key, value) {
                 this.Key = StringPair.DecodeDelimiters(key);
@@ -80,4 +80,3 @@ var Gaia;
         Utils.StringPairCollection = StringPairCollection;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=map.js.map

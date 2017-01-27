@@ -6,7 +6,11 @@ namespace Gaia.Core.Domain
 {
     public class BlobAttachment: GaiaEntity<long>
     {
-        public string BlobId { get; set; }
+        public string BlobUri
+        {
+            get { return get<string>(); }
+            set { set(ref value); }
+        }
 
         public string Context
         {
@@ -32,6 +36,6 @@ namespace Gaia.Core.Domain
         }
 
 
-        public Uri BlobUri() => new Uri(BlobId);
+        public Uri ToUri() => new Uri(BlobUri);
     }
 }
