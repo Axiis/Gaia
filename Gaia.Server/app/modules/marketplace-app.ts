@@ -7,8 +7,8 @@ module Gaia.App.MarketPlace {
     module.directive('binaryData', Gaia.Directives.BinaryData);
     module.directive('tagsInput', () => new Gaia.Directives.TagsInput());
     module.directive('enumOptions', () => new Gaia.Directives.EnumOptions());
-    module.directive('smallProductCard', () => new Gaia.Directives.MarketPlace.SmallProductCard());
-    module.directive('largeProductCard', () => new Gaia.Directives.MarketPlace.LargeProductCard());
+    //module.directive('smallProductCard', () => new Gaia.Directives.MarketPlace.SmallProductCard());
+    //module.directive('largeProductCard', () => new Gaia.Directives.MarketPlace.LargeProductCard());
 
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);
@@ -40,8 +40,8 @@ module Gaia.App.MarketPlace {
     module.controller('CustomerOrderHistoryViewModel', Gaia.ViewModels.MarketPlace.CustomerOrderHistoryViewModel);
     module.controller('CustomerInvoiceViewModel', Gaia.ViewModels.MarketPlace.CustomerInvoiceViewModel);
 
-    module.controller('SmallProductCardController', Gaia.Directives.MarketPlace.SmallProductCardController);
-    module.controller('LargeProductCardController', Gaia.Directives.MarketPlace.LargeProductCardController);
+    module.controller('SmallProductCardController', Gaia.Directives.MarketPlace.SmallProductCard);
+    module.controller('LargeProductCardController', Gaia.Directives.MarketPlace.LargeProductCard);
 
     module.controller('MerchantViewModel', Gaia.ViewModels.MarketPlace.MerchantViewModel);
     module.controller('MerchantProductsViewModel', Gaia.ViewModels.MarketPlace.MerchantProductsViewModel);

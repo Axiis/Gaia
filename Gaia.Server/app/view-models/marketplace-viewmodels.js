@@ -40,9 +40,9 @@ var Gaia;
                 MarketPlaceViewModel.prototype.isCustomerActive = function () {
                     return this.state.current.name.startsWith('customer');
                 };
+                MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
                 return MarketPlaceViewModel;
             }());
-            MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
             MarketPlace.MarketPlaceViewModel = MarketPlaceViewModel;
             var PreferencesViewModel = (function () {
                 function PreferencesViewModel() {
@@ -54,6 +54,7 @@ var Gaia;
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
 //Merchant
+var Gaia;
 (function (Gaia) {
     var ViewModels;
     (function (ViewModels) {
@@ -96,9 +97,9 @@ var Gaia;
                 MerchantViewModel.prototype.isProductsActive = function () {
                     return this.$state.current.name == 'merchant.products';
                 };
+                MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
                 return MerchantViewModel;
             }());
-            MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
             MarketPlace.MerchantViewModel = MerchantViewModel;
             var MerchantProductsViewModel = (function () {
                 function MerchantProductsViewModel(marketplace, $q, notify, domModel) {
@@ -215,9 +216,9 @@ var Gaia;
                 MerchantProductsViewModel.prototype.isReviewing = function (product) {
                     return product.Status == Gaia.Domain.ProductStatus.Reviewing;
                 };
+                MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantProductsViewModel;
             }());
-            MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantProductsViewModel = MerchantProductsViewModel;
             var MerchantServicesViewModel = (function () {
                 function MerchantServicesViewModel(marketplace, $q, notify, domModel) {
@@ -337,21 +338,22 @@ var Gaia;
                 MerchantServicesViewModel.prototype.isAvailable = function (service) {
                     return service.Status == Gaia.Domain.ServiceStatus.Available;
                 };
+                MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantServicesViewModel;
             }());
-            MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantServicesViewModel = MerchantServicesViewModel;
             var MerchantOrdersViewModel = (function () {
                 function MerchantOrdersViewModel() {
                 }
+                MerchantOrdersViewModel.$inject = [];
                 return MerchantOrdersViewModel;
             }());
-            MerchantOrdersViewModel.$inject = [];
             MarketPlace.MerchantOrdersViewModel = MerchantOrdersViewModel;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
 //Customer
+var Gaia;
 (function (Gaia) {
     var ViewModels;
     (function (ViewModels) {
@@ -402,6 +404,7 @@ var Gaia;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
+var Gaia;
 (function (Gaia) {
     var Directives;
     (function (Directives) {
@@ -513,3 +516,4 @@ var Gaia;
         })(MarketPlace = Directives.MarketPlace || (Directives.MarketPlace = {}));
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=marketplace-viewmodels.js.map

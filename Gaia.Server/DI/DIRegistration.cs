@@ -197,6 +197,11 @@ namespace Gaia.Server.DI
             }
         }
 
+        public IObjectStore<Entity> Add<Entity>(Entity entity) where Entity : class
+        {
+            throw new NotImplementedException();
+        }
+
         public Task BulkInsert<Entity>(IEnumerable<Entity> objectStream) where Entity : class
         {
             throw new NotImplementedException();
@@ -217,12 +222,22 @@ namespace Gaia.Server.DI
             throw new NotImplementedException();
         }
 
+        public IObjectStore<Entity> Delete<Entity>(Entity entity) where Entity : class
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();
         }
 
         public IObjectFactory<DomainObject> FactoryFor<DomainObject>() where DomainObject : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public IObjectStore<Entity> Modify<Entity>(Entity entity) where Entity : class
         {
             throw new NotImplementedException();
         }

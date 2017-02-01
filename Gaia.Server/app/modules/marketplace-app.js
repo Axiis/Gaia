@@ -9,8 +9,8 @@ var Gaia;
             MarketPlace.module.directive('binaryData', Gaia.Directives.BinaryData);
             MarketPlace.module.directive('tagsInput', function () { return new Gaia.Directives.TagsInput(); });
             MarketPlace.module.directive('enumOptions', function () { return new Gaia.Directives.EnumOptions(); });
-            MarketPlace.module.directive('smallProductCard', function () { return new Gaia.Directives.MarketPlace.SmallProductCard(); });
-            MarketPlace.module.directive('largeProductCard', function () { return new Gaia.Directives.MarketPlace.LargeProductCard(); });
+            //module.directive('smallProductCard', () => new Gaia.Directives.MarketPlace.SmallProductCard());
+            //module.directive('largeProductCard', () => new Gaia.Directives.MarketPlace.LargeProductCard());
             ///Gaia services
             MarketPlace.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             MarketPlace.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
@@ -34,8 +34,8 @@ var Gaia;
             MarketPlace.module.controller('CustomerCheckoutViewModel', Gaia.ViewModels.MarketPlace.CustomerCheckoutViewModel);
             MarketPlace.module.controller('CustomerOrderHistoryViewModel', Gaia.ViewModels.MarketPlace.CustomerOrderHistoryViewModel);
             MarketPlace.module.controller('CustomerInvoiceViewModel', Gaia.ViewModels.MarketPlace.CustomerInvoiceViewModel);
-            MarketPlace.module.controller('SmallProductCardController', Gaia.Directives.MarketPlace.SmallProductCardController);
-            MarketPlace.module.controller('LargeProductCardController', Gaia.Directives.MarketPlace.LargeProductCardController);
+            MarketPlace.module.controller('SmallProductCardController', Gaia.Directives.MarketPlace.SmallProductCard);
+            MarketPlace.module.controller('LargeProductCardController', Gaia.Directives.MarketPlace.LargeProductCard);
             MarketPlace.module.controller('MerchantViewModel', Gaia.ViewModels.MarketPlace.MerchantViewModel);
             MarketPlace.module.controller('MerchantProductsViewModel', Gaia.ViewModels.MarketPlace.MerchantProductsViewModel);
             MarketPlace.module.controller('MerchantServicesViewModel', Gaia.ViewModels.MarketPlace.MerchantServicesViewModel);
@@ -120,3 +120,4 @@ var Gaia;
         })(MarketPlace = App.MarketPlace || (App.MarketPlace = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=marketplace-app.js.map

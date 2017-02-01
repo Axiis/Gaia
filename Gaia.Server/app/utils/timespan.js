@@ -41,3 +41,4 @@ var Gaia;
         Utils.TimeSpan = TimeSpan;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
+//# sourceMappingURL=timespan.js.map

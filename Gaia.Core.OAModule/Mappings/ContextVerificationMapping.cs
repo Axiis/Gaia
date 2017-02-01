@@ -1,4 +1,5 @@
-﻿using Gaia.Core.Domain;
+﻿using Axis.Jupiter.Europa;
+using Gaia.Core.Domain;
 
 namespace Gaia.Core.OAModule.Mappings
 {
@@ -11,8 +12,11 @@ namespace Gaia.Core.OAModule.Mappings
                 .WithMany()
                 .HasForeignKey(e => e.UserId);
 
-            this.Property(e => e.VerificationToken).HasMaxLength(100);
-            this.Property(e => e.Context).HasMaxLength(250);
+            this.Property(e => e.VerificationToken)
+                .IsIndex("VerificationToken", false)
+                .HasMaxLength(100);
+            this.Property(e => e.Context)
+                .HasMaxLength(250);
         }
     }
 }

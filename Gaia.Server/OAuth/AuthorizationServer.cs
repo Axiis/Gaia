@@ -61,8 +61,13 @@ namespace Gaia.Server.OAuth
 
                     context.Validated(new Microsoft.Owin.Security.AuthenticationTicket(identity, null));
                 })
-                .Error(opr => context.UsingValue(cxt => cxt.SetError("invalid_grant", opr.Message))
-                                    .UsingValue(cxt => cxt.Rejected()));
+
+                //if any of the above failed...
+                .Error(opr =>
+                {
+                    context.SetError("invalid_grant", opr.Message);
+                    context.Rejected();
+                });
             });
 
         /// <summary>
