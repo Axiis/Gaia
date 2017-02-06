@@ -159,6 +159,8 @@ namespace Gaia.Server.DI
                 .Where(_pair => _pair.implementation != null)
                 .ForAll((_cnt, _pair) => c.Register(_pair.@interface, _pair.implementation, Lifestyle.Scoped));
 
+            c.Register<IMailPushService, ElasticMailPush>(Lifestyle.Scoped);
+
             #endregion
 
             #region Others

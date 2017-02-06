@@ -324,8 +324,10 @@ namespace Gaia.Core.OAModule
                         "system/MarketPlace/Merchant/Services/@add",
                         "system/MarketPlace/Merchant/Services/@modify",
                         "system/MarketPlace/Merchant/ServiceInterface/@add",
-                        "system/MarketPlace/Merchant/Products/@add",
-                        "system/MarketPlace/Merchant/Products/@modify"
+
+                        "system/MarketPlace/Merchant/Services/images/@get",
+                        "system/MarketPlace/Merchant/Services/images/@add",
+                        "system/MarketPlace/Merchant/Services/images/@remove"
 
                     }
                     .ForAll((cnt, next) =>
@@ -371,6 +373,11 @@ namespace Gaia.Core.OAModule
                         "system/Profiles/Farms/@remove",
                         "system/Profiles/Farms/@modify",
                         "system/Profiles/Farms/@get",
+                        "system/MarketPlace/Merchant/Products/@add",
+                        "system/MarketPlace/Merchant/Products/@modify",
+                        "system/MarketPlace/Merchant/Products/images/@get",
+                        "system/MarketPlace/Merchant/Products/images/@add",
+                        "system/MarketPlace/Merchant/Products/images/@remove"
                     }
                     .ForAll((cnt, next) =>
                     {
@@ -438,6 +445,8 @@ namespace Gaia.Core.OAModule
                         "system/MarketPlace/Customer/Cart/@remove",
                         "system/MarketPlace/Customer/Cart/@pay",
                         "system/MarketPlace/Customer/Orders/@get",
+                        "system/MarketPlace/Merchant/Products/images/@get",
+                        "system/MarketPlace/Merchant/Services/images/@get",
 
                         ///misc
                         "system/Profiles/@discover",

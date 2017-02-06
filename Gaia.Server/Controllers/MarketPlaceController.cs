@@ -1,4 +1,5 @@
-﻿using Axis.Luna.Extensions;
+﻿using Axis.Luna;
+using Axis.Luna.Extensions;
 using Gaia.Core.Domain.MarketPlace;
 using Gaia.Core.Services;
 using Gaia.Server.Controllers.MarketPlaceModels;
@@ -28,18 +29,18 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/merchants/product-categories")]
         public IHttpActionResult GetProductCategories()
-            => _marketPlace.GetProductCategories().OperationResult(Request);
+        => _marketPlace.GetProductCategories().OperationResult(Request);
 
 
         [HttpGet]
         [Route("api/market-place/merchants/service-categories")]
         public IHttpActionResult GetServiceCategories()
-            => _marketPlace.GetServiceCategories().OperationResult(Request);
+        => _marketPlace.GetServiceCategories().OperationResult(Request);
 
         [HttpGet]
         [Route("api/market-place/merchant/products")]
         public IHttpActionResult FindMerchantProducts(string data)
-            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindMerchantProducts(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
@@ -47,7 +48,7 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/merchant/services")]
         public IHttpActionResult FindMerchantServices(string data)
-            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindMerchantServices(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
@@ -56,7 +57,7 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/merchants/orders")]
         public IHttpActionResult GetMerchantOrders(string data)
-            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.GetMerchantOrders(info.PageIndex, info.PageSize))
                 .Pipe(_op => _op.OperationResult(Request));
@@ -64,43 +65,94 @@ namespace Gaia.Server.Controllers
         [HttpPut]
         [Route("api/market-place/merchants/orders")]
         public IHttpActionResult ModifyOrder([FromBody] Order order)
-            => _marketPlace.ModifyOrder(order).OperationResult(Request);
+        => _marketPlace.ModifyOrder(order).OperationResult(Request);
 
 
         [HttpPut]
         [Route("api/market-place/merchants/orders/fulfilled")]
         public IHttpActionResult FulfillOrder([FromBody]Order order)
-            => _marketPlace.FulfillOrder(order).OperationResult(Request);
+        => _marketPlace.FulfillOrder(order).OperationResult(Request);
 
 
         [HttpPost]
         [Route("api/market-place/merchants/services")]
         public IHttpActionResult AddService([FromBody]Service service)
-            => _marketPlace.AddService(service).OperationResult(Request);
+        => _marketPlace.AddService(service).OperationResult(Request);
 
 
         [HttpPut]
         [Route("api/market-place/merchants/services")]
         public IHttpActionResult ModifyService([FromBody]Service service)
-            => _marketPlace.ModifyService(service).OperationResult(Request);
+        => _marketPlace.ModifyService(service).OperationResult(Request);
+
+
+        [HttpPost]
+        [Route("api/market-place/merchants/services/images")]
+        public IHttpActionResult AddServiceImage([FromBody]ImageAttachmentArgs args)
+        => Operation.Try(() => _marketPlace.AddServiceImage(args.ItemId, args.Data))
+                    .OperationResult(Request);
+
+
+        [HttpDelete]
+        [Route("api/market-place/merchants/services/images")]
+        public IHttpActionResult RemoveServiceImage(string data)
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<ImageAttachmentArgs>(_json, Constants.DefaultJsonSerializerSettings))
+                .Pipe(info => _marketPlace.RemoveServiceImage(info.Uri))
+                .Pipe(_op => _op.OperationResult(Request));
+
+
+        [HttpGet]
+        [Route("api/market-place/merchants/services/images")]
+        public IHttpActionResult GetServiceImages(string data)
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<ImageAttachmentArgs>(_json, Constants.DefaultJsonSerializerSettings))
+                .Pipe(info => _marketPlace.GetServiceImages(info.ItemId))
+                .Pipe(_op => _op.OperationResult(Request));
 
 
         [HttpPost]
         [Route("api/market-place/merchants/service-interfaces")]
         public IHttpActionResult AddServiceInterface([FromBody]ServiceInterface @interface)
-            => _marketPlace.AddServiceInterface(@interface).OperationResult(Request);
+        => _marketPlace.AddServiceInterface(@interface).OperationResult(Request);
 
 
         [HttpPost]
         [Route("api/market-place/merchants/products")]
         public IHttpActionResult AddProduct([FromBody]Product product)
-            => _marketPlace.AddProduct(product).OperationResult(Request);
+        => _marketPlace.AddProduct(product).OperationResult(Request);
 
 
         [HttpPut]
         [Route("api/market-place/merchants/products")]
         public IHttpActionResult ModifyProduct([FromBody]Product product)
-            => _marketPlace.ModifyProduct(product).OperationResult(Request);
+        => _marketPlace.ModifyProduct(product).OperationResult(Request);
+
+
+
+        [HttpPost]
+        [Route("api/market-place/merchants/products/images")]
+        public IHttpActionResult AddProductImage([FromBody]ImageAttachmentArgs args)
+        => Operation.Try(() => _marketPlace.AddProductImage(args.ItemId, args.Data))
+                    .OperationResult(Request);
+
+
+        [HttpDelete]
+        [Route("api/market-place/merchants/products/images")]
+        public IHttpActionResult RemoveProductsImage(string data)
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<ImageAttachmentArgs>(_json, Constants.DefaultJsonSerializerSettings))
+                .Pipe(info => _marketPlace.RemoveServiceImage(info.Uri))
+                .Pipe(_op => _op.OperationResult(Request));
+
+
+        [HttpGet]
+        [Route("api/market-place/merchants/products/images")]
+        public IHttpActionResult GetProductsImages(string data)
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+                .Pipe(_json => JsonConvert.DeserializeObject<ImageAttachmentArgs>(_json, Constants.DefaultJsonSerializerSettings))
+                .Pipe(info => _marketPlace.GetProductImages(info.ItemId))
+                .Pipe(_op => _op.OperationResult(Request));
 
         #endregion
 
@@ -108,7 +160,7 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/customer/products")]
         public IHttpActionResult FindCustomerProduct(string data)
-            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindCustomerProducts(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
@@ -116,7 +168,7 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/customer/services")]
         public IHttpActionResult FindCustomerService(string data)
-            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.FindCustomerServices(info.SearchString, info.PageSize, info.PageIndex))
                 .Pipe(_op => _op.OperationResult(Request));
@@ -124,33 +176,33 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/customer/shopping-lists")]
         IHttpActionResult GetShoppingLists()
-            => _marketPlace.GetShoppingLists().OperationResult(Request);
+        => _marketPlace.GetShoppingLists().OperationResult(Request);
 
 
         [HttpPut]
         [Route("api/market-place/customer/cart")]
         IHttpActionResult AddToBasket(AddToListArgs args)
-            => _marketPlace.AddToBasket(args?.ItemId ?? -1, args?.ItemType ?? ItemType.Product)
+        => _marketPlace.AddToBasket(args?.ItemId ?? -1, args?.ItemType ?? ItemType.Product)
                 .OperationResult(Request);
 
 
         [HttpDelete]
         [Route("api/market-place/customer/cart")]
         IHttpActionResult RemoveFromBasket(RemoveFromListArgs arg)
-            => _marketPlace.RemoveFromBasket(arg?.ItemId ?? -1).OperationResult(Request);
+        => _marketPlace.RemoveFromBasket(arg?.ItemId ?? -1).OperationResult(Request);
 
 
         [HttpPut]
         [Route("api/market-place/customer/list")]
         IHttpActionResult AddToList(AddToListArgs args)
-            => _marketPlace.AddToList(args?.ListName, args?.ItemId ?? -1, args?.ItemType ?? ItemType.Product)
+        => _marketPlace.AddToList(args?.ListName, args?.ItemId ?? -1, args?.ItemType ?? ItemType.Product)
                 .OperationResult(Request);
 
 
         [HttpDelete]
         [Route("api/market-place/customer/list")]
         IHttpActionResult RemoveFromList(RemoveFromListArgs arg)
-            => _marketPlace.RemoveFromList(arg?.ListName, arg?.ItemId ?? -1).OperationResult(Request);
+        => _marketPlace.RemoveFromList(arg?.ListName, arg?.ItemId ?? -1).OperationResult(Request);
 
 
         [HttpPost]
@@ -168,7 +220,7 @@ namespace Gaia.Server.Controllers
         [HttpGet]
         [Route("api/market-place/customer/orders")]
         IHttpActionResult GetCustomerOrders(string data)
-            => Encoding.UTF8.GetString(Convert.FromBase64String(data))
+        => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<SearchArgs>(_json, Constants.DefaultJsonSerializerSettings))
                 .Pipe(info => _marketPlace.GetCustomerOrders(info?.PageIndex ?? 0, info?.PageSize ?? -1))
                 .Pipe(_op => _op.OperationResult(Request));
@@ -201,7 +253,13 @@ namespace Gaia.Server.Controllers
             public long ItemId { get; set; }
         }
 
+        public class ImageAttachmentArgs
+        {
+            public long ItemId { get; set; }
+            public EncodedBinaryData Data { get; set; }
 
+            public string Uri { get; set; }
+        }
 
         public class CheckoutArgs
         {

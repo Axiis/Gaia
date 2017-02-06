@@ -42,7 +42,6 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
 
             this.Ignore(e => e.ItemType);
             this.Ignore(e => e.Images);
-            this.Ignore(e => e.Videos);
         }
     }
 
@@ -60,6 +59,7 @@ namespace Gaia.Core.OAModule.Mappings.MarketPlace
                 .HasColumnType("nText");
 
             this.Ignore(e => e.ItemType);
+            this.Ignore(e => e.Images);
         }
     }
 

@@ -6,6 +6,8 @@ namespace Gaia.Core
     {
         public static readonly string UserRegistrationContext = "user-registration";
         public static readonly string UserActivationContext = "user-activation";
+        public static readonly string ServiceInstanceContext = typeof(Domain.MarketPlace.Service).FullName;
+        public static readonly string ProductInstanceContext = typeof(Domain.MarketPlace.Product).FullName;
 
         public static readonly string DefaultPolicyAdminAccessProfile = "system.[Policy-Admin Profile]";
         public static readonly string DefaultServiceProviderAccessProfile = "system.[Service-Provider Profile]";
@@ -24,6 +26,10 @@ namespace Gaia.Core
 
         #region User Data
         public static readonly string UserData_ProfileImage = "ProfileImage";
+        #endregion
+
+        #region Mail Messages
+        public static readonly string MailSubject_AccountVerification = "Account Verification";
         #endregion
     }
 }

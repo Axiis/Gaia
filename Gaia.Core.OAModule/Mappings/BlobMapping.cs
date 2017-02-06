@@ -7,7 +7,9 @@ namespace Gaia.Core.OAModule.Mappings
     {
         public BlobMapping()
         {
-            this.Property(e => e.ContextId).IsIndex("BlobContextId", false);
+            this.Property(e => e.ContextId)
+                .HasMaxLength(400)
+                .IsIndex("BlobContextId", false);
             this.Property(e => e.Context)
                 .HasMaxLength(400)
                 .IsIndex("BlobContext", false);

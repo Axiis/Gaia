@@ -394,6 +394,25 @@ module Gaia.Services {
             return this.transport.post<Utils.Operation<number>>('/api/market-place/merchants/services', service, config).then(opr => opr.data);
         }
 
+        addServiceImage(itemId: number, data: Utils.EncodedBinaryData, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
+            return this.transport.post<Utils.Operation<string>>('/api/market-place/merchants/services/images', {
+                ItemId: itemId,
+                Data: data
+            }, config).then(opr => opr.data);
+        }
+
+        removeServiceImage(uri: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
+            return this.transport.delete<Utils.Operation<string>>('/api/market-place/merchants/services/images', {
+                Uri: uri
+            }, config).then(opr => opr.data);
+        }
+
+        getServiceImages(itemId: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Domain.BlobRef[]>> {
+            return this.transport.get<Utils.Operation<Domain.BlobRef[]>>('/api/market-place/merchants/services/images', {
+                ItemId: itemId
+            }, config).then(opr => opr.data);
+        }
+
         modifyService(service: Gaia.Domain.Service, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
             return this.transport.put<Utils.Operation<void>>('/api/market-place/merchants/services', service, config).then(opr => opr.data);
         }
@@ -407,6 +426,26 @@ module Gaia.Services {
         }
         modifyProduct(product: Gaia.Domain.Product, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<void>> {
             return this.transport.put<Utils.Operation<void>>('/api/market-place/merchants/products', product, config).then(opr => opr.data);
+        }
+
+
+        addProductImage(itemId: number, data: Utils.EncodedBinaryData, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
+            return this.transport.post<Utils.Operation<string>>('/api/market-place/merchants/products/images', {
+                ItemId: itemId,
+                Data: data
+            }, config).then(opr => opr.data);
+        }
+
+        removeProductImage(uri: string, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
+            return this.transport.delete<Utils.Operation<string>>('/api/market-place/merchants/products/images', {
+                Uri: uri
+            }, config).then(opr => opr.data);
+        }
+
+        getProductImages(itemId: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Domain.BlobRef[]>> {
+            return this.transport.get<Utils.Operation<Domain.BlobRef[]>>('/api/market-place/merchants/services/images', {
+                ItemId: itemId
+            }, config).then(opr => opr.data);
         }
         ///end-Merchant
 

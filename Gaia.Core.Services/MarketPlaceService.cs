@@ -1,5 +1,7 @@
 ﻿using Axis.Jupiter;
 using Axis.Luna;
+using Axis.Luna.Extensions;
+using Gaia.Core.Domain;
 using Gaia.Core.Domain.MarketPlace;
 using Gaia.Core.Domain.Meta;
 using Gaia.Core.Utils;
@@ -19,13 +21,19 @@ namespace Gaia.Core.Services
 
         public IDataContext DataContext { get; private set; }
 
+        public IBlobStoreService BlobStore { get; private set; }
 
-        public MarketPlaceService(IUserContextService userContext, IDataContext dataContext)
+
+        public MarketPlaceService(IUserContextService userContext, IDataContext dataContext,
+                                  IBlobStoreService blobStore)
         {
-            ThrowNullArguments(() => userContext, () => dataContext);
+            ThrowNullArguments(() => userContext, 
+                               () => dataContext,
+                               () => blobStore);
 
             this.UserContext = userContext;
             this.DataContext = dataContext;
+            this.BlobStore = blobStore;
         }
 
 
@@ -124,13 +132,75 @@ namespace Gaia.Core.Services
             });
 
         public Operation ModifyService(Service service)
-            => FeatureAccess.Guard(UserContext, () =>
-            {
-                if (service.CreatedBy != UserContext.CurrentUser.UserId) throw new Exception("Cannot modify service belonging to another user");
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            if (service.CreatedBy != UserContext.CurrentUser.UserId) throw new Exception("Cannot modify service belonging to another user");
 
-                service.ModifiedBy = UserContext.CurrentUser.EntityId;
-                DataContext.Store<Service>().Modify(service, true);
-            });
+            service.ModifiedBy = UserContext.CurrentUser.EntityId;
+            DataContext.Store<Service>().Modify(service, true);
+        });
+
+        public Operation<string> AddServiceImage(long serviceId, EncodedBinaryData blob)
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            var service = DataContext.Store<Service>().Query
+                .FirstOrDefault(_s => _s.EntityId == serviceId)
+                .ThrowIfNull("Service not found");
+
+            if (service.Owner.UserId != UserContext.CurrentUser.UserId) throw new Exception("Cannot modify service belonging to another user");
+
+            return BlobStore.Persist(blob)
+                .Then(opr =>
+                {
+                    DataContext.Store<BlobAttachment>().Add(new BlobAttachment
+                    {
+                        BlobUri = opr.Result,
+                        ContextId = serviceId.ToString(),
+                        Context = DomainConstants.ServiceInstanceContext,
+                        OwnerId = UserContext.CurrentUser.UserId,
+                        CreatedBy = UserContext.CurrentUser.UserId
+                    });
+                    DataContext.CommitChanges();
+
+                    return opr.Result;
+                });
+        });
+
+        public Operation RemoveServiceImage(string imageUri)
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            var blobAttachment = DataContext.Store<BlobAttachment>()
+                .QueryWith()
+                .Where(_ba => _ba.BlobUri == imageUri)
+                .Where(_ba => _ba.OwnerId == UserContext.CurrentUser.UserId)
+                .Where(_ba => _ba.Context == DomainConstants.ServiceInstanceContext)
+                .FirstOrDefault()
+                .ThrowIfNull("Service image not found");
+
+            DataContext.Store<BlobAttachment>().Delete(blobAttachment, true);
+
+            BlobStore.Delete(imageUri).Resolve();
+        });
+
+        public Operation<IEnumerable<BlobRef>> GetServiceImages(long serviceId)
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            return DataContext.Store<BlobAttachment>()
+                .QueryWith()
+                .Where(_ba => _ba.ContextId == serviceId.ToString())
+                .Where(_ba => _ba.Context == DomainConstants.ServiceInstanceContext)
+                .Where(_ba => _ba.OwnerId == UserContext.CurrentUser.UserId)
+                .AsEnumerable()
+                .Select(_ba => new BlobRef
+                {
+                    Uri = _ba.BlobUri,
+                    Metadata = BlobStore.GetMetadata(_ba.BlobUri)
+                                        .Then(opr => TagBuilder.Create(opr.Result).ToString())
+                                        .Resolve()
+                })
+                .ToArray() //to run the iteration before exiting
+                .AsEnumerable();
+        });
 
         public Operation<long> AddServiceInterface(ServiceInterface @interface)
             => FeatureAccess.Guard(UserContext, () =>
@@ -157,6 +227,69 @@ namespace Gaia.Core.Services
                 product.ModifiedBy = UserContext.CurrentUser.EntityId;
                 DataContext.Store<Product>().Modify(product, true);
             });
+
+
+        public Operation<string> AddProductImage(long serviceId, EncodedBinaryData blob)
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            var service = DataContext.Store<Product>().Query
+                .FirstOrDefault(_s => _s.EntityId == serviceId)
+                .ThrowIfNull("Product not found");
+
+            if (service.Owner.UserId != UserContext.CurrentUser.UserId) throw new Exception("Cannot modify product belonging to another user");
+
+            return BlobStore.Persist(blob)
+                .Then(opr =>
+                {
+                    DataContext.Store<BlobAttachment>().Add(new BlobAttachment
+                    {
+                        BlobUri = opr.Result,
+                        ContextId = serviceId.ToString(),
+                        Context = DomainConstants.ProductInstanceContext,
+                        OwnerId = UserContext.CurrentUser.UserId,
+                        CreatedBy = UserContext.CurrentUser.UserId
+                    });
+                    DataContext.CommitChanges();
+
+                    return opr.Result;
+                });
+        });
+
+        public Operation RemoveProductImage(string imageUri)
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            var blobAttachment = DataContext.Store<BlobAttachment>()
+                .QueryWith()
+                .Where(_ba => _ba.BlobUri == imageUri)
+                .Where(_ba => _ba.OwnerId == UserContext.CurrentUser.UserId)
+                .Where(_ba => _ba.Context == DomainConstants.ProductInstanceContext)
+                .FirstOrDefault()
+                .ThrowIfNull("Product image not found");
+
+            DataContext.Store<BlobAttachment>().Delete(blobAttachment, true);
+
+            BlobStore.Delete(imageUri).Resolve();
+        });
+
+        public Operation<IEnumerable<BlobRef>> GetProductImages(long productId)
+        => FeatureAccess.Guard(UserContext, () =>
+        {
+            return DataContext.Store<BlobAttachment>()
+                .QueryWith()
+                .Where(_ba => _ba.ContextId == productId.ToString())
+                .Where(_ba => _ba.Context == DomainConstants.ProductInstanceContext)
+                .Where(_ba => _ba.OwnerId == UserContext.CurrentUser.UserId)
+                .AsEnumerable()
+                .Select(_ba => new BlobRef
+                {
+                    Uri = _ba.BlobUri,
+                    Metadata = BlobStore.GetMetadata(_ba.BlobUri)
+                                        .Then(opr => TagBuilder.Create(opr.Result).ToString())
+                                        .Resolve()
+                })
+                .ToArray() //to run the iteration before exiting
+                .AsEnumerable();
+        });
         #endregion
 
         #region Customer

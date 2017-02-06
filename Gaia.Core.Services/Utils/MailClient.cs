@@ -4,12 +4,4 @@ using Axis.Luna;
 
 namespace Gaia.Core.Services.Utils
 {
-    public class MailClient1 : BaseService, System.IMailPushService
-    {
-        public AsyncOperation Push(MailMessage mail)
-            => Operation.RunAsync(() =>
-            {
-                //send the message here
-            });
-    }
 }

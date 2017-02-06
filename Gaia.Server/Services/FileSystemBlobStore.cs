@@ -2,8 +2,11 @@
 using System;
 using Axis.Luna;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Hosting;
+using System.Collections.Generic;
+using Axis.Luna.Extensions;
 
 namespace Gaia.Server.Services
 {
@@ -41,11 +44,11 @@ namespace Gaia.Server.Services
         /// <param name="blobUri"></param>
         /// <returns></returns>
         public Operation Delete(string blobUri)
-            => Operation.Try(() =>
-            {
-                var finfo = new FileInfo(GetLocalPath(blobUri));
-                if (finfo.Exists) finfo.Delete();
-            });
+        => Operation.Try(() =>
+        {
+            var finfo = new FileInfo(GetLocalPath(blobUri));
+            if (finfo.Exists) finfo.Delete();
+        });
 
         /// <summary>
         /// 
@@ -53,11 +56,11 @@ namespace Gaia.Server.Services
         /// <param name="blobUri"></param>
         /// <returns></returns>
         public Operation<EncodedBinaryData> GetBlob(string blobUri)
-            => Operation.Try(() =>
-            {
-                var finfo = new FileInfo(GetLocalPath(blobUri));
-                return new EncodedBinaryData(finfo.OpenRead() as Stream, MimeMap.ToMime(finfo.Extension));
-            });
+        => Operation.Try(() =>
+        {
+            var finfo = new FileInfo(GetLocalPath(blobUri));
+            return new EncodedBinaryData(finfo.OpenRead() as Stream, MimeMap.ToMime(finfo.Extension));
+        });
 
         /// <summary>
         /// 
@@ -67,19 +70,41 @@ namespace Gaia.Server.Services
         /// <param name="subDirectory"></param>
         /// <returns></returns>
         public Operation<string> Persist(EncodedBinaryData blob)
-            => Operation.Try(() =>
-            {
-                var mime = blob.MimeObject();
-                var fileName = $"{RandomAlphaNumericGenerator.RandomAlphaNumeric(40)}{mime.Extension}";
+        => Operation.Try(() =>
+        {
+            var mime = blob.MimeObject();
+            var fileName = $"{RandomAlphaNumericGenerator.RandomAlphaNumeric(40)}{mime.Extension}";
 
-                DirectoryInfo dinfo = new DirectoryInfo(RootDirecotry);
+            DirectoryInfo dinfo = new DirectoryInfo(RootDirecotry);
 
-                using (var stream = new FileInfo(Path.Combine(dinfo.FullName, fileName)).OpenWrite())
-                    stream.Write(blob.Data, 0, blob.Data.Length);
+            using (var stream = new FileInfo(Path.Combine(dinfo.FullName, fileName)).OpenWrite())
+                stream.Write(blob.Data, 0, blob.Data.Length);
 
-                var referrerUri = RefererRequest.RefererUri();
-                return new Uri($"{referrerUri.Scheme}://{referrerUri.Authority}/Content/Blob/{fileName}").ToString(); //just to make sure it parses correctly
-            });
+            if (!string.IsNullOrWhiteSpace(blob.Metadata))
+                using (var writer = new StreamWriter(new FileInfo(Path.Combine(dinfo.FullName, fileName + ".meta")).OpenWrite()))
+                {
+                    blob.MetadataTags().ForAll((cnt, next) => writer.WriteLine(next));
+                    writer.Flush();
+                }
+
+            var referrerUri = RefererRequest.RefererUri();
+            return new Uri($"{referrerUri.Scheme}://{referrerUri.Authority}/Content/Blob/{fileName}").ToString(); //just to make sure it parses correctly
+        });
+
+        public Operation<Dictionary<string, string>> GetMetadata(string blobUri)
+        => Operation.Try(() =>
+        {
+            var finfo = new FileInfo(GetLocalPath(blobUri) + ".meta");
+            
+            if (finfo.Exists)
+                return new StreamReader(finfo.OpenRead())
+                    .Using(reader => reader.ReadToEnd())
+                    .Pipe(_tags => TagBuilder.Parse(_tags))
+                    .Select(_tag => _tag.Name.ValuePair(_tag.Value))
+                    .Pipe(_tags => new Dictionary<string, string>().AddAll(_tags));
+
+            else return new Dictionary<string, string>();
+        });
 
 
         internal string GetLocalPath(string uri)
@@ -92,7 +117,7 @@ namespace Gaia.Server.Services
 
             path = Regex.Replace(path, "\\/Content\\/Blob\\/", "", RegexOptions.IgnoreCase);
             return Path.Combine(RootDirecotry, path);
-        }        
+        }
     }
 
     /// <summary>

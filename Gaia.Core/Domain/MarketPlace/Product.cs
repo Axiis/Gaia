@@ -1,4 +1,5 @@
-﻿using Axis.Pollux.Identity.Principal;
+﻿using Axis.Luna;
+using Axis.Pollux.Identity.Principal;
 using Gaia.Core.Utils;
 using System.Collections.Generic;
 
@@ -59,8 +60,7 @@ namespace Gaia.Core.Domain.MarketPlace
         }
 
 
-        public ICollection<BlobAttachment> Images { get; set; } = new HashSet<BlobAttachment>(); //ignore
-        public ICollection<BlobAttachment> Videos { get; set; } = new HashSet<BlobAttachment>(); //ignore
+        public ICollection<BlobRef> Images { get; set; } = new HashSet<BlobRef>(); //ignore
 
         public Product()
         {

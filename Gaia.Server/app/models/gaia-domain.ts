@@ -571,6 +571,7 @@ module Gaia.Domain {
 
         Inputs: ServiceInterface[];
         Outputs: ServiceInterface[];
+        Images: BlobRef[];
 
         constructor(data?: Object) {
             super(data);
@@ -579,6 +580,7 @@ module Gaia.Domain {
                 this.Product = !Object.isNullOrUndefined(this.Product) ? new Product(this.Product) : null;
                 this.Inputs = !Object.isNullOrUndefined(this.Inputs) ? this.Inputs.map(r => new ServiceInterface(r)) : [];
                 this.Outputs = !Object.isNullOrUndefined(this.Outputs) ? this.Outputs.map(r => new ServiceInterface(r)) : [];
+                this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(r => new BlobRef(r)) : [];
             }
 
             if (Object.isNullOrUndefined(this.Status)) this.Status = ServiceStatus.Unavailable;
@@ -598,15 +600,13 @@ module Gaia.Domain {
 
         Owner: Axis.Pollux.Domain.User;
 
-        Images: Axis.Luna.Domain.BinaryData[];
-        Videos: Axis.Luna.Domain.BinaryData[];
+        Images: BlobRef[];
 
         constructor(data?: Object) {
             super(data);
             
             if (!Object.isNullOrUndefined(data)) {
-                this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
-                this.Videos = !Object.isNullOrUndefined(this.Videos) ? this.Videos.map(r => new Axis.Luna.Domain.BinaryData(r)) : [];
+                this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(r => new BlobRef(r)) : [];
             }
 
             if (Object.isNullOrUndefined(this.Status)) this.Status = ProductStatus.Reviewing;
@@ -660,6 +660,21 @@ module Gaia.Domain {
             if (!Object.isNullOrUndefined(data)) {
                 this.Owner = !Object.isNullOrUndefined(this.Owner) ? new Axis.Pollux.Domain.User(data) : null;
             }
+        }
+    }
+
+
+    export class BlobRef {
+        Uri: string = null;
+        Metadata: string = null;
+
+        MetadataTags(): Utils.StringPair[] {
+            if (!Object.isNullOrUndefined(this.Metadata)) return Utils.StringPair.ParseStringPairs(this.Metadata);
+            else return [];
+        }
+
+        constructor(data?: Object) {
+            if (!Object.isNullOrUndefined(data)) data.copyTo(this);
         }
     }
 }

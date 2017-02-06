@@ -1,12 +1,14 @@
 ﻿using Axis.Luna;
+using Gaia.Core.Domain.Mail;
 using Gaia.Core.Services;
+using Gaia.Core.System;
 using Mail = System.Net.Mail;
 
-namespace Gaia.Core.System
+namespace Gaia.Core.Services
 {
     public interface IMailPushService : IGaiaService, IUserContextAware
     {
-        AsyncOperation Push(Mail.MailMessage mail);
+        Operation Push<Mail>(Mail mail) where Mail : BaseMailModel;
     }
     
 }

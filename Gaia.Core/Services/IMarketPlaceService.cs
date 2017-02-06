@@ -52,6 +52,15 @@ namespace Gaia.Core.Services
         [Feature("system/MarketPlace/Merchant/Services/@modify")]
         Operation ModifyService(Service service);
 
+        [Feature("system/MarketPlace/Merchant/Services/images/@add")]
+        Operation<string> AddServiceImage(long serviceId, EncodedBinaryData blob);
+
+        [Feature("system/MarketPlace/Merchant/Services/images/@remove")]
+        Operation RemoveServiceImage(string imageUri);
+
+        [Feature("system/MarketPlace/Merchant/Services/images/@get")]
+        Operation<IEnumerable<BlobRef>> GetServiceImages(long serviceId);
+
 
         [Feature("system/MarketPlace/Merchant/ServiceInterface/@add")]
         Operation<long> AddServiceInterface(ServiceInterface @interface);
@@ -62,6 +71,17 @@ namespace Gaia.Core.Services
 
         [Feature("system/MarketPlace/Merchant/Products/@modify")]
         Operation ModifyProduct(Product product);
+
+        [Feature("system/MarketPlace/Merchant/Products/images/@add")]
+        Operation<string> AddProductImage(long productId, EncodedBinaryData blob);
+
+        [Feature("system/MarketPlace/Merchant/Products/images/@remove")]
+        Operation RemoveProductImage(string imageUri);
+
+        [Feature("system/MarketPlace/Merchant/Products/images/@get")]
+        Operation<IEnumerable<BlobRef>> GetProductImages(long productId);
+
+
         #endregion
 
         #region Customer

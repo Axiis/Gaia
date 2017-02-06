@@ -92,6 +92,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Projects\c#\Axis.Core\Axis.Pollux\Axis.Pollux.RoleAuthorization\bin\Debug\Axis.Pollux.RoleAuthorization.dll</HintPath>
     </Reference>
+    <Reference Include="CAIRO.ElasticEmail, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CAIRO.ElasticEmail.1.5.0.0\lib\net45\CAIRO.ElasticEmail.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -183,6 +187,10 @@
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.9.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SimpleInjector, Version=3.2.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
@@ -377,6 +385,7 @@
     <TypeScriptCompile Include="app\utils\constants.ts" />
     <TypeScriptCompile Include="app\utils\encodedBinaryData.ts" />
     <TypeScriptCompile Include="app\utils\extensions.ts" />
+    <Content Include="readme.txt" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="scripts\angular-animate.js" />
@@ -1471,12 +1480,14 @@
     <Compile Include="DI\DIRegistration.cs" />
     <Compile Include="DI\MvcResolutionContext.cs" />
     <Compile Include="DI\OwinResolutionContext.cs" />
+    <Compile Include="DI\UrlProvider.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="OAuth\AuthorizationServer.cs" />
     <Compile Include="OAuth\Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ElasticMailPush.cs" />
     <Compile Include="Services\FileSystemBlobStore.cs" />
     <Compile Include="Services\NewtonsoftSerializerSettingsProvider.cs" />
     <Compile Include="Services\IOwinContextProvider.cs" />

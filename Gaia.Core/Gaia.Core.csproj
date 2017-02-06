@@ -79,6 +79,8 @@
     <Compile Include="Domain\BlobAttachment.cs" />
     <Compile Include="Domain\ForumThreadWatch.cs" />
     <Compile Include="Domain\IBaseHash.cs" />
+    <Compile Include="Domain\Mail\AccountVerification.cs" />
+    <Compile Include="Domain\Mail\BaseMailModel.cs" />
     <Compile Include="Domain\MarketPlace\OrderAggregate.cs" />
     <Compile Include="Domain\MarketPlace\ItemType.cs" />
     <Compile Include="Domain\MarketPlace\ISearchableItem.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="CQRS\IDomainQuery.cs" />
     <Compile Include="Services\IActivityFeedService.cs" />
     <Compile Include="Services\IAdvertService.cs" />
+    <Compile Include="Services\IAppUrlProvider.cs" />
     <Compile Include="Services\IBlobService.cs" />
     <Compile Include="Services\IContextVerificationService.cs" />
     <Compile Include="Services\IGaiaService.cs" />
@@ -130,7 +133,7 @@
     <Compile Include="Services\ISystemSettingsService.cs" />
     <Compile Include="Services\IUserLocator.cs" />
     <Compile Include="System\IContextAware.cs" />
-    <Compile Include="System\IMailPushService.cs" />
+    <Compile Include="Services\IMailPushService.cs" />
     <Compile Include="System\SystemSettings.cs" />
     <Compile Include="UserDataConstants.cs" />
     <Compile Include="Utils\Extensions.cs" />
