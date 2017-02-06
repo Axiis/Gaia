@@ -18,6 +18,7 @@ var Gaia;
                     '</div>' +
                     '</div>';
             }
+            //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
             RingLoader.prototype.controller = function ($scope) {
                 //default values
                 if (!$scope.size)
@@ -74,6 +75,7 @@ var Gaia;
                     '</div>' +
                     '</div>';
             }
+            //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
             BoxLoader.prototype.controller = function ($scope) {
                 //default values
                 if (!$scope.size)
@@ -113,4 +115,3 @@ var Gaia;
         Directives.BoxLoader = BoxLoader;
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=loaders.js.map

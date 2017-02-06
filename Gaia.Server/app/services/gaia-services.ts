@@ -448,6 +448,7 @@ module Gaia.Services {
         }
 
 
+
         getShoppingLists(config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string[]>> {
             return this.transport.get<Utils.Operation<string[]>>('/api/merket-place/customer/shopping-list', null, config).then(opr => opr.data);
         }

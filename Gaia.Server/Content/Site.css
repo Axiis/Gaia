@@ -166,12 +166,27 @@ ul.gaia-vertical-menu-list > li.active > a{
     border-radius:50%;
     width:40px;
     height:40px;
-    background-color: brown;
+    background: transparent;
     right:0;
     bottom:0;
     margin-bottom:73px;
     margin-right: 10px;
     z-index:2;
+}
+.small-product-card > div.primary-icon {
+    position: absolute;
+    border-radius:50%;
+    width:40px;
+    height:40px;
+    right: 10px;
+    bottom: 73px;
+    background-color: brown;
+    color: white;
+    z-index: 1;
+}
+.small-product-card > div.primary-icon > i{
+    padding-left:4px;
+    padding-top:4px;
 }
 
 .small-product-card > div.flex-container{
@@ -183,6 +198,7 @@ ul.gaia-vertical-menu-list > li.active > a{
 
 .small-product-card > div.flex-container > div:nth-child(1){
     flex-basis:62.5%;
+    background-color: #ccc;
 }
 
 .small-product-card > div.flex-container > div.product-details{
@@ -190,6 +206,7 @@ ul.gaia-vertical-menu-list > li.active > a{
     background-color:white;
     display: flex;
     flex-direction:column;
+    font-size:14px;
 }
 
 .small-product-card > div.flex-container > div.product-details > div:nth-child(1) {
@@ -245,6 +262,19 @@ ul.gaia-vertical-menu-list > li.active > a{
     margin-top: 10px;
     margin-left: 40%;
 }
+.large-product-card > div.primary-icon {
+    position: absolute;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    background: none;
+    color: white;
+    left: -20px;
+    top: 0;
+    margin-top: 10px;
+    margin-left: 40%;
+    z-index: 2;
+}
 
 .large-product-card > div.flex-container {
     height: 100%;
@@ -255,15 +285,17 @@ ul.gaia-vertical-menu-list > li.active > a{
 
 .large-product-card > div.flex-container > div:nth-child(1){
     width:40%;
+    background-color:#ccc;
 }
 
 .large-product-card > div.flex-container > div.product-details {
     width: 60%;
     background: white;
     box-sizing: border-box;
-    padding: 10px 10px 10px 15px;
+    padding: 10px 10px 10px 30px;
     display: flex;
     flex-direction:column;
+    font-size:16px;
 }
 
 .large-product-card > div.flex-container > div.product-details > div:nth-child(1){
@@ -284,7 +316,3 @@ ul.gaia-vertical-menu-list > li.active > a{
 .large-product-card > div.flex-container > div.product-details > div:nth-child(3) > div.product-price{
     
 }
-
-
-
-

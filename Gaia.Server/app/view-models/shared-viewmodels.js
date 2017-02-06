@@ -15,11 +15,10 @@ var Gaia;
                         window.location.href = '/view-server/login/shell';
                     });
                 };
-                NavbarViewModel.$inject = ['#gaia.utils.domainTransport'];
                 return NavbarViewModel;
             }());
+            NavbarViewModel.$inject = ['#gaia.utils.domainTransport'];
             Shared.NavbarViewModel = NavbarViewModel;
         })(Shared = ViewModels.Shared || (ViewModels.Shared = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=shared-viewmodels.js.map

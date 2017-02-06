@@ -21,4 +21,3 @@ var Gaia;
         Directives.TagsInput = TagsInput;
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=tagsInput.js.map

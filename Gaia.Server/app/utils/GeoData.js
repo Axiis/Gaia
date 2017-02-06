@@ -2,11 +2,11 @@ var Gaia;
 (function (Gaia) {
     var Utils;
     (function (Utils) {
+        var Arc;
         (function (Arc) {
             Arc[Arc["Degrees"] = 0] = "Degrees";
             Arc[Arc["Radians"] = 1] = "Radians";
-        })(Utils.Arc || (Utils.Arc = {}));
-        var Arc = Utils.Arc;
+        })(Arc = Utils.Arc || (Utils.Arc = {}));
         var GeoLocation = (function () {
             function GeoLocation(data) {
                 this.Latitude = 0;
@@ -120,10 +120,9 @@ var Gaia;
                     .map(function (_match) { return GeoLocation.Parse(_match); })
                     .project(function (_locations) { return new GeoArea(_locations); });
             };
-            GeoArea.AreaPattern = /\[[^\]+]\](\s*\,\s*\[[^\]+]\])+/;
             return GeoArea;
         }());
+        GeoArea.AreaPattern = /\[[^\]+]\](\s*\,\s*\[[^\]+]\])+/;
         Utils.GeoArea = GeoArea;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=GeoData.js.map

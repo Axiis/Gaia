@@ -13,6 +13,7 @@ module Gaia.Directives {
             show: '=?'
         };
 
+        //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
         controller($scope) {
 
             //default values
@@ -64,6 +65,7 @@ module Gaia.Directives {
             show: '=?'
         };
 
+        //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
         controller($scope) {
 
             //default values

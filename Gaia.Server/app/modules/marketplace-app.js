@@ -9,8 +9,10 @@ var Gaia;
             MarketPlace.module.directive('binaryData', Gaia.Directives.BinaryData);
             MarketPlace.module.directive('tagsInput', function () { return new Gaia.Directives.TagsInput(); });
             MarketPlace.module.directive('enumOptions', function () { return new Gaia.Directives.EnumOptions(); });
-            //module.directive('smallProductCard', () => new Gaia.Directives.MarketPlace.SmallProductCard());
-            //module.directive('largeProductCard', () => new Gaia.Directives.MarketPlace.LargeProductCard());
+            MarketPlace.module.directive('smallProductCard', ['#gaia.marketPlaceService', '#gaia.utils.notify', '$compile',
+                function (mp, n, $compile) { return new Gaia.Directives.MarketPlace.SmallProductCard(mp, n, $compile); }]);
+            MarketPlace.module.directive('largeProductCard', ['#gaia.marketPlaceService', '#gaia.utils.notify', '$compile',
+                function (mp, n, $compile) { return new Gaia.Directives.MarketPlace.LargeProductCard(mp, n, $compile); }]);
             ///Gaia services
             MarketPlace.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             MarketPlace.module.service('#gaia.accountsService', Gaia.Services.UserAccountService);
@@ -120,4 +122,3 @@ var Gaia;
         })(MarketPlace = App.MarketPlace || (App.MarketPlace = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-app.js.map

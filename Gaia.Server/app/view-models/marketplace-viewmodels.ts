@@ -342,6 +342,57 @@ module Gaia.ViewModels.MarketPlace {
 
     export class CustomerViewModel {
 
+        private notify: Utils.Services.NotifyService;
+        private marketPlace: Services.MarketPlaceService;
+
+        private currentPage: number;
+        private pageSize: number;
+        private searchString: string;
+
+        products: Domain.Product[];
+        isRefreshingProducts: boolean;
+
+
+        refreshProducts() {
+            //this.isRefreshingProducts = true;
+            //this.marketPlace
+            //    .findCustomerProduct(this.searchString, this.pageSize, this.currentPage)
+            //    .then(opr => {
+
+            //        this.isRefreshingProducts = false;
+            //    }, err => {
+
+            //        this.isRefreshingProducts = false;
+            //    });
+
+            for (var cnt = 0; cnt < 20; cnt++) {
+                this.products.push(new Domain.Product({
+                    TransactionId: '56435ytr-6435ytrt-tjr53ytrefd-'+cnt,
+                    Title: 'random title here - '+cnt,
+                    Description: 'random description here and everywhere else; blah, blah, blah...'+cnt,
+                    Status: Domain.ProductStatus.Published,
+                    Cost: 6543,
+                    StockCount: 2456,
+                    Tags: null,
+                    EntityId: 43
+                }));
+            }
+        }
+
+
+
+        static $inject = ['#gaia.utils.notify', '#gaia.marketPlaceService'];
+        constructor(notify, marketPlace) {
+            this.notify = notify;
+            this.marketPlace = marketPlace;
+
+            this.currentPage = 0;
+            this.pageSize = 50;
+            this.searchString = null;
+            this.products = [];
+
+            this.refreshProducts();
+        }
     }
 
     export class CustomerProductsViewModel {
@@ -378,13 +429,13 @@ module Gaia.Directives.MarketPlace{
         restrict: string = 'E';
         $scope: any = null;
         scope: any = {
-            product: '=',
-            style: '=?'
+            product: '='
         };
 
         template: string = '' +
         '<div class="material-shadow small-product-card" style="{{style}}">'+
-        '<div class= "material-interactive material-shadow primary-button" ng-click="vm.addToCart()"></div>'+
+        '<div class= "material-interactive material-shadow primary-button" ng-click="vm.addToCart()"></div>' +
+        '<div class="primary-icon btn btn-icon"><i class="icon-cart-add"></i></div>' +
         '<div class= "flex-container">'+
         '<div></div>'+
         '<div class= "product-details">'+
@@ -407,6 +458,10 @@ module Gaia.Directives.MarketPlace{
             this.$scope = $scope;
         }
 
+        link(scope: ng.IScope, element, attributes: ng.IAttributes): void {
+            scope['style'] = attributes['stylel'];
+        }
+
         addToCart() {
             this.marketPlace.addToBasket((this.$scope.product as Domain.Product).EntityId, Domain.ItemType.Product)
                 .then(oprc => {
@@ -424,7 +479,9 @@ module Gaia.Directives.MarketPlace{
                 });
         }
 
-        constructor(private marketPlace: Services.MarketPlaceService, private notify: Utils.Services.NotifyService) {
+        constructor(private marketPlace: Services.MarketPlaceService,
+            private notify: Utils.Services.NotifyService,
+            private $compile: ng.ICompileService) {
         }
     }
 
@@ -434,13 +491,13 @@ module Gaia.Directives.MarketPlace{
         restrict: string = 'E';
         $scope: any = null;
         scope: any = {
-            product: '=',
-            style: '=?'
+            product: '='
         };
 
         template: string = '' +
-        '<div style="{{style}}" class="material-shadow large-product-card">'+
+        '<div style="{{style}}" class="material-shadow large-product-card">' +
         '<div class="material-interactive material-shadow primary-button"></div>' +
+        '<div class="primary-icon btn"><i class="icon-cart-add"></i></div>' +
         '<div class= "flex-container">' +
         '<div></div>' +
         '<div class= "product-details">' +
@@ -463,6 +520,10 @@ module Gaia.Directives.MarketPlace{
             this.$scope = $scope;
         }
 
+        link(scope: ng.IScope, element, attributes: ng.IAttributes): void {
+            scope['style'] = attributes['stylel'];
+        }
+
         addToCart() {
             this.marketPlace.addToBasket((this.$scope.product as Domain.Product).EntityId, Domain.ItemType.Product)
                 .then(oprc => {
@@ -475,7 +536,9 @@ module Gaia.Directives.MarketPlace{
 
         }
 
-        constructor(private marketPlace: Services.MarketPlaceService, private notify: Utils.Services.NotifyService) {
+        constructor(private marketPlace: Services.MarketPlaceService,
+            private notify: Utils.Services.NotifyService,
+            private $compile: ng.ICompileService) {
         }
     }
 }

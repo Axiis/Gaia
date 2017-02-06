@@ -50,4 +50,3 @@ var Gaia;
         })(Dashboard = App.Dashboard || (App.Dashboard = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=dashboard-app.js.map
