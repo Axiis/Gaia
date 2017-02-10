@@ -5,6 +5,8 @@ var Gaia;
         var Login;
         (function (Login) {
             Login.module = angular.module("gaiaLogin", ['ui.router', 'ngSanitize']);
+            ///directives
+            Login.module.directive('boxLoader', function () { return new Gaia.Directives.BoxLoader(); });
             ///Gaia services
             Login.module.service('#gaia.profileService', Gaia.Services.ProfileService);
             ///Pollux Services
@@ -54,7 +56,7 @@ var Gaia;
                     controllerAs: 'vm'
                 })
                     .state('verifyRegistration', {
-                    url: '/verify-registration/:verificationToken/:user',
+                    url: '/verify-registration/:verificationToken/:user/:emailDomain',
                     templateUrl: 'verify-registration',
                     controller: 'VerifyRegistrationViewModel',
                     controllerAs: 'vm'

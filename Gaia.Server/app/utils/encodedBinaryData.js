@@ -3,10 +3,10 @@ var Gaia;
     var Utils;
     (function (Utils) {
         var EncodedBinaryData = (function () {
-            function EncodedBinaryData(data, mime, name, metadata) {
+            function EncodedBinaryData(binary, mime, name, metadata) {
                 this._mime = null;
                 this._metadata = new Utils.StringPairCollection();
-                this.Data = data;
+                this.Data = binary;
                 this.Mime = mime;
                 this.Metadata = metadata;
                 this.Name = name; //name comes last so it is appended to the metadata
@@ -91,6 +91,9 @@ var Gaia;
                     Name: this.Name,
                     Mime: this.Mime
                 };
+            };
+            EncodedBinaryData.prototype.Serializable = function () {
+                return this.RawObjectForm();
             };
             EncodedBinaryData.Create = function (data) {
                 return new EncodedBinaryData(data.Data, data.Mime, data.Name, data.Metadata);

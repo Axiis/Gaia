@@ -9,6 +9,7 @@ namespace Gaia.Core.Services
 {
     public interface IAppUrlProvider
     {
-        Operation<string> GetAccountVerificationUrl(string verificationToken);
+        Operation<string> GetAccountVerificationUrl(string verificationToken, string targetUser);
+        Operation<string> GetBlobUrl(string blobName);
     }
 }

@@ -118,6 +118,12 @@ var Gaia;
                     this.products = new Gaia.Utils.SequencePage([], 0, 1, 0);
                     this.listProducts(0, null);
                 }
+                MerchantProductsViewModel.prototype.hasProductTitle = function () {
+                    if (Object.isNullOrUndefined(this.currentProduct))
+                        return false;
+                    else
+                        return !Object.isNullOrUndefined(this.currentProduct.Title);
+                };
                 MerchantProductsViewModel.prototype.switchState = function (state) {
                     var _this = this;
                     if (!Object.isNullOrUndefined(state)) {
@@ -128,7 +134,7 @@ var Gaia;
                 MerchantProductsViewModel.prototype.isCurrentProductNascent = function () {
                     if (Object.isNullOrUndefined(this.currentProduct))
                         return false;
-                    else if (this.currentProduct['$nascent'] == true)
+                    else if (this.currentProduct['$_nascent'] == true)
                         return true;
                     else
                         return false;
@@ -146,6 +152,22 @@ var Gaia;
                         _this.products = opr.Result;
                         _this.isSearching = false;
                         _this.currentListingPage = pageIndex;
+                        //load the product's images
+                        _this.products.Page.forEach(function (_product) {
+                            _product['$_isLoadingImages'] = true;
+                            _this.marketplace.getProductImages(_product.EntityId)
+                                .then(function (opr) {
+                                _product.Images.clear();
+                                opr.Result.forEach(function (_ref) {
+                                    _ref['$_owner'] = _product;
+                                    _product.Images.push(_ref);
+                                });
+                                delete _product['$_isLoadingImages'];
+                            }, function (err) {
+                                _this.notify.error('Could not product images', 'Oops!');
+                                return _this.$q.reject();
+                            });
+                        });
                     }, function (err) {
                         _this.products = new Gaia.Utils.SequencePage([], 0, 1, 0);
                         _this.isSearching = false;
@@ -160,7 +182,7 @@ var Gaia;
                 };
                 MerchantProductsViewModel.prototype.addAndModify = function () {
                     this.modifyProduct(this.newProduct(function (s) {
-                        s['$nascent'] = true;
+                        s['$_nascent'] = true;
                     }));
                 };
                 MerchantProductsViewModel.prototype.modifyProduct = function (product) {
@@ -175,7 +197,7 @@ var Gaia;
                     var _this = this;
                     if (!Object.isNullOrUndefined(this.currentProduct) && !this.isPersistingProduct) {
                         this.isPersistingProduct = true;
-                        if (this.currentProduct['$nascent']) {
+                        if (this.currentProduct['$_nascent']) {
                             this.marketplace
                                 .addProduct(this.currentProduct)
                                 .then(function (opr) {
@@ -183,7 +205,7 @@ var Gaia;
                                 _this.currentProduct.CreatedBy = _this.domModel.simpleModel.UserId;
                                 _this.notify.success('the Product was persisted successfully!');
                                 _this.isPersistingProduct = false;
-                                delete _this.currentProduct['$nascent'];
+                                delete _this.currentProduct['$_nascent'];
                                 _this.products.Page.push(_this.currentProduct);
                                 _this.switchState({ isListingProducts: true, currentProduct: null });
                             }, function (err) {
@@ -207,6 +229,53 @@ var Gaia;
                         }
                     }
                 };
+                MerchantProductsViewModel.prototype.productImageRef = function (imageRef) {
+                    return 'url(' + imageRef.Uri + ')';
+                };
+                MerchantProductsViewModel.prototype.isModifyingExistingProduct = function () {
+                    return this.isModifyingProduct && !this.isCurrentProductNascent();
+                };
+                MerchantProductsViewModel.prototype.removeImage = function (ref) {
+                    var _this = this;
+                    if (ref['$_isRemovingImage'])
+                        return;
+                    ref['$_isRemovingImage'] = true;
+                    this.marketplace.removeProductImage(ref.Uri)
+                        .then(function (opr) {
+                        _this.notify.success("The Image has been deleted");
+                        ref['$_owner'].Images.remove(ref);
+                        delete ref['$_isRemovingImage'];
+                        delete ref['$_owner'];
+                    }, function (err) {
+                        _this.notify.error("The Image was not deleted", "Oops!");
+                        delete ref['$_isRemovingImage'];
+                    });
+                };
+                Object.defineProperty(MerchantProductsViewModel.prototype, "uploadImage", {
+                    set: function (data) {
+                        var _this = this;
+                        var _product = this.currentProduct;
+                        if (_product['$_isPersistingImage'])
+                            return;
+                        _product['$_isPersistingImage'] = true;
+                        this.marketplace.addProductImage(this.currentProduct.EntityId, data)
+                            .then(function (opr) {
+                            _this.notify.success("The image was persisted successfully");
+                            _this.currentProduct.Images.push(new Gaia.Domain.BlobRef({
+                                Uri: opr.Result,
+                                Metadata: null
+                            }));
+                            $('#uploadImageForm')[0].reset();
+                            delete _product['$_isPersistingImage'];
+                        }, function (err) {
+                            _this.notify.error("An error occured...", "Oops!");
+                            $('#uploadImageForm')[0].reset();
+                            delete _product['$_isPersistingImage'];
+                        });
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 MerchantProductsViewModel.prototype.statusString = function (product) {
                     return Gaia.Domain.ProductStatus[product.Status];
                 };
@@ -237,6 +306,12 @@ var Gaia;
                     this.services = new Gaia.Utils.SequencePage([], 0, 1, 0);
                     this.listServices(0, null);
                 }
+                MerchantServicesViewModel.prototype.hasServiceTitle = function () {
+                    if (Object.isNullOrUndefined(this.currentService))
+                        return false;
+                    else
+                        return !Object.isNullOrUndefined(this.currentService.Title);
+                };
                 MerchantServicesViewModel.prototype.switchState = function (state) {
                     var _this = this;
                     if (!Object.isNullOrUndefined(state)) {
@@ -247,7 +322,7 @@ var Gaia;
                 MerchantServicesViewModel.prototype.isCurrentServiceNascent = function () {
                     if (Object.isNullOrUndefined(this.currentService))
                         return false;
-                    else if (this.currentService['$nascent'] == true)
+                    else if (this.currentService['$_nascent'] == true)
                         return true;
                     else
                         return false;
@@ -279,7 +354,7 @@ var Gaia;
                 };
                 MerchantServicesViewModel.prototype.addAndModify = function () {
                     this.modifyService(this.newService(function (s) {
-                        s['$nascent'] = true;
+                        s['$_nascent'] = true;
                     }));
                 };
                 MerchantServicesViewModel.prototype.modifyService = function (service) {
@@ -294,7 +369,7 @@ var Gaia;
                     var _this = this;
                     if (!Object.isNullOrUndefined(this.currentService) && !this.isPersistingService) {
                         this.isPersistingService = true;
-                        if (this.currentService['$nascent']) {
+                        if (this.currentService['$_nascent']) {
                             this.marketplace
                                 .addService(this.currentService)
                                 .then(function (opr) {
@@ -302,7 +377,7 @@ var Gaia;
                                 _this.currentService.CreatedBy = _this.domModel.simpleModel.UserId;
                                 _this.notify.success('the Service was persisted successfully!');
                                 _this.isPersistingService = false;
-                                delete _this.currentService['$nascent'];
+                                delete _this.currentService['$_nascent'];
                                 _this.services.Page.push(_this.currentService);
                                 _this.switchState({ isListingServices: true, currentService: null });
                             }, function (err) {

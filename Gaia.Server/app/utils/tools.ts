@@ -52,7 +52,7 @@ module Gaia.Utils {
 
         var a, b, c, d;
         var chunk;
-        
+
         for (var i = 0; i < mainLength; i = i + 3) {
             // Combine the three bytes into a single integer
             chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
@@ -84,6 +84,17 @@ module Gaia.Utils {
         }
 
         return base64;
+    }
+
+    export function FromBase64String(base64: string): Uint8Array {
+        var raw = window.atob(base64);
+        var rawLength = raw.length;
+        var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+        for (i = 0; i < rawLength; i++) {
+            array[i] = raw.charCodeAt(i);
+        }
+        return array;
     }
 
     //Class that implements pagination

@@ -74,6 +74,16 @@ var Gaia;
             return base64;
         }
         Utils.ToBase64String = ToBase64String;
+        function FromBase64String(base64) {
+            var raw = window.atob(base64);
+            var rawLength = raw.length;
+            var array = new Uint8Array(new ArrayBuffer(rawLength));
+            for (i = 0; i < rawLength; i++) {
+                array[i] = raw.charCodeAt(i);
+            }
+            return array;
+        }
+        Utils.FromBase64String = FromBase64String;
         //Class that implements pagination
         var SequencePage = (function () {
             function SequencePage(page, sequenceLength, pageSize, pageIndex) {

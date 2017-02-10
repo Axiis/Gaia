@@ -69,7 +69,7 @@ module Gaia.Utils {
             return this._metadata.pairs;
         }
 
-        RawObjectForm(): {} {
+        RawObjectForm(): any {
             return {
                 Data: Utils.ToBase64String(this.Data),
                 Name: this.Name,
@@ -77,9 +77,13 @@ module Gaia.Utils {
             };
         }
 
+        Serializable(): any {
+            return this.RawObjectForm();
+        }
 
-        constructor(data: Uint8Array, mime: string, name?: string, metadata?: string) {
-            this.Data = data;
+
+        constructor(binary: Uint8Array, mime: string, name?: string, metadata?: string) {
+            this.Data = binary;
             this.Mime = mime;
             this.Metadata = metadata;
             this.Name = name; //name comes last so it is appended to the metadata

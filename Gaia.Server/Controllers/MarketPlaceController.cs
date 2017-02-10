@@ -142,7 +142,7 @@ namespace Gaia.Server.Controllers
         public IHttpActionResult RemoveProductsImage(string data)
         => Encoding.UTF8.GetString(Convert.FromBase64String(data))
                 .Pipe(_json => JsonConvert.DeserializeObject<ImageAttachmentArgs>(_json, Constants.DefaultJsonSerializerSettings))
-                .Pipe(info => _marketPlace.RemoveServiceImage(info.Uri))
+                .Pipe(info => _marketPlace.RemoveProductImage(info.Uri))
                 .Pipe(_op => _op.OperationResult(Request));
 
 

@@ -51,16 +51,16 @@ namespace Gaia.Core.Services
                                () => accessManager,
                                () => blobStore,
                                () => messagePush,
-                               () => UrlProvider);
+                               () => urlProvider);
 
-            this.UserContext = userContext;
-            this.DataContext = dataContext;
-            this.CredentialAuth = credentialAuthentication;
-            this.ContextVerifier = contextVerifier;
-            this.AccessManager = accessManager;
-            this.BlobStore = blobStore;
-            this.MessagePush = messagePush;
-            this.UrlProvider = UrlProvider;
+            UserContext = userContext;
+            DataContext = dataContext;
+            CredentialAuth = credentialAuthentication;
+            ContextVerifier = contextVerifier;
+            AccessManager = accessManager;
+            BlobStore = blobStore;
+            MessagePush = messagePush;
+            UrlProvider = urlProvider;
         }
 
         public Operation RegisterUser(string userId, Credential[] secretCredentials)
@@ -116,7 +116,8 @@ namespace Gaia.Core.Services
                                     Recipients = new[] { userId },
                                     From = "donotreply@gaia.org",
                                     Subject = MailSubject_AccountVerification,
-                                    VerificationUrl = UrlProvider.GetAccountVerificationUrl(opr.Result.VerificationToken).Resolve()
+                                    VerificationUrl = UrlProvider.GetAccountVerificationUrl(opr.Result.VerificationToken, userId).Resolve(),
+                                    ExpiryDate = opr.Result.ExpiresOn
                                 }))
                                 .Resolve();
             }
@@ -160,7 +161,7 @@ namespace Gaia.Core.Services
                                     Recipients = new[] { userId },
                                     From = "donotreply@gaia.org",
                                     Subject = MailSubject_AccountVerification,
-                                    VerificationUrl = UrlProvider.GetAccountVerificationUrl(opr.Result.VerificationToken).Resolve()
+                                    VerificationUrl = UrlProvider.GetAccountVerificationUrl(opr.Result.VerificationToken, userId).Resolve()
                                 }))
                                 .Resolve();
             }

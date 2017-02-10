@@ -1,21 +1,28 @@
 ﻿using Microsoft.Owin;
+using Owin;
+using System.Runtime.Remoting.Messaging;
 
 namespace Gaia.Server.Services
 {
     public interface IOwinContextProvider
     {
-        IOwinContext Context { get;}
+        IOwinContext Owin { get; }
     }
 
-    public class OwinContextProvider : IOwinContextProvider
+    public class OwinContextProvider: IOwinContextProvider
     {
-        public OwinContextProvider(IOwinContext context)
-        {
-            _context = context;
-        }
+        public virtual IOwinContext Owin => CallContext.LogicalGetData(OwinContextProviderExtension.CallContextOwinKey) as IOwinContext;
+    }
 
-        private IOwinContext _context;
+    public static class OwinContextProviderExtension
+    {
+        public static readonly string CallContextOwinKey = "Gaia.CallContext.OwinContext";
 
-        public IOwinContext Context => _context;
+        public static IAppBuilder UseOwinContextProvider(this IAppBuilder app)
+            => app.Use(async (context, next) =>
+            {
+                CallContext.LogicalSetData(CallContextOwinKey, context);
+                await next();
+            });
     }
 }

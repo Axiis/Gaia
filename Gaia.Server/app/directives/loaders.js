@@ -7,7 +7,7 @@ var Gaia;
                 this.restrict = 'E';
                 this.scope = {
                     size: '=?',
-                    color: '=?',
+                    //color: '=?', get this from the 'attributes' in the 'link' function
                     isBlockLoader: '=?blockLoader',
                     overlayOpacity: '=?',
                     show: '=?'
@@ -20,17 +20,23 @@ var Gaia;
             }
             //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
             RingLoader.prototype.controller = function ($scope) {
+            };
+            ;
+            RingLoader.prototype.link = function (scope, element, attributes) {
+                var $scope = scope;
                 //default values
                 if (!$scope.size)
                     $scope.size = '0px';
-                if (!$scope.color)
-                    $scope.color = 'rgba(0,0,0,0)';
                 if (Object.isNullOrUndefined($scope.isBlockLoader))
                     $scope.isBlockLoader = false;
                 if (!$scope.overlayOpacity)
                     $scope.overlayOpacity = 0;
                 if (!$scope.show)
                     $scope.show = false;
+                if (Object.isNullOrUndefined(attributes['color']))
+                    $scope.color = 'rgba(0,0,0,0)';
+                else
+                    $scope.color = attributes['color'];
                 $scope.containerStyle = function () {
                     return {
                         height: $scope.size + 'px',
@@ -52,7 +58,6 @@ var Gaia;
                     };
                 };
             };
-            ;
             return RingLoader;
         }());
         Directives.RingLoader = RingLoader;
@@ -75,19 +80,21 @@ var Gaia;
                     '</div>' +
                     '</div>';
             }
-            //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
-            BoxLoader.prototype.controller = function ($scope) {
+            BoxLoader.prototype.link = function (scope, element, attributes) {
+                var $scope = scope;
                 //default values
                 if (!$scope.size)
                     $scope.size = '0px';
-                if (!$scope.color)
-                    $scope.color = 'rgba(0,0,0,0)';
                 if (Object.isNullOrUndefined($scope.isBlockLoader))
                     $scope.isBlockLoader = false;
                 if (!$scope.overlayOpacity)
                     $scope.overlayOpacity = 0;
                 if (!$scope.show)
                     $scope.show = false;
+                if (Object.isNullOrUndefined(attributes['color']))
+                    $scope.color = 'rgba(0,0,0,0)';
+                else
+                    $scope.color = attributes['color'];
                 $scope.containerStyle = function () {
                     return {
                         height: $scope.size + 'px',

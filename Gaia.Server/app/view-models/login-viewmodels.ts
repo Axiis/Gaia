@@ -179,6 +179,7 @@ module Gaia.ViewModels.Login {
         message: string;
         messageHeader: string;
         linkText: string;
+        isVerifying: boolean = true;
 
         action() {
             if (this.hasVerificationError) this.$location.url('/home');
@@ -193,23 +194,21 @@ module Gaia.ViewModels.Login {
         constructor(private $state: angular.ui.IStateService, private $stateParams: angular.ui.IStateParamsService,
             private $location: angular.ILocationService, private transport: Gaia.Utils.Services.DomainTransport) {
             transport.put('/api/profiles/verification', {
-                User: $stateParams['user'],
+                User: $stateParams['user'] + '@' + $stateParams['emailDomain'],
                 Value: $stateParams['verificationToken']
-            }, {
-                    headers: { Accept: 'application/json' }
-                })
-                .success(s => {
-                    this.messageHeader = 'Congratulations!';
-                    this.message = 'Your Account has been Verified. You may now follow the link below to login.';
-                    this.hasVerificationError = false;
-                    this.linkText = 'Signin';
-                })
-                .error(e => {
-                    this.messageHeader = 'Oops!';
-                    this.message = e.Message;
-                    this.hasVerificationError = true;
-                    this.linkText = 'Home';
-                });
+            }).then(opr => {
+                this.isVerifying = false;
+                this.messageHeader = 'Congratulations!';
+                this.message = 'Your Account has been Verified. You may now follow the link below to login.';
+                this.hasVerificationError = false;
+                this.linkText = 'Signin';
+            }, err => {
+                this.isVerifying = false;
+                this.messageHeader = 'Oops!';
+                this.message = 'An error occured - verification failed.';
+                this.hasVerificationError = true;
+                this.linkText = 'Home';
+            });
         }
     }
 

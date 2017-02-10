@@ -15,22 +15,22 @@ namespace Gaia.Server.Services
         /// <summary>
         /// 
         /// </summary>
-        public string RootDirecotry => Path.Combine(RefererRequest.RootDirectory(), "Content/Blob"); // ~/Content/Blob
+        public string RootDirecotry => Path.Combine(HostingEnvironment.MapPath("~/"), "Content/Blob"); // ~/Content/Blob
 
         /// <summary>
         /// 
         /// </summary>
-        public IRefererUrlProvider RefererRequest { get; private set; }
+        public IAppUrlProvider UrlProvider { get; private set; }
 
         public IUserContextService UserContext { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="refererRequest"></param>
-        public FileSystemBlobStore(IRefererUrlProvider refererRequest, IUserContextService userContextService)
+        /// <param name="urlProvider"></param>
+        public FileSystemBlobStore(IAppUrlProvider urlProvider, IUserContextService userContextService)
         {
-            RefererRequest = refererRequest;
+            UrlProvider = urlProvider;
             UserContext = userContextService;
 
             //create the root dir
@@ -46,7 +46,12 @@ namespace Gaia.Server.Services
         public Operation Delete(string blobUri)
         => Operation.Try(() =>
         {
+            //delete blob file
             var finfo = new FileInfo(GetLocalPath(blobUri));
+            if (finfo.Exists) finfo.Delete();
+
+            //delete meta file
+            finfo = new FileInfo(finfo.FullName + ".meta");
             if (finfo.Exists) finfo.Delete();
         });
 
@@ -73,22 +78,19 @@ namespace Gaia.Server.Services
         => Operation.Try(() =>
         {
             var mime = blob.MimeObject();
-            var fileName = $"{RandomAlphaNumericGenerator.RandomAlphaNumeric(40)}{mime.Extension}";
+            var fileName = GenerateUniqueName(mime);  
 
-            DirectoryInfo dinfo = new DirectoryInfo(RootDirecotry);
-
-            using (var stream = new FileInfo(Path.Combine(dinfo.FullName, fileName)).OpenWrite())
+            using (var stream = new FileInfo(fileName).OpenWrite())
                 stream.Write(blob.Data, 0, blob.Data.Length);
 
             if (!string.IsNullOrWhiteSpace(blob.Metadata))
-                using (var writer = new StreamWriter(new FileInfo(Path.Combine(dinfo.FullName, fileName + ".meta")).OpenWrite()))
+                using (var writer = new StreamWriter(new FileInfo(fileName + ".meta").OpenWrite()))
                 {
                     blob.MetadataTags().ForAll((cnt, next) => writer.WriteLine(next));
                     writer.Flush();
                 }
 
-            var referrerUri = RefererRequest.RefererUri();
-            return new Uri($"{referrerUri.Scheme}://{referrerUri.Authority}/Content/Blob/{fileName}").ToString(); //just to make sure it parses correctly
+            return UrlProvider.GetBlobUrl(new FileInfo(fileName).Name);
         });
 
         public Operation<Dictionary<string, string>> GetMetadata(string blobUri)
@@ -118,46 +120,17 @@ namespace Gaia.Server.Services
             path = Regex.Replace(path, "\\/Content\\/Blob\\/", "", RegexOptions.IgnoreCase);
             return Path.Combine(RootDirecotry, path);
         }
-    }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IRefererUrlProvider
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        Uri RefererUri();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        string RootDirectory();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class OWINRefererUrlProvier : IRefererUrlProvider
-    {
-        private IOwinContextProvider _owinProvider;
-
-        public OWINRefererUrlProvier(IOwinContextProvider owinProvider)
+        private string GenerateUniqueName(Mime mime)
         {
-            _owinProvider = owinProvider;
+            var dinfo = new DirectoryInfo(RootDirecotry);
+            string fname = null;
+            do
+            {
+                fname = Path.Combine(dinfo.FullName, $"{RandomAlphaNumericGenerator.RandomAlphaNumeric(40)}{mime.Extension}");
+            }
+            while (File.Exists(fname));
+            return fname;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Uri RefererUri() => _owinProvider.Context.Request.Uri;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string RootDirectory() => HostingEnvironment.MapPath("~/");
     }
 }

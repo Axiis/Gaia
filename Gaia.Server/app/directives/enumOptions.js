@@ -6,7 +6,7 @@ var Gaia;
             function EnumOptions() {
                 this.restrict = 'A';
             }
-            EnumOptions.prototype.links = function (scope, element, attributes) {
+            EnumOptions.prototype.link = function (scope, element, attributes) {
                 var config = attributes['enumOptions'].split(':').map(function (_str) { return _str.trim(); });
                 var modelExp = config[0];
                 var modelValue;

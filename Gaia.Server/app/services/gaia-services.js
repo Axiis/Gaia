@@ -6,6 +6,14 @@ var Gaia;
             function BlobService(transport) {
                 this.transport = transport;
             }
+            BlobService.prototype.getData = function () {
+            };
+            BlobService.prototype.getMetadata = function () {
+            };
+            BlobService.prototype.persist = function () {
+            };
+            BlobService.prototype.deleteData = function () {
+            };
             BlobService.$inject = ['#gaia.utils.domainTransport'];
             return BlobService;
         }());
@@ -356,7 +364,7 @@ var Gaia;
             MarketPlaceService.prototype.addServiceImage = function (itemId, data, config) {
                 return this.transport.post('/api/market-place/merchants/services/images', {
                     ItemId: itemId,
-                    Data: data
+                    Data: data.RawObjectForm()
                 }, config).then(function (opr) { return opr.data; });
             };
             MarketPlaceService.prototype.removeServiceImage = function (uri, config) {
@@ -384,7 +392,7 @@ var Gaia;
             MarketPlaceService.prototype.addProductImage = function (itemId, data, config) {
                 return this.transport.post('/api/market-place/merchants/products/images', {
                     ItemId: itemId,
-                    Data: data
+                    Data: data.RawObjectForm()
                 }, config).then(function (opr) { return opr.data; });
             };
             MarketPlaceService.prototype.removeProductImage = function (uri, config) {
@@ -393,7 +401,7 @@ var Gaia;
                 }, config).then(function (opr) { return opr.data; });
             };
             MarketPlaceService.prototype.getProductImages = function (itemId, config) {
-                return this.transport.get('/api/market-place/merchants/services/images', {
+                return this.transport.get('/api/market-place/merchants/products/images', {
                     ItemId: itemId
                 }, config).then(function (opr) { return opr.data; });
             };

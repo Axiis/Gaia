@@ -42,11 +42,11 @@
 2016/09/04 ====================================================================================
 
 1.   The default Client Account is ment for non service-providers, i.e, people who will only have access to the marketplace to purchase goods and services.
-	 This means that i will have to flesh-out the market place service, and identify resources to grant the client-account.
+	 This means that i will have to flesh-out the market place service, and identify resources to grant the client-account. [DONE]
 
-2.   Added new access descriptors for enabling a client (default/Farmer/Service-Provider) to manage Business, Farm, and Service accounts
+2.   Added new access descriptors for enabling a client (default/Farmer/Service-Provider) to manage Business, Farm, and Service accounts [DONE]
 
-3.   Add access descriptors for the market place
+3.   Add access descriptors for the market place [DONE]
 
 
 2016/10/20 ====================================================================================
@@ -72,4 +72,9 @@
 1.    Modify all Api-endpoints that utilize the GET verb and also have "[FromBody]" parameter-attributes. HTTP spec does not specify
 	  behaviour for passing a body along with a GET request, and as such, all the network layers may respoond to such an even as they
 	  see fit: which includes stripping off the body of the request. Be that as it may, all such requests should rely on "query strings"
-	  to pass along parameters to the Api-Endpoint.
+	  to pass along parameters to the Api-Endpoint. [DONE]
+
+
+2017/02/10 ====================================================================================
+
+1.    It appears Service/Product Tags are not showing up in the Service/Product editor for already existing items.

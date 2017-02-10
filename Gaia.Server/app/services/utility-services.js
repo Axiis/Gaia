@@ -22,6 +22,7 @@ var Gaia;
                 DomainTransport.prototype.get = function (url, data, config) {
                     var _this = this;
                     if (data) {
+                        data = this.removeSupportProperties(data);
                         config = config || {};
                         config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
                     }
@@ -34,6 +35,7 @@ var Gaia;
                 DomainTransport.prototype.delete = function (url, data, config) {
                     var _this = this;
                     if (data) {
+                        data = this.removeSupportProperties(data);
                         config = config || {};
                         config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
                     }
@@ -54,6 +56,7 @@ var Gaia;
                 DomainTransport.prototype.jsonp = function (url, data, config) {
                     var _this = this;
                     if (data) {
+                        data = this.removeSupportProperties(data);
                         config = config || {};
                         config.data = data;
                     }
@@ -65,6 +68,7 @@ var Gaia;
                 };
                 DomainTransport.prototype.post = function (url, data, config) {
                     var _this = this;
+                    data = this.removeSupportProperties(data);
                     return this.http.post(url, data, config)
                         .error(function (r) {
                         if (_this.accessDenied(r))
@@ -73,6 +77,7 @@ var Gaia;
                 };
                 DomainTransport.prototype.put = function (url, data, config) {
                     var _this = this;
+                    data = this.removeSupportProperties(data);
                     return this.http.put(url, data, config)
                         .error(function (r) {
                         if (_this.accessDenied(r))
@@ -81,11 +86,43 @@ var Gaia;
                 };
                 DomainTransport.prototype.patch = function (url, data, config) {
                     var _this = this;
+                    data = this.removeSupportProperties(data);
                     return this.http.patch(url, data, config)
                         .error(function (r) {
                         if (_this.accessDenied(r))
                             window.location.href = '/view-server/login/shell';
                     });
+                };
+                DomainTransport.prototype.removeSupportProperties = function (data) {
+                    if (Object.isNullOrUndefined(data))
+                        return data;
+                    var _data = {};
+                    for (var key in data) {
+                        var _val = data[key];
+                        var _type = typeof _val;
+                        if (key.startsWith('$_'))
+                            continue;
+                        if (_type == 'object')
+                            _val = this.removeSupportProperties(_val);
+                        _data[key] = _val;
+                    }
+                    return _data;
+                };
+                DomainTransport.prototype.removeRecurrsion = function (data, _cache) {
+                    if (Object.isNullOrUndefined(data))
+                        return data;
+                    var cache = _cache || [];
+                    for (var key in data) {
+                        var val = data[key];
+                        if (typeof val == 'object') {
+                            if (cache.contains(val))
+                                return null;
+                            else {
+                                cache.push(val);
+                                this.removeRecurrsion(val);
+                            }
+                        }
+                    }
                 };
                 DomainTransport.inject = ['$http', '$q'];
                 return DomainTransport;

@@ -9,6 +9,8 @@ var Gaia;
             MarketPlace.module.directive('binaryData', Gaia.Directives.BinaryData);
             MarketPlace.module.directive('tagsInput', function () { return new Gaia.Directives.TagsInput(); });
             MarketPlace.module.directive('enumOptions', function () { return new Gaia.Directives.EnumOptions(); });
+            MarketPlace.module.directive('ringLoader', function () { return new Gaia.Directives.RingLoader(); });
+            MarketPlace.module.directive('boxLoader', function () { return new Gaia.Directives.BoxLoader(); });
             MarketPlace.module.directive('smallProductCard', ['#gaia.marketPlaceService', '#gaia.utils.notify', '$compile',
                 function (mp, n, $compile) { return new Gaia.Directives.MarketPlace.SmallProductCard(mp, n, $compile); }]);
             MarketPlace.module.directive('largeProductCard', ['#gaia.marketPlaceService', '#gaia.utils.notify', '$compile',

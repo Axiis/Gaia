@@ -10,7 +10,7 @@ using Microsoft.Owin.StaticFiles;
 using Gaia.Server.Utils;
 using System.Net.Http.Formatting;
 using Axis.Luna.Extensions;
-using Microsoft.Owin.Extensions;
+using Gaia.Server.Services;
 
 [assembly: OwinStartup(typeof(Gaia.Server.WebapiStartup))]
 
@@ -62,6 +62,8 @@ namespace Gaia.Server
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
             //config.Filters.Add(new OAuthAuthenticationFilter(OAuthDefaults.AuthenticationType));
+
+            app.UseOwinContextProvider();
 
             //apply the configuration
             app.UseWebApi(config);

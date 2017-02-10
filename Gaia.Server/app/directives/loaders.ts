@@ -7,7 +7,7 @@ module Gaia.Directives {
         restrict: string = 'E';
         scope: any = {
             size: '=?',
-            color: '=?',
+            //color: '=?', get this from the 'attributes' in the 'link' function
             isBlockLoader: '=?blockLoader',
             overlayOpacity: '=?',
             show: '=?'
@@ -15,13 +15,20 @@ module Gaia.Directives {
 
         //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
         controller($scope) {
+        };
+
+
+        link(scope: ng.IScope, element: JQuery, attributes: ng.IAttributes): void {
+
+            var $scope: any = scope;
 
             //default values
             if (!$scope.size) $scope.size = '0px';
-            if (!$scope.color) $scope.color = 'rgba(0,0,0,0)';
             if (Object.isNullOrUndefined($scope.isBlockLoader)) $scope.isBlockLoader = false;
             if (!$scope.overlayOpacity) $scope.overlayOpacity = 0;
             if (!$scope.show) $scope.show = false;
+            if (Object.isNullOrUndefined(attributes['color'])) $scope.color = 'rgba(0,0,0,0)';
+            else $scope.color = attributes['color'];
 
             $scope.containerStyle = function () {
                 return {
@@ -42,10 +49,10 @@ module Gaia.Directives {
                     display: !$scope.isBlockLoader ? 'inline-block' : 'block',
                     width: !$scope.isBlockLoader ? 'initial' : '100%',
                     height: !$scope.isBlockLoader ? 'initial' : '100%',
-                    'text-align': !$scope.isBlockLoader? 'initial' : 'center'
+                    'text-align': !$scope.isBlockLoader ? 'initial' : 'center'
                 };
             }
-        };
+        }
 
         template: string = '<div class="inline-center-pseudo" ng-style="overlayStyle()" ng-show="show">' +
                                '<div class="ring-loader" ng-style="containerStyle()">' +
@@ -65,15 +72,17 @@ module Gaia.Directives {
             show: '=?'
         };
 
-        //note that we should do all of these inside the link function instead so that the color attribute can be carried from the attributes object.
-        controller($scope) {
+        link(scope: ng.IScope, element: JQuery, attributes: ng.IAttributes): void {
+
+            var $scope: any = scope;
 
             //default values
             if (!$scope.size) $scope.size = '0px';
-            if (!$scope.color) $scope.color = 'rgba(0,0,0,0)';
             if (Object.isNullOrUndefined($scope.isBlockLoader)) $scope.isBlockLoader = false;
             if (!$scope.overlayOpacity) $scope.overlayOpacity = 0;
             if (!$scope.show) $scope.show = false;
+            if (Object.isNullOrUndefined(attributes['color'])) $scope.color = 'rgba(0,0,0,0)';
+            else $scope.color = attributes['color'];
 
             $scope.containerStyle = function () {
                 return {

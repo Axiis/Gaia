@@ -302,6 +302,9 @@
     <Content Include="Content\images\cube.svg" />
     <Content Include="Content\images\default-image-200.png" />
     <Content Include="Content\images\farmer.svg" />
+    <Content Include="Content\images\GaiaLogo-black.svg" />
+    <Content Include="Content\images\GaiaLogo-primary.png" />
+    <Content Include="Content\images\GaiaLogo-primary.svg" />
     <Content Include="Content\images\GaiaLogo.svg" />
     <Content Include="Content\images\merchant.svg" />
     <Content Include="Content\images\ring.svg" />
@@ -1237,6 +1240,7 @@
     <Content Include="scripts\summernote\summernote.min.js" />
     <Content Include="scripts\toastr.js" />
     <Content Include="scripts\toastr.min.js" />
+    <Content Include="test.html" />
     <Content Include="Themes\Londinium\css\bootstrap.min.css" />
     <Content Include="Themes\Londinium\css\icons.css" />
     <Content Include="Themes\Londinium\css\icons\icons.dev.svg" />
@@ -1392,6 +1396,7 @@
     <Content Include="scripts\angular-aria.min.js.map" />
     <Content Include="scripts\angular-animate.min.js.map" />
     <Content Include="scripts\jquery-1.12.4.min.map" />
+    <Content Include="Views\Email\AccountVerification.cshtml" />
     <None Include="Views\login\recover-password.cshtml" />
     <Content Include="Views\home.html" />
     <Content Include="Views\index.cshtml" />
@@ -1480,7 +1485,6 @@
     <Compile Include="DI\DIRegistration.cs" />
     <Compile Include="DI\MvcResolutionContext.cs" />
     <Compile Include="DI\OwinResolutionContext.cs" />
-    <Compile Include="DI\UrlProvider.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1491,6 +1495,7 @@
     <Compile Include="Services\FileSystemBlobStore.cs" />
     <Compile Include="Services\NewtonsoftSerializerSettingsProvider.cs" />
     <Compile Include="Services\IOwinContextProvider.cs" />
+    <Compile Include="Services\UrlProvider.cs" />
     <Compile Include="Services\UserLocator.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\ContentFileSystem.cs" />

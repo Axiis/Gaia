@@ -16,7 +16,7 @@ namespace Gaia.Server.Services
         }
 
 
-        public string CurrentUser() => (_contextProvider.Context)?.Authentication?.User?.Identity.Name;
+        public string CurrentUser() => (_contextProvider.Owin)?.Authentication?.User?.Identity.Name;
 
         public string[] UserAccessProfiles()
         {

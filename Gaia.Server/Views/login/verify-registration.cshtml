@@ -6,7 +6,10 @@
 
 
 <div class="text-center" style="text-align:center; margin-top:150px;">
-    <h2 class="text-primary">Verifying...</h2>
+    <h2 ng-show="vm.isVerifying" class="text-primary">Verifying</h2>
+    <p>
+        <box-loader size="40" color="'#518CA3'" block-loader="true" show="vm.isVerifying"></box-loader>
+    </p>
 
     <div style="margin-top:20px;">
         <div style="margin:0 auto; width:300px;" class="alert-wrapper jgrowl-showcase" ng-class="{hidden:!vm.hasMessage()}">

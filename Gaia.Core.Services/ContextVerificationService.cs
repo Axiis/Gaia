@@ -61,6 +61,7 @@ namespace Gaia.Core.Services
                        .Where(_cv => _cv.Context == verificationContext)
                        .Where(_cv => _cv.VerificationToken == token)
                        .Where(_cv => _cv.Verified == false)
+                       .Where(_cv => _cv.ExpiresOn > DateTime.Now)
                        .FirstOrDefault()
                        .ThrowIfNull("verification token is invalid")
                        .Do(_cv =>

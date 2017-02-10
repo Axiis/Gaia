@@ -3,6 +3,9 @@ module Gaia.App.Login {
     
     export const module = angular.module("gaiaLogin", ['ui.router', 'ngSanitize']);
 
+    ///directives
+    module.directive('boxLoader', () => new Gaia.Directives.BoxLoader());
+
     ///Gaia services
     module.service('#gaia.profileService', Gaia.Services.ProfileService);
 
@@ -58,7 +61,7 @@ module Gaia.App.Login {
                 controllerAs: 'vm'
             })
             .state('verifyRegistration', {
-                url: '/verify-registration/:verificationToken/:user',
+                url: '/verify-registration/:verificationToken/:user/:emailDomain',
                 templateUrl: 'verify-registration', //<-- /view-server/login/account-message
                 controller: 'VerifyRegistrationViewModel',
                 controllerAs: 'vm'

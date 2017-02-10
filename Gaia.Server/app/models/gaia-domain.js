@@ -465,9 +465,11 @@ var Gaia;
             __extends(Product, _super);
             function Product(data) {
                 _super.call(this, data);
-                if (!Object.isNullOrUndefined(data)) {
+                if (!Object.isNullOrUndefined(this.Images)) {
                     this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(function (r) { return new BlobRef(r); }) : [];
                 }
+                else
+                    this.Images = [];
                 if (Object.isNullOrUndefined(this.Status))
                     this.Status = ProductStatus.Reviewing;
                 if (Object.isNullOrUndefined(this.Cost))

@@ -163,21 +163,20 @@ var Gaia;
                     this.$location = $location;
                     this.transport = transport;
                     this.hasVerificationError = false;
+                    this.isVerifying = true;
                     transport.put('/api/profiles/verification', {
-                        User: $stateParams['user'],
+                        User: $stateParams['user'] + '@' + $stateParams['emailDomain'],
                         Value: $stateParams['verificationToken']
-                    }, {
-                        headers: { Accept: 'application/json' }
-                    })
-                        .success(function (s) {
+                    }).then(function (opr) {
+                        _this.isVerifying = false;
                         _this.messageHeader = 'Congratulations!';
                         _this.message = 'Your Account has been Verified. You may now follow the link below to login.';
                         _this.hasVerificationError = false;
                         _this.linkText = 'Signin';
-                    })
-                        .error(function (e) {
+                    }, function (err) {
+                        _this.isVerifying = false;
                         _this.messageHeader = 'Oops!';
-                        _this.message = e.Message;
+                        _this.message = 'An error occured - verification failed.';
                         _this.hasVerificationError = true;
                         _this.linkText = 'Home';
                     });

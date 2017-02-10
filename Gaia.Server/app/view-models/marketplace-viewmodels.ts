@@ -82,16 +82,22 @@ module Gaia.ViewModels.MarketPlace {
         searchString: string = null;
         products: Utils.SequencePage<Domain.Product> = new Utils.SequencePage<Domain.Product>([], 0, 1, 0);
 
+        hasProductTitle(): boolean {
+            if (Object.isNullOrUndefined(this.currentProduct)) return false;
+
+            else return !Object.isNullOrUndefined(this.currentProduct.Title);
+        }
+
         switchState(state: any) {
             if (!Object.isNullOrUndefined(state)) {
                 this.isSearching = this.isListingProducts = this.isModifyingProduct = this.isPersistingProduct = false;
                 (state as Object).keyValuePairs().forEach(kvp => this[kvp.Key] = kvp.Value);
-            }
+            } 
         }
 
         isCurrentProductNascent(): boolean {
             if (Object.isNullOrUndefined(this.currentProduct)) return false;
-            else if (this.currentProduct['$nascent'] == true) return true;
+            else if (this.currentProduct['$_nascent'] == true) return true;
             else return false;
         }
 
@@ -108,6 +114,23 @@ module Gaia.ViewModels.MarketPlace {
                     this.products = opr.Result
                     this.isSearching = false;
                     this.currentListingPage = pageIndex;
+
+                    //load the product's images
+                    this.products.Page.forEach(_product => {
+                        _product['$_isLoadingImages'] = true;
+                        this.marketplace.getProductImages(_product.EntityId)
+                            .then(opr => {
+                                _product.Images.clear();
+                                opr.Result.forEach(_ref => {
+                                    _ref['$_owner'] = _product;
+                                    _product.Images.push(_ref);
+                                });
+                                delete _product['$_isLoadingImages'];
+                            }, err => {
+                                this.notify.error('Could not product images', 'Oops!');
+                                return this.$q.reject();
+                            });
+                    })
                 }, err => {
                     this.products = new Utils.SequencePage<Domain.Product>([], 0, 1, 0);
                     this.isSearching = false;
@@ -123,7 +146,7 @@ module Gaia.ViewModels.MarketPlace {
 
         addAndModify() {
             this.modifyProduct(this.newProduct(s => {
-                s['$nascent'] = true;
+                s['$_nascent'] = true;
             }));
         }
 
@@ -141,7 +164,7 @@ module Gaia.ViewModels.MarketPlace {
             if (!Object.isNullOrUndefined(this.currentProduct) && !this.isPersistingProduct) {
                 this.isPersistingProduct = true;
 
-                if (this.currentProduct['$nascent']) {
+                if (this.currentProduct['$_nascent']) {
                     this.marketplace
                         .addProduct(this.currentProduct)
                         .then(opr => {
@@ -150,7 +173,7 @@ module Gaia.ViewModels.MarketPlace {
                             this.notify.success('the Product was persisted successfully!');
                             this.isPersistingProduct = false;
 
-                            delete this.currentProduct['$nascent'];
+                            delete this.currentProduct['$_nascent'];
                             this.products.Page.push(this.currentProduct);
 
                             this.switchState({ isListingProducts: true, currentProduct: null });
@@ -175,6 +198,54 @@ module Gaia.ViewModels.MarketPlace {
                         });
                 }
             }
+        }
+
+
+
+        productImageRef(imageRef: Domain.BlobRef): string {
+            return 'url(' + imageRef.Uri + ')';
+        }
+        isModifyingExistingProduct(): boolean {
+            return this.isModifyingProduct && !this.isCurrentProductNascent();
+        }
+        removeImage(ref: Domain.BlobRef) {
+            if (ref['$_isRemovingImage']) return;
+
+            ref['$_isRemovingImage'] = true;
+            this.marketplace.removeProductImage(ref.Uri)
+                .then(opr => {
+                    this.notify.success("The Image has been deleted");
+                    (ref['$_owner'] as Domain.Product).Images.remove(ref);
+
+                    delete ref['$_isRemovingImage'];
+                    delete ref['$_owner'];
+                }, err => {
+                    this.notify.error("The Image was not deleted", "Oops!");
+
+                    delete ref['$_isRemovingImage'];
+                });
+        }
+        set uploadImage(data: Utils.EncodedBinaryData) {
+            var _product = this.currentProduct;
+            if (_product['$_isPersistingImage']) return;
+
+            _product['$_isPersistingImage'] = true;
+            this.marketplace.addProductImage(this.currentProduct.EntityId, data)
+                .then(opr => {
+                    this.notify.success("The image was persisted successfully");
+                    this.currentProduct.Images.push(new Domain.BlobRef({
+                        Uri: opr.Result,
+                        Metadata: null
+                    }));
+                    (<any>$('#uploadImageForm')[0]).reset();
+
+                    delete _product['$_isPersistingImage'];
+                }, err => {
+                    this.notify.error("An error occured...", "Oops!");
+                    (<any>$('#uploadImageForm')[0]).reset();
+
+                    delete _product['$_isPersistingImage'];
+                });
         }
 
 
@@ -209,6 +280,12 @@ module Gaia.ViewModels.MarketPlace {
         searchString: string = null;
         services: Utils.SequencePage<Domain.Service> = new Utils.SequencePage<Domain.Service>([], 0, 1, 0);
 
+        hasServiceTitle(): boolean {
+            if (Object.isNullOrUndefined(this.currentService)) return false;
+
+            else return !Object.isNullOrUndefined(this.currentService.Title);
+        }
+
         switchState(state: any) {
             if (!Object.isNullOrUndefined(state)) {
                 this.isSearching = this.isListingServices = this.isModifyingService = this.isPersistingService = false;
@@ -218,7 +295,7 @@ module Gaia.ViewModels.MarketPlace {
 
         isCurrentServiceNascent(): boolean {
             if (Object.isNullOrUndefined(this.currentService)) return false;
-            else if (this.currentService['$nascent'] == true) return true;
+            else if (this.currentService['$_nascent'] == true) return true;
             else return false;
         }
 
@@ -250,7 +327,7 @@ module Gaia.ViewModels.MarketPlace {
                 
         addAndModify() {
             this.modifyService(this.newService(s => {
-                s['$nascent'] = true;
+                s['$_nascent'] = true;
             }));
         }
 
@@ -268,7 +345,7 @@ module Gaia.ViewModels.MarketPlace {
             if (!Object.isNullOrUndefined(this.currentService) && !this.isPersistingService) {
                 this.isPersistingService = true;
 
-                if (this.currentService['$nascent']) {
+                if (this.currentService['$_nascent']) {
                     this.marketplace
                         .addService(this.currentService)
                         .then(opr => {
@@ -277,7 +354,7 @@ module Gaia.ViewModels.MarketPlace {
                             this.notify.success('the Service was persisted successfully!');
                             this.isPersistingService = false;
 
-                            delete this.currentService['$nascent'];
+                            delete this.currentService['$_nascent'];
                             this.services.Page.push(this.currentService);
 
                             this.switchState({ isListingServices: true, currentService: null });

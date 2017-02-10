@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=320, initial-scale=1" />
+    <title>Cleave Confirm</title>
+
+    <link rel="stylesheet" href="Content/Site.css" />
+    <link rel="stylesheet" href="Themes/Londinium/css/icons.css" />
+
+    <style>
+        .gallery-card{
+            width:180px;
+            height:200px;
+            border-radius:3px;
+            border:1px solid #ccc;
+            position:relative;
+        }
+        .gallery-card > .image-placeholder{
+            height:100%;
+            width:100%;
+            z-index:0;
+        }
+        .gallery-card > .detail-strip{
+            z-index:1;
+            position:absolute;
+            bottom:0;
+            width:100%;
+            height:40px;
+            background: #999;
+            background: linear-gradient(rgba(153,153,153,0), rgba(153,153,153,0.8));
+        }
+        .gallery-card > .gallery-action{
+            width:36px;
+            height:36px;
+            position: absolute;
+            bottom: 22px;
+            right: 10px;
+        }
+
+        .material-primary-button{
+            border-radius:50%;
+            position:relative;
+            display: flex;
+            flex-direction:row;
+            align-items: center;
+        }
+        .material-primary-button > div{
+            width:100%;
+            height:100%;
+            border-radius:50%;
+            z-index:1;
+            position:absolute;
+            bottom:0;
+            top:0;
+            left:0;
+            right:0;
+        }        
+        .material-primary-button > div::after{
+            content: '';
+            box-shadow:0 2px 12px -1px rgba(0,0,0,0.6);
+            opacity:0;
+            transition: opacity 0.2s ease-in-out;
+            width:100%;
+            height:100%;
+            border-radius:50%;
+            display:inline-block;
+        }        
+        .material-primary-button:hover > div::after{
+            opacity:1;
+        }
+        .material-primary-button > i{
+            display: inline-block;
+            width:100%;
+            text-align:center;
+            margin-top: -2px;
+            z-index:2;
+        }
+    </style>
+</head>
+<body style="padding-top:80px;">
+
+    <div style="width:36px; height:36px;" 
+         class="material-primary-button material-shadow">
+        <div style="background-color:yellowgreen;"></div>
+        <i class="icon-remove"></i>
+    </div>
+
+    <div class="gallery-card material-shadow" style="margin:0 auto;">
+
+        <div class="image-placeholder"></div>
+
+        <div class="detail-strip"></div>
+
+        <div class="material-primary-button material-shadow gallery-action">
+            <div style="background-color:orangered;"></div>
+            <i class="icon-remove" style="color:white;"></i>
+        </div>
+
+    </div>
+    <br /><br /><br /><br /><br />
+    <div class="material-shadow material-interactive" style="margin:0 auto; height:40px; width:40px;"></div>
+
+</body>
+</html>

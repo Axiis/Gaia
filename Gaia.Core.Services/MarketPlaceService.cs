@@ -198,7 +198,6 @@ namespace Gaia.Core.Services
                                         .Then(opr => TagBuilder.Create(opr.Result).ToString())
                                         .Resolve()
                 })
-                .ToArray() //to run the iteration before exiting
                 .AsEnumerable();
         });
 
@@ -287,7 +286,6 @@ namespace Gaia.Core.Services
                                         .Then(opr => TagBuilder.Create(opr.Result).ToString())
                                         .Resolve()
                 })
-                .ToArray() //to run the iteration before exiting
                 .AsEnumerable();
         });
         #endregion

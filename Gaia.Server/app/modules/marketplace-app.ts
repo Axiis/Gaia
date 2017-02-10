@@ -7,6 +7,8 @@ module Gaia.App.MarketPlace {
     module.directive('binaryData', Gaia.Directives.BinaryData);
     module.directive('tagsInput', () => new Gaia.Directives.TagsInput());
     module.directive('enumOptions', () => new Gaia.Directives.EnumOptions());
+    module.directive('ringLoader', () => new Gaia.Directives.RingLoader());
+    module.directive('boxLoader', () => new Gaia.Directives.BoxLoader());
     module.directive('smallProductCard', ['#gaia.marketPlaceService', '#gaia.utils.notify', '$compile',
         (mp: Services.MarketPlaceService, n: Utils.Services.NotifyService, $compile: ng.ICompileService) => new Gaia.Directives.MarketPlace.SmallProductCard(mp, n, $compile)]);
     module.directive('largeProductCard', ['#gaia.marketPlaceService', '#gaia.utils.notify', '$compile',

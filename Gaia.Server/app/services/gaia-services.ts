@@ -2,6 +2,21 @@
 module Gaia.Services {
 
     export class BlobService {
+
+        public getData() {
+
+        }
+        public getMetadata() {
+
+        }
+        public persist() {
+
+        }
+        public deleteData() {
+
+        }
+
+
         static $inject = ['#gaia.utils.domainTransport'];
         constructor(private transport: Gaia.Utils.Services.DomainTransport) {
 
@@ -397,7 +412,7 @@ module Gaia.Services {
         addServiceImage(itemId: number, data: Utils.EncodedBinaryData, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
             return this.transport.post<Utils.Operation<string>>('/api/market-place/merchants/services/images', {
                 ItemId: itemId,
-                Data: data
+                Data: data.RawObjectForm()
             }, config).then(opr => opr.data);
         }
 
@@ -432,7 +447,7 @@ module Gaia.Services {
         addProductImage(itemId: number, data: Utils.EncodedBinaryData, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<string>> {
             return this.transport.post<Utils.Operation<string>>('/api/market-place/merchants/products/images', {
                 ItemId: itemId,
-                Data: data
+                Data: data.RawObjectForm()
             }, config).then(opr => opr.data);
         }
 
@@ -443,7 +458,7 @@ module Gaia.Services {
         }
 
         getProductImages(itemId: number, config?: ng.IRequestShortcutConfig): ng.IPromise<Utils.Operation<Domain.BlobRef[]>> {
-            return this.transport.get<Utils.Operation<Domain.BlobRef[]>>('/api/market-place/merchants/services/images', {
+            return this.transport.get<Utils.Operation<Domain.BlobRef[]>>('/api/market-place/merchants/products/images', {
                 ItemId: itemId
             }, config).then(opr => opr.data);
         }

@@ -18,7 +18,7 @@
                             style="background:white; border:1px solid #ccc; border-radius:1px; color:#999; margin-bottom:1px;"
                             href
                             data-toggle="tooltip"
-                            title="Add new service"
+                            title="Add new Product"
                             ng-click="vm.addAndModify()">
                         <i class="icon-plus"></i>
                     </button>
@@ -28,9 +28,9 @@
 
         <div class="pull-left">
             <ul class="pagination">
-                <li ng-show="vm.services.PageCount > 1">
+                <li ng-show="vm.products.PageCount > 1">
                     <a href
-                       ng-click="vm.listServices(0, vm.searchString)">
+                       ng-click="vm.listProducts(0, vm.searchString)">
                         <i class="icon-arrow-left2"></i>
                     </a>
                 </li>
@@ -55,7 +55,7 @@
 
     <div style="margin-top:10px;">
         <!--Item List-->
-        <div class="clearfix gaia-service-item"
+        <div class="clearfix gaia-product-item"
              ng-repeat="data in vm.products.Page">
             <div class="row"
                  ng-click="vm.modifyProduct(data)">
@@ -87,7 +87,7 @@
                         type="button"
                         class="btn btn-xs btn-success">
                     <i class="icon-thumbs-up3" ng-hide="vm.isPersistingProduct"></i>
-                    <div id="service-ring-loader" ng-show="vm.isPersistingProduct"></div>
+                    <div id="product-ring-loader" ng-show="vm.isPersistingProduct"></div>
 
                     &nbsp;Ok
                 </button>
@@ -96,9 +96,10 @@
 
         <div class="form-group">
             <label>Product Title</label>
-            <input type="text" ng-model="vm.currentProduct.Title" class="form-control" placeholder="Title">
-            <span class="label label-danger"
-                  ng-hide="!Object.isNullOrUndefined(vm.currentProduct.Title) && (!vm.currentProduct.Title.trim() == '')">Required</span>
+            <input type="text" ng-model="vm.currentProduct.Title" class="form-control" placeholder="Title" name="___productTitle">
+            <label class="error"
+                   for="___productTitle"
+                   ng-hide="vm.hasProductTitle()">Required</label>
         </div>
 
         <div class="form-group">
@@ -106,7 +107,7 @@
                 <div class="col-sm-6">
                     <div style="margin-bottom:10px;">
                         <label>Price (&#8358;)</label>
-                        <input type="text" class="form-control" value="1000" id="spinner-service-price" ng-model="vm.currentProduct.Cost">
+                        <input type="text" class="form-control" value="1000" id="spinner-product-price" ng-model="vm.currentProduct.Cost">
                     </div>
                     <div>
                         <label style="display: block; width:100%;">Status</label>
@@ -129,6 +130,66 @@
                 </div>
             </div>
         </div>
+
+        <hr ng-show="vm.isModifyingExistingProduct()"/>
+
+        <div class="form-group" ng-show="vm.isModifyingExistingProduct()">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="clearfix">
+                        <!--Tool Bar-->
+                        <div class="pull-left">
+                            <label>Product Images</label>
+                        </div>
+
+                        <div style="display:inline-block;" class="pull-right">
+                            <div class="form-horizontal">
+                                <div class="form-group" style="margin:0px;">
+                                    <form id="uploadImageForm">
+                                        <label class="btn btn-icon btn-success btn-xs"
+                                               href
+                                               data-toggle="tooltip"
+                                               title="Add new product image">
+                                            <i ng-show="!vm.currentProduct.$_isPersistingImage" 
+                                               class="icon-pencil"></i>
+                                            <ring-loader show="vm.currentProduct.$_isPersistingImage"
+                                                         size="18" color="white"></ring-loader>
+                                            <input type="file"
+                                                   binary-data="vm.uploadImage"
+                                                   style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; justify-content:flex-start;">
+
+
+                        <div class="gallery-card material-shadow" style="margin:10px;"
+                             ng-repeat="imageRef in vm.currentProduct.Images">
+
+                            <div class="image-placeholder"
+                                 style="background-size:cover;"
+                                 ng-style="{'background-image':vm.productImageRef(imageRef)}"></div>
+
+                            <div class="detail-strip"></div>
+
+                            <div class="material-primary-button material-shadow gallery-action"
+                                 ng-click="vm.removeImage(imageRef)">
+                                <div style="background-color:orangered;"></div>
+                                <i ng-show="!imageRef.$_isRemovingImage" 
+                                   class="icon-remove" style="color:white;"></i>
+                                <ring-loader ng-class="{hide:!imageRef.$_isRemovingImage}"
+                                             show="true" size="18" color="white"></ring-loader>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -139,9 +200,9 @@
 
 <script type="text/javascript">
         $(function () {
-            ringLoader($('#service-ring-loader'), '14px', 'white');
+            ringLoader($('#product-ring-loader'), '14px', 'white');
 
-            $('#spinner-service-price').spinner({
+            $('#spinner-product-price').spinner({
                 min: 0,
                 step: 100,
                 start: 1000,

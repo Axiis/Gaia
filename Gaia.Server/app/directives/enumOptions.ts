@@ -5,7 +5,7 @@ module Gaia.Directives {
 
         restrict: string = 'A';
 
-        links(scope: ng.IScope, element: JQuery, attributes: ng.IAttributes): void {
+        link(scope: ng.IScope, element: JQuery, attributes: ng.IAttributes): void {
 
             var config = (<string>attributes['enumOptions']).split(':').map(_str => _str.trim());
             var modelExp = config[0];

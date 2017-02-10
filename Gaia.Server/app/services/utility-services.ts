@@ -19,6 +19,7 @@ module Gaia.Utils.Services {
         
         get<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {    
             if (data) {
+                data = this.removeSupportProperties(data);
                 config = config || {};
                 config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
             }         
@@ -30,6 +31,7 @@ module Gaia.Utils.Services {
         
         delete<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             if (data) {
+                data = this.removeSupportProperties(data);
                 config = config || {};
                 config.params = { data: Utils.ToBase64String(Utils.ToUTF8EncodedArray(JSON.stringify(data))) };
             }         
@@ -48,6 +50,7 @@ module Gaia.Utils.Services {
         
         jsonp<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
             if (data) {
+                data = this.removeSupportProperties(data);
                 config = config || {};
                 config.data = data;
             }         
@@ -58,6 +61,7 @@ module Gaia.Utils.Services {
         }
         
         post<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+            data = this.removeSupportProperties(data);
             return this.http.post(url, data, config)
                 .error(r => {
                     if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
@@ -65,6 +69,7 @@ module Gaia.Utils.Services {
         }
         
         put<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+            data = this.removeSupportProperties(data);
             return this.http.put(url, data, config)
                 .error(r => {
                     if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
@@ -72,10 +77,46 @@ module Gaia.Utils.Services {
         }
         
         patch<T>(url: string, data: any, config?: angular.IRequestShortcutConfig): angular.IHttpPromise<T> {
+            data = this.removeSupportProperties(data);
             return this.http.patch(url, data, config)
                 .error(r => {
                     if (this.accessDenied(r)) window.location.href = '/view-server/login/shell';
                 });
+        }
+
+        private removeSupportProperties(data: any): any {
+            if (Object.isNullOrUndefined(data)) return data;
+            
+            var _data = {};
+
+            for (var key in data) {
+                var _val = data[key];
+                var _type = typeof _val;
+
+                if (key.startsWith('$_')) continue;
+                if (_type == 'object') _val = this.removeSupportProperties(_val);
+
+                _data[key] = _val;
+            }
+            return _data;
+        }
+        
+
+        private removeRecurrsion(data: any, _cache?: any[]) {
+            if (Object.isNullOrUndefined(data)) return data;
+
+            var cache = _cache || [];
+
+            for (var key in data) {
+                var val = data[key];
+                if (typeof val == 'object') {
+                    if (cache.contains(val)) return null;
+                    else {
+                        cache.push(val);
+                        this.removeRecurrsion(val);
+                    }
+                }
+            }
         }
     }
 

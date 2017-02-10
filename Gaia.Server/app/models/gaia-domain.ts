@@ -605,9 +605,10 @@ module Gaia.Domain {
         constructor(data?: Object) {
             super(data);
             
-            if (!Object.isNullOrUndefined(data)) {
+            if (!Object.isNullOrUndefined(this.Images)) {
                 this.Images = !Object.isNullOrUndefined(this.Images) ? this.Images.map(r => new BlobRef(r)) : [];
             }
+            else this.Images = [];
 
             if (Object.isNullOrUndefined(this.Status)) this.Status = ProductStatus.Reviewing;
             if (Object.isNullOrUndefined(this.Cost)) this.Cost = 0.0;
