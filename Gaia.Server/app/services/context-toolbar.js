@@ -51,12 +51,11 @@ var Gaia;
                     return oldMenus;
                 }
             };
-            ContextToolbar.$inject = ['$compile'];
             return ContextToolbar;
         }());
+        ContextToolbar.$inject = ['$compile'];
         Services.ContextToolbar = ContextToolbar;
         //module merging to simulate nested classes!
-        var ContextToolbar;
         (function (ContextToolbar) {
             var ButtonMenu = (function () {
                 function ButtonMenu() {
@@ -73,7 +72,7 @@ var Gaia;
             var ButtonDropdown = (function (_super) {
                 __extends(ButtonDropdown, _super);
                 function ButtonDropdown() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 ButtonDropdown.prototype.toElement = function () {
                     return $(document.createElement('button'))
@@ -143,4 +142,3 @@ var Gaia;
         })(ContextToolbar = Services.ContextToolbar || (Services.ContextToolbar = {}));
     })(Services = Gaia.Services || (Gaia.Services = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=context-toolbar.js.map

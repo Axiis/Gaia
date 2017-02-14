@@ -66,13 +66,12 @@ module Gaia.Directives {
         restrict: string = 'E';
         scope: any = {
             size: '=?',
-            color: '=?',
             isBlockLoader: '=?blockLoader',
             overlayOpacity: '=?',
             show: '=?'
         };
 
-        link(scope: ng.IScope, element: JQuery, attributes: ng.IAttributes): void {
+        link(scope: ng.IScope, element: JQuery, attributes: ng.IAttributes) {
 
             var $scope: any = scope;
 

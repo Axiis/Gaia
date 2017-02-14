@@ -66,7 +66,6 @@ var Gaia;
                 this.restrict = 'E';
                 this.scope = {
                     size: '=?',
-                    color: '=?',
                     isBlockLoader: '=?blockLoader',
                     overlayOpacity: '=?',
                     show: '=?'
@@ -122,4 +121,3 @@ var Gaia;
         Directives.BoxLoader = BoxLoader;
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=loaders.js.map

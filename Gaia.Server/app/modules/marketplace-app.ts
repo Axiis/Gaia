@@ -6,6 +6,7 @@ module Gaia.App.MarketPlace {
     ///Gaia Directives
     module.directive('binaryData', Gaia.Directives.BinaryData);
     module.directive('tagsInput', () => new Gaia.Directives.TagsInput());
+    module.directive('numberSpinner', () => new Gaia.Directives.NumberSpinner());
     module.directive('enumOptions', () => new Gaia.Directives.EnumOptions());
     module.directive('ringLoader', () => new Gaia.Directives.RingLoader());
     module.directive('boxLoader', () => new Gaia.Directives.BoxLoader());

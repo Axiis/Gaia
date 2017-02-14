@@ -85,7 +85,8 @@ module Gaia.ViewModels.MarketPlace {
         hasProductTitle(): boolean {
             if (Object.isNullOrUndefined(this.currentProduct)) return false;
 
-            else return !Object.isNullOrUndefined(this.currentProduct.Title);
+            else return !Object.isNullOrUndefined(this.currentProduct.Title) &&
+                this.currentProduct.Title != '';
         }
 
         switchState(state: any) {
@@ -283,7 +284,8 @@ module Gaia.ViewModels.MarketPlace {
         hasServiceTitle(): boolean {
             if (Object.isNullOrUndefined(this.currentService)) return false;
 
-            else return !Object.isNullOrUndefined(this.currentService.Title);
+            else return !Object.isNullOrUndefined(this.currentService.Title) &&
+                this.currentService.Title != '';
         }
 
         switchState(state: any) {
@@ -312,6 +314,23 @@ module Gaia.ViewModels.MarketPlace {
                     this.services = opr.Result
                     this.isSearching = false;
                     this.currentListingPage = pageIndex;
+
+                    //load the service's images
+                    this.services.Page.forEach(_service => {
+                        _service['$_isLoadingImages'] = true;
+                        this.marketplace.getServiceImages(_service.EntityId)
+                            .then(opr => {
+                                _service.Images.clear();
+                                opr.Result.forEach(_ref => {
+                                    _ref['$_owner'] = _service;
+                                    _service.Images.push(_ref);
+                                });
+                                delete _service['$_isLoadingImages'];
+                            }, err => {
+                                this.notify.error('Could not service images', 'Oops!');
+                                return this.$q.reject();
+                            });
+                    })
                 }, err => {
                     this.services = new Utils.SequencePage<Domain.Service>([], 0, 1, 0);
                     this.isSearching = false;
@@ -320,11 +339,11 @@ module Gaia.ViewModels.MarketPlace {
         }
 
         newService(init?: Func1<Domain.Service, void>): Domain.Service {
-            var s = new Domain.Service();
-            if (!Object.isNullOrUndefined(init)) init(s);
-            return s;
+            var p = new Domain.Service();
+            if (!Object.isNullOrUndefined(init)) init(p);
+            return p;
         }
-                
+
         addAndModify() {
             this.modifyService(this.newService(s => {
                 s['$_nascent'] = true;
@@ -364,7 +383,7 @@ module Gaia.ViewModels.MarketPlace {
                             return this.$q.reject(err);
                         });
                 }
-                else{
+                else {
                     this.marketplace
                         .modifyService(this.currentService)
                         .then(opr => {
@@ -382,23 +401,70 @@ module Gaia.ViewModels.MarketPlace {
         }
 
 
+
+        serviceImageRef(imageRef: Domain.BlobRef): string {
+            return 'url(' + imageRef.Uri + ')';
+        }
+        isModifyingExistingService(): boolean {
+            return this.isModifyingService && !this.isCurrentServiceNascent();
+        }
+        removeImage(ref: Domain.BlobRef) {
+            if (ref['$_isRemovingImage']) return;
+
+            ref['$_isRemovingImage'] = true;
+            this.marketplace.removeServiceImage(ref.Uri)
+                .then(opr => {
+                    this.notify.success("The Image has been deleted");
+                    (ref['$_owner'] as Domain.Service).Images.remove(ref);
+
+                    delete ref['$_isRemovingImage'];
+                    delete ref['$_owner'];
+                }, err => {
+                    this.notify.error("The Image was not deleted", "Oops!");
+
+                    delete ref['$_isRemovingImage'];
+                });
+        }
+        set uploadImage(data: Utils.EncodedBinaryData) {
+            var _service = this.currentService;
+            if (_service['$_isPersistingImage']) return;
+
+            _service['$_isPersistingImage'] = true;
+            this.marketplace.addServiceImage(this.currentService.EntityId, data)
+                .then(opr => {
+                    this.notify.success("The image was persisted successfully");
+                    this.currentService.Images.push(new Domain.BlobRef({
+                        Uri: opr.Result,
+                        Metadata: null
+                    }));
+                    (<any>$('#uploadImageForm')[0]).reset();
+
+                    delete _service['$_isPersistingImage'];
+                }, err => {
+                    this.notify.error("An error occured...", "Oops!");
+                    (<any>$('#uploadImageForm')[0]).reset();
+
+                    delete _service['$_isPersistingImage'];
+                });
+        }
+
+
         statusString(service: Domain.Service): string {
             return Domain.ServiceStatus[service.Status];
         }
 
+        isAvailable(service: Domain.Service): boolean {
+            return service.Status == Domain.ServiceStatus.Available;
+        }
         isSuspended(service: Domain.Service): boolean {
             return service.Status == Domain.ServiceStatus.Suspended;
         }
         isUnavailable(service: Domain.Service): boolean {
             return service.Status == Domain.ServiceStatus.Unavailable;
         }
-        isAvailable(service: Domain.Service): boolean {
-            return service.Status == Domain.ServiceStatus.Available;
-        }
 
         static $inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
         constructor(private marketplace: Services.MarketPlaceService, private $q: ng.IQService, private notify: Gaia.Utils.Services.NotifyService, private domModel: Gaia.Utils.Services.DomModelService) {
-
             this.listServices(0, null);
         }
     }

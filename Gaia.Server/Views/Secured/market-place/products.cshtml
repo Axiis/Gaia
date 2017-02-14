@@ -3,6 +3,7 @@
 }
 
 <div ng-show="vm.isListingProducts">
+
     <div class="clearfix">
         <!--Tool Bar-->
         <div style="display:inline-block;" class="pull-right">
@@ -53,9 +54,16 @@
         </div>
     </div>
 
+    <div ng-show="vm.isSearching"
+         style="margin-top:30px; text-align:center;">
+        <box-loader color="#518CA3" size="50" show="true" block-loader="true"></box-loader>
+        <p style="font-size:16px; margin-top:20px;">Loading</p>
+    </div>
+
     <div style="margin-top:10px;">
         <!--Item List-->
         <div class="clearfix gaia-product-item"
+             ng-hide="vm.isSearching"
              ng-repeat="data in vm.products.Page">
             <div class="row"
                  ng-click="vm.modifyProduct(data)">
@@ -87,7 +95,7 @@
                         type="button"
                         class="btn btn-xs btn-success">
                     <i class="icon-thumbs-up3" ng-hide="vm.isPersistingProduct"></i>
-                    <div id="product-ring-loader" ng-show="vm.isPersistingProduct"></div>
+                    <ring-loader size="18" color="white" show="vm.isPersistingProduct"></ring-loader>
 
                     &nbsp;Ok
                 </button>
@@ -107,16 +115,22 @@
                 <div class="col-sm-6">
                     <div style="margin-bottom:10px;">
                         <label>Price (&#8358;)</label>
-                        <input type="text" class="form-control" value="1000" id="spinner-product-price" ng-model="vm.currentProduct.Cost">
+                        <input type="text" 
+                               class="form-control" 
+                               value="1000" id="spinner-product-price" 
+                               number-spinner="start:1000; model:vm.currentProduct.Cost;"/>
                     </div>
                     <div>
                         <label style="display: block; width:100%;">Status</label>
-                        <select class="form-control" enum-options="vm.currentProduct.Status : Gaia.Domain.ProductStatus"></select>
+                        <select class="form-control" 
+                                enum-options="vm.currentProduct.Status : Gaia.Domain.ProductStatus"></select>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <label>Description</label>
-                    <textarea rows="5" cols="5" class="form-control" placeholder="Description" ng-model="vm.currentProduct.Description"></textarea>
+                    <textarea rows="5" cols="5" 
+                              class="form-control" placeholder="Description" 
+                              ng-model="vm.currentProduct.Description"></textarea>
                 </div>
             </div>
         </div>
@@ -124,9 +138,12 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-12"
-                     data-toggle="tooltip" title="Enter keywords that help to describe/identify this Product for easy searching">
+                     data-toggle="tooltip" 
+                     title="Enter keywords that help to describe/identify this Product for easy searching">
                     <label>Search Tags</label>
-                    <input type="text" id="searchTags" tags-input="vm.currentProduct.Tags" class="tags" style="display: none;">
+                    <input type="text" id="searchTags" 
+                           tags-input="vm.currentProduct.Tags" 
+                           class="tags" style="display: none;">
                 </div>
             </div>
         </div>
@@ -135,7 +152,15 @@
 
         <div class="form-group" ng-show="vm.isModifyingExistingProduct()">
             <div class="row">
-                <div class="col-sm-12">
+
+                <div ng-show="vm.currentProduct.$_isLoadingImages"
+                     class="col-sm-12"
+                     style="margin-top:30px; text-align:center;">
+                    <box-loader color="#518CA3" size="50" show="true" block-loader="true"></box-loader>
+                    <p style="font-size:16px; margin-top:20px;">Loading</p>
+                </div>
+
+                <div class="col-sm-12" ng-hide="vm.currentProduct.$_isLoadingImages">
                     <div class="clearfix">
                         <!--Tool Bar-->
                         <div class="pull-left">
@@ -196,17 +221,3 @@
 <div ng-show="vm.isManagingProductStock">
 
 </div>
-
-
-<script type="text/javascript">
-        $(function () {
-            ringLoader($('#product-ring-loader'), '14px', 'white');
-
-            $('#spinner-product-price').spinner({
-                min: 0,
-                step: 100,
-                start: 1000,
-                numberFormat: "C"
-            });
-        });
-</script>

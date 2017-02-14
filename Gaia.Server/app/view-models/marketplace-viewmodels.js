@@ -40,9 +40,9 @@ var Gaia;
                 MarketPlaceViewModel.prototype.isCustomerActive = function () {
                     return this.state.current.name.startsWith('customer');
                 };
-                MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
                 return MarketPlaceViewModel;
             }());
+            MarketPlaceViewModel.$inject = ['#gaia.contextToolbar', '#gaia.utils.domModel', '$state'];
             MarketPlace.MarketPlaceViewModel = MarketPlaceViewModel;
             var PreferencesViewModel = (function () {
                 function PreferencesViewModel() {
@@ -54,7 +54,6 @@ var Gaia;
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
 //Merchant
-var Gaia;
 (function (Gaia) {
     var ViewModels;
     (function (ViewModels) {
@@ -97,9 +96,9 @@ var Gaia;
                 MerchantViewModel.prototype.isProductsActive = function () {
                     return this.$state.current.name == 'merchant.products';
                 };
-                MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
                 return MerchantViewModel;
             }());
+            MerchantViewModel.$inject = ['$state', '#gaia.utils.domModel'];
             MarketPlace.MerchantViewModel = MerchantViewModel;
             var MerchantProductsViewModel = (function () {
                 function MerchantProductsViewModel(marketplace, $q, notify, domModel) {
@@ -122,7 +121,8 @@ var Gaia;
                     if (Object.isNullOrUndefined(this.currentProduct))
                         return false;
                     else
-                        return !Object.isNullOrUndefined(this.currentProduct.Title);
+                        return !Object.isNullOrUndefined(this.currentProduct.Title) &&
+                            this.currentProduct.Title != '';
                 };
                 MerchantProductsViewModel.prototype.switchState = function (state) {
                     var _this = this;
@@ -285,9 +285,9 @@ var Gaia;
                 MerchantProductsViewModel.prototype.isReviewing = function (product) {
                     return product.Status == Gaia.Domain.ProductStatus.Reviewing;
                 };
-                MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantProductsViewModel;
             }());
+            MerchantProductsViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantProductsViewModel = MerchantProductsViewModel;
             var MerchantServicesViewModel = (function () {
                 function MerchantServicesViewModel(marketplace, $q, notify, domModel) {
@@ -310,7 +310,8 @@ var Gaia;
                     if (Object.isNullOrUndefined(this.currentService))
                         return false;
                     else
-                        return !Object.isNullOrUndefined(this.currentService.Title);
+                        return !Object.isNullOrUndefined(this.currentService.Title) &&
+                            this.currentService.Title != '';
                 };
                 MerchantServicesViewModel.prototype.switchState = function (state) {
                     var _this = this;
@@ -340,6 +341,22 @@ var Gaia;
                         _this.services = opr.Result;
                         _this.isSearching = false;
                         _this.currentListingPage = pageIndex;
+                        //load the service's images
+                        _this.services.Page.forEach(function (_service) {
+                            _service['$_isLoadingImages'] = true;
+                            _this.marketplace.getServiceImages(_service.EntityId)
+                                .then(function (opr) {
+                                _service.Images.clear();
+                                opr.Result.forEach(function (_ref) {
+                                    _ref['$_owner'] = _service;
+                                    _service.Images.push(_ref);
+                                });
+                                delete _service['$_isLoadingImages'];
+                            }, function (err) {
+                                _this.notify.error('Could not service images', 'Oops!');
+                                return _this.$q.reject();
+                            });
+                        });
                     }, function (err) {
                         _this.services = new Gaia.Utils.SequencePage([], 0, 1, 0);
                         _this.isSearching = false;
@@ -347,10 +364,10 @@ var Gaia;
                     });
                 };
                 MerchantServicesViewModel.prototype.newService = function (init) {
-                    var s = new Gaia.Domain.Service();
+                    var p = new Gaia.Domain.Service();
                     if (!Object.isNullOrUndefined(init))
-                        init(s);
-                    return s;
+                        init(p);
+                    return p;
                 };
                 MerchantServicesViewModel.prototype.addAndModify = function () {
                     this.modifyService(this.newService(function (s) {
@@ -401,8 +418,58 @@ var Gaia;
                         }
                     }
                 };
+                MerchantServicesViewModel.prototype.serviceImageRef = function (imageRef) {
+                    return 'url(' + imageRef.Uri + ')';
+                };
+                MerchantServicesViewModel.prototype.isModifyingExistingService = function () {
+                    return this.isModifyingService && !this.isCurrentServiceNascent();
+                };
+                MerchantServicesViewModel.prototype.removeImage = function (ref) {
+                    var _this = this;
+                    if (ref['$_isRemovingImage'])
+                        return;
+                    ref['$_isRemovingImage'] = true;
+                    this.marketplace.removeServiceImage(ref.Uri)
+                        .then(function (opr) {
+                        _this.notify.success("The Image has been deleted");
+                        ref['$_owner'].Images.remove(ref);
+                        delete ref['$_isRemovingImage'];
+                        delete ref['$_owner'];
+                    }, function (err) {
+                        _this.notify.error("The Image was not deleted", "Oops!");
+                        delete ref['$_isRemovingImage'];
+                    });
+                };
+                Object.defineProperty(MerchantServicesViewModel.prototype, "uploadImage", {
+                    set: function (data) {
+                        var _this = this;
+                        var _service = this.currentService;
+                        if (_service['$_isPersistingImage'])
+                            return;
+                        _service['$_isPersistingImage'] = true;
+                        this.marketplace.addServiceImage(this.currentService.EntityId, data)
+                            .then(function (opr) {
+                            _this.notify.success("The image was persisted successfully");
+                            _this.currentService.Images.push(new Gaia.Domain.BlobRef({
+                                Uri: opr.Result,
+                                Metadata: null
+                            }));
+                            $('#uploadImageForm')[0].reset();
+                            delete _service['$_isPersistingImage'];
+                        }, function (err) {
+                            _this.notify.error("An error occured...", "Oops!");
+                            $('#uploadImageForm')[0].reset();
+                            delete _service['$_isPersistingImage'];
+                        });
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 MerchantServicesViewModel.prototype.statusString = function (service) {
                     return Gaia.Domain.ServiceStatus[service.Status];
+                };
+                MerchantServicesViewModel.prototype.isAvailable = function (service) {
+                    return service.Status == Gaia.Domain.ServiceStatus.Available;
                 };
                 MerchantServicesViewModel.prototype.isSuspended = function (service) {
                     return service.Status == Gaia.Domain.ServiceStatus.Suspended;
@@ -410,25 +477,21 @@ var Gaia;
                 MerchantServicesViewModel.prototype.isUnavailable = function (service) {
                     return service.Status == Gaia.Domain.ServiceStatus.Unavailable;
                 };
-                MerchantServicesViewModel.prototype.isAvailable = function (service) {
-                    return service.Status == Gaia.Domain.ServiceStatus.Available;
-                };
-                MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
                 return MerchantServicesViewModel;
             }());
+            MerchantServicesViewModel.$inject = ['#gaia.marketPlaceService', '$q', '#gaia.utils.notify', '#gaia.utils.domModel'];
             MarketPlace.MerchantServicesViewModel = MerchantServicesViewModel;
             var MerchantOrdersViewModel = (function () {
                 function MerchantOrdersViewModel() {
                 }
-                MerchantOrdersViewModel.$inject = [];
                 return MerchantOrdersViewModel;
             }());
+            MerchantOrdersViewModel.$inject = [];
             MarketPlace.MerchantOrdersViewModel = MerchantOrdersViewModel;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
 //Customer
-var Gaia;
 (function (Gaia) {
     var ViewModels;
     (function (ViewModels) {
@@ -466,9 +529,9 @@ var Gaia;
                         }));
                     }
                 };
-                CustomerViewModel.$inject = ['#gaia.utils.notify', '#gaia.marketPlaceService'];
                 return CustomerViewModel;
             }());
+            CustomerViewModel.$inject = ['#gaia.utils.notify', '#gaia.marketPlaceService'];
             MarketPlace.CustomerViewModel = CustomerViewModel;
             var CustomerProductsViewModel = (function () {
                 function CustomerProductsViewModel() {
@@ -509,7 +572,6 @@ var Gaia;
         })(MarketPlace = ViewModels.MarketPlace || (ViewModels.MarketPlace = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-var Gaia;
 (function (Gaia) {
     var Directives;
     (function (Directives) {
@@ -629,4 +691,3 @@ var Gaia;
         })(MarketPlace = Directives.MarketPlace || (Directives.MarketPlace = {}));
     })(Directives = Gaia.Directives || (Gaia.Directives = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-viewmodels.js.map

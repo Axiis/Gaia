@@ -44,9 +44,9 @@ var Gaia;
                         return _this.$q.reject();
                     });
                 };
-                Signin.$inject = ['$window', '#gaia.utils.domainTransport', '$q'];
                 return Signin;
             }());
+            Signin.$inject = ['$window', '#gaia.utils.domainTransport', '$q'];
             Login.Signin = Signin;
             var Signup = (function () {
                 function Signup($state, transport) {
@@ -124,9 +124,9 @@ var Gaia;
                         _this.password = _this.verifyPassword = null;
                     });
                 };
-                Signup.$inject = ['$state', '#gaia.utils.domainTransport'];
                 return Signup;
             }());
+            Signup.$inject = ['$state', '#gaia.utils.domainTransport'];
             Login.Signup = Signup;
             var RecoveryRequest = (function () {
                 function RecoveryRequest() {
@@ -151,9 +151,9 @@ var Gaia;
                 MessageViewModel.prototype.message = function () {
                     return this.$stateParams['message'];
                 };
-                MessageViewModel.$inject = ['$state', '$stateParams'];
                 return MessageViewModel;
             }());
+            MessageViewModel.$inject = ['$state', '$stateParams'];
             Login.MessageViewModel = MessageViewModel;
             var VerifyRegistration = (function () {
                 function VerifyRegistration($state, $stateParams, $location, transport) {
@@ -190,11 +190,10 @@ var Gaia;
                 VerifyRegistration.prototype.hasMessage = function () {
                     return this.message != null || this.messageHeader != null;
                 };
-                VerifyRegistration.$inject = ['$state', '$stateParams', '$location', '#gaia.utils.domainTransport'];
                 return VerifyRegistration;
             }());
+            VerifyRegistration.$inject = ['$state', '$stateParams', '$location', '#gaia.utils.domainTransport'];
             Login.VerifyRegistration = VerifyRegistration;
         })(Login = ViewModels.Login || (ViewModels.Login = {}));
     })(ViewModels = Gaia.ViewModels || (Gaia.ViewModels = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=login-viewmodels.js.map

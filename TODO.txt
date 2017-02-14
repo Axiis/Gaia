@@ -77,4 +77,6 @@
 
 2017/02/10 ====================================================================================
 
-1.    It appears Service/Product Tags are not showing up in the Service/Product editor for already existing items.
+1.    It appears Service/Product Tags are not showing up in the Service/Product editor for already existing items.[Figured]
+2.    Using the up/down buttons on the number spinner doesnt convey the underlying values to the bound model.
+3.	  The tagsInput directive doesnt convey the values to the bound model. [DONE]

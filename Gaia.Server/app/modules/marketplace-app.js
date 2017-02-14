@@ -8,6 +8,7 @@ var Gaia;
             ///Gaia Directives
             MarketPlace.module.directive('binaryData', Gaia.Directives.BinaryData);
             MarketPlace.module.directive('tagsInput', function () { return new Gaia.Directives.TagsInput(); });
+            MarketPlace.module.directive('numberSpinner', function () { return new Gaia.Directives.NumberSpinner(); });
             MarketPlace.module.directive('enumOptions', function () { return new Gaia.Directives.EnumOptions(); });
             MarketPlace.module.directive('ringLoader', function () { return new Gaia.Directives.RingLoader(); });
             MarketPlace.module.directive('boxLoader', function () { return new Gaia.Directives.BoxLoader(); });
@@ -124,4 +125,3 @@ var Gaia;
         })(MarketPlace = App.MarketPlace || (App.MarketPlace = {}));
     })(App = Gaia.App || (Gaia.App = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=marketplace-app.js.map

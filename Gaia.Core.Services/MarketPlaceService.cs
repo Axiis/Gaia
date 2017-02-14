@@ -57,12 +57,18 @@ namespace Gaia.Core.Services
                         .Where(_p => _p.Owner.EntityId == UserContext.CurrentUser.EntityId)
                         .Where(SearchableExpression<Product>(searchTokens))
                         .OrderBy(_p => _p.EntityId)
-                        .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex)).Take(pageSize).ToArray(), _p.Count(), pageSize, pageIndex));
+                        .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex))
+                                                                        .Take(pageSize)
+                                                                        .UsingEach(__p => __p.Owner = null)
+                                                                        .ToArray(), _p.Count(), pageSize, pageIndex));
                 }
                 else return DataContext.Store<Product>().QueryWith(_p => _p.Owner)
                     .Where(_p => _p.Owner.EntityId == UserContext.CurrentUser.EntityId)
                     .OrderBy(_p => _p.EntityId)
-                    .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex)).Take(pageSize).ToArray(), _p.Count(), pageSize, pageIndex));
+                    .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex))
+                                                                    .Take(pageSize)
+                                                                    .UsingEach(__p => __p.Owner = null)
+                                                                    .ToArray(), _p.Count(), pageSize, pageIndex));
             });
         public Operation<SequencePage<ISearchableItem>> FindMerchantServices(string searchString, int pageSize, long pageIndex = 0L)
             => FeatureAccess.Guard(UserContext, () =>
@@ -77,12 +83,18 @@ namespace Gaia.Core.Services
                         .Where(_p => _p.Owner.EntityId == UserContext.CurrentUser.EntityId)
                         .Where(SearchableExpression<Service>(searchTokens))
                         .OrderBy(_p => _p.EntityId)
-                        .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex)).Take(pageSize).ToArray(), _p.Count(), pageSize, pageIndex));
+                        .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex))
+                                                                        .Take(pageSize)
+                                                                        .UsingEach(__s => __s.Owner = null)
+                                                                        .ToArray(), _p.Count(), pageSize, pageIndex));
                 }
                 else return DataContext.Store<Service>().QueryWith(_s => _s.Owner)
                     .Where(_s => _s.Owner.EntityId == UserContext.CurrentUser.EntityId)
                     .OrderBy(_p => _p.EntityId)
-                    .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex)).Take(pageSize).ToArray(), _p.Count(), pageSize, pageIndex));
+                    .Pipe(_p => new SequencePage<ISearchableItem>(_p.Skip((int)(pageSize * pageIndex))
+                                                                        .Take(pageSize)
+                                                                        .UsingEach(__s => __s.Owner = null)
+                                                                        .ToArray(), _p.Count(), pageSize, pageIndex));
             });
 
         /// <summary>

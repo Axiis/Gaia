@@ -93,8 +93,9 @@ module Gaia.Utils.Services {
                 var _val = data[key];
                 var _type = typeof _val;
 
-                if (key.startsWith('$_')) continue;
-                if (_type == 'object') _val = this.removeSupportProperties(_val);
+                if (key.startsWith('$')) continue;
+                else if (Array.isArray(_val)) _val = (<any[]>_val).map(_next => this.removeSupportProperties(_next));
+                else if (_type == 'object') _val = this.removeSupportProperties(_val);
 
                 _data[key] = _val;
             }

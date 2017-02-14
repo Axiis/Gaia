@@ -34,8 +34,9 @@ module Gaia.Utils {
         static ParseStringPairs(value: string, encoding?: Encoding): Array<StringPair> {
             encoding = encoding || Encoding.InlineCss;
             if (encoding == Encoding.InlineCss) return value.split(';')
+                .filter(_part => !Object.isNullOrUndefined(_part) && _part.length > 0)
                 .map(v => {
-                    var parts = v.split(':');
+                    var parts = v.split(':').filter(_part => !Object.isNullOrUndefined(_part) && _part.length > 0);
                     var sp = new StringPair(parts[0].trim(), parts.length > 1 ? parts[1].trim() : null);
                     return sp;
                 })

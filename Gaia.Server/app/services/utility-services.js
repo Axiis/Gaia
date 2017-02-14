@@ -94,15 +94,18 @@ var Gaia;
                     });
                 };
                 DomainTransport.prototype.removeSupportProperties = function (data) {
+                    var _this = this;
                     if (Object.isNullOrUndefined(data))
                         return data;
                     var _data = {};
                     for (var key in data) {
                         var _val = data[key];
                         var _type = typeof _val;
-                        if (key.startsWith('$_'))
+                        if (key.startsWith('$'))
                             continue;
-                        if (_type == 'object')
+                        else if (Array.isArray(_val))
+                            _val = _val.map(function (_next) { return _this.removeSupportProperties(_next); });
+                        else if (_type == 'object')
                             _val = this.removeSupportProperties(_val);
                         _data[key] = _val;
                     }
@@ -124,9 +127,9 @@ var Gaia;
                         }
                     }
                 };
-                DomainTransport.inject = ['$http', '$q'];
                 return DomainTransport;
             }());
+            DomainTransport.inject = ['$http', '$q'];
             Services.DomainTransport = DomainTransport;
             var DomModelService = (function () {
                 function DomModelService() {
@@ -186,4 +189,3 @@ var Gaia;
         })(Services = Utils.Services || (Utils.Services = {}));
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=utility-services.js.map

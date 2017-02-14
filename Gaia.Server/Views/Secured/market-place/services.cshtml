@@ -3,7 +3,9 @@
 }
 
 <div ng-show="vm.isListingServices">
-    <div class="clearfix"><!--Tool Bar-->
+
+    <div class="clearfix">
+        <!--Tool Bar-->
         <div style="display:inline-block;" class="pull-right">
             <div class="form-horizontal">
                 <div class="form-group" style="margin:0px;">
@@ -17,7 +19,7 @@
                             style="background:white; border:1px solid #ccc; border-radius:1px; color:#999; margin-bottom:1px;"
                             href
                             data-toggle="tooltip"
-                            title="Add new service"
+                            title="Add new Product"
                             ng-click="vm.addAndModify()">
                         <i class="icon-plus"></i>
                     </button>
@@ -27,24 +29,24 @@
 
         <div class="pull-left">
             <ul class="pagination">
-                <li ng-show="vm.services.PageCount > 1">
+                <li ng-show="vm.products.PageCount > 1">
                     <a href
-                       ng-click="vm.listServices(0, vm.searchString)">
+                       ng-click="vm.listProducts(0, vm.searchString)">
                         <i class="icon-arrow-left2"></i>
                     </a>
                 </li>
 
-                <li ng-class="{active: (pindex == vm.services.PageIndex)}"
-                    ng-repeat="pindex in vm.services.AdjacentIndexes(4)">
-                    <a href 
-                       ng-click="vm.listServices(pindex, vm.searchString)">
+                <li ng-class="{active: (pindex == vm.products.PageIndex)}"
+                    ng-repeat="pindex in vm.products.AdjacentIndexes(4)">
+                    <a href
+                       ng-click="vm.listProducts(pindex, vm.searchString)">
                         {{pindex + 1}}
                     </a>
                 </li>
 
-                <li ng-show="vm.services.PageCount > 1">
+                <li ng-show="vm.products.PageCount > 1">
                     <a href
-                       ng-click="vm.listServices(vm.services.PageCount-1, vm.searchString)">
+                       ng-click="vm.listProducts(vm.products.PageCount-1, vm.searchString)">
                         <i class="icon-arrow-right3"></i>
                     </a>
                 </li>
@@ -52,8 +54,16 @@
         </div>
     </div>
 
-    <div style="margin-top:10px;"><!--Item List-->
+    <div ng-show="vm.isSearching"
+         style="margin-top:30px; text-align:center;">
+        <box-loader color="#518CA3" size="50" show="true" block-loader="true"></box-loader>
+        <p style="font-size:16px; margin-top:20px;">Loading</p>
+    </div>
+
+    <div style="margin-top:10px;">
+        <!--Item List-->
         <div class="clearfix gaia-service-item"
+             ng-hide="vm.isSearching"
              ng-repeat="data in vm.services.Page">
             <div class="row"
                  ng-click="vm.modifyService(data)">
@@ -85,7 +95,7 @@
                         type="button"
                         class="btn btn-xs btn-success">
                     <i class="icon-thumbs-up3" ng-hide="vm.isPersistingService"></i>
-                    <div id="service-ring-loader" ng-show="vm.isPersistingService"></div>
+                    <ring-loader size="18" color="white" show="vm.isPersistingService"></ring-loader>
 
                     &nbsp;Ok
                 </button>
@@ -105,16 +115,22 @@
                 <div class="col-sm-6">
                     <div style="margin-bottom:10px;">
                         <label>Price (&#8358;)</label>
-                        <input type="text" class="form-control" value="1000" id="spinner-service-price" ng-model="vm.currentService.Cost">
+                        <input type="text"
+                               class="form-control"
+                               value="1000" id="spinner-service-price"
+                               number-spinner="start:1000; model:vm.currentProduct.Cost;" />
                     </div>
                     <div>
                         <label style="display: block; width:100%;">Status</label>
-                        <select class="form-control" enum-options="vm.currentService.Status : Gaia.Domain.ServiceStatus"></select>
+                        <select class="form-control"
+                                enum-options="vm.currentService.Status : Gaia.Domain.ServiceStatus"></select>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <label>Description</label>
-                    <textarea rows="5" cols="5" class="form-control" placeholder="Description" ng-model="vm.currentService.Description"></textarea>
+                    <textarea rows="5" cols="5"
+                              class="form-control" placeholder="Description"
+                              ng-model="vm.currentService.Description"></textarea>
                 </div>
             </div>
         </div>
@@ -122,30 +138,82 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-12"
-                     data-toggle="tooltip" title="Enter keywords that help to describe/identify this service for easy searching">
+                     data-toggle="tooltip"
+                     title="Enter keywords that help to describe/identify this service for easy searching">
                     <label>Search Tags</label>
-                    <input type="text" id="searchTags" class="tags" style="display: none;">
+                    <input type="text" id="searchTags"
+                           tags-input="vm.currentService.Tags"
+                           class="tags" style="display: none;">
                 </div>
             </div>
         </div>
 
-        <hr/>
+        <hr ng-show="vm.isModifyingExistingService()" />
+
+        <div class="form-group" ng-show="vm.isModifyingExistingService()">
+            <div class="row">
+
+                <div ng-show="vm.currentService.$_isLoadingImages"
+                     class="col-sm-12"
+                     style="margin-top:30px; text-align:center;">
+                    <box-loader color="#518CA3" size="50" show="true" block-loader="true"></box-loader>
+                    <p style="font-size:16px; margin-top:20px;">Loading</p>
+                </div>
+
+                <div class="col-sm-12" ng-hide="vm.currentService.$_isLoadingImages">
+                    <div class="clearfix">
+                        <!--Tool Bar-->
+                        <div class="pull-left">
+                            <label>Service Images</label>
+                        </div>
+
+                        <div style="display:inline-block;" class="pull-right">
+                            <div class="form-horizontal">
+                                <div class="form-group" style="margin:0px;">
+                                    <form id="uploadImageForm">
+                                        <label class="btn btn-icon btn-success btn-xs"
+                                               href
+                                               data-toggle="tooltip"
+                                               title="Add new service image">
+                                            <i ng-show="!vm.currentService.$_isPersistingImage"
+                                               class="icon-pencil"></i>
+                                            <ring-loader show="vm.currentService.$_isPersistingImage"
+                                                         size="18" color="white"></ring-loader>
+                                            <input type="file"
+                                                   binary-data="vm.uploadImage"
+                                                   style="width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute; z-index: -1;" />
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; justify-content:flex-start;">
 
 
+                        <div class="gallery-card material-shadow" style="margin:10px;"
+                             ng-repeat="imageRef in vm.currentService.Images">
+
+                            <div class="image-placeholder"
+                                 style="background-size:cover;"
+                                 ng-style="{'background-image':vm.serviceImageRef(imageRef)}"></div>
+
+                            <div class="detail-strip"></div>
+
+                            <div class="material-primary-button material-shadow gallery-action"
+                                 ng-click="vm.removeImage(imageRef)">
+                                <div style="background-color:orangered;"></div>
+                                <i ng-show="!imageRef.$_isRemovingImage"
+                                   class="icon-remove" style="color:white;"></i>
+                                <ring-loader ng-class="{hide:!imageRef.$_isRemovingImage}"
+                                             show="true" size="18" color="white"></ring-loader>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-
-    <script type="text/javascript">
-        $(function () {
-            ringLoader($('#service-ring-loader'), '14px', 'white');
-
-            $('#searchTags').tagsInput({ width: '100%' });
-            $('#spinner-service-price').spinner({
-                min: 0,
-                step: 100,
-                start: 1000,
-                numberFormat: "C"
-            });
-        });
-    </script>

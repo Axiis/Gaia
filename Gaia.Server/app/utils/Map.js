@@ -2,10 +2,10 @@ var Gaia;
 (function (Gaia) {
     var Utils;
     (function (Utils) {
+        var Encoding;
         (function (Encoding) {
             Encoding[Encoding["InlineCss"] = 0] = "InlineCss";
-        })(Utils.Encoding || (Utils.Encoding = {}));
-        var Encoding = Utils.Encoding;
+        })(Encoding = Utils.Encoding || (Utils.Encoding = {}));
         var StringPair = (function () {
             function StringPair(key, value) {
                 this.Key = StringPair.DecodeDelimiters(key);
@@ -20,8 +20,9 @@ var Gaia;
                 encoding = encoding || Encoding.InlineCss;
                 if (encoding == Encoding.InlineCss)
                     return value.split(';')
+                        .filter(function (_part) { return !Object.isNullOrUndefined(_part) && _part.length > 0; })
                         .map(function (v) {
-                        var parts = v.split(':');
+                        var parts = v.split(':').filter(function (_part) { return !Object.isNullOrUndefined(_part) && _part.length > 0; });
                         var sp = new StringPair(parts[0].trim(), parts.length > 1 ? parts[1].trim() : null);
                         return sp;
                     })
@@ -80,4 +81,3 @@ var Gaia;
         Utils.StringPairCollection = StringPairCollection;
     })(Utils = Gaia.Utils || (Gaia.Utils = {}));
 })(Gaia || (Gaia = {}));
-//# sourceMappingURL=map.js.map
